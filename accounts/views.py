@@ -46,7 +46,7 @@ def login(request):
 
 def logout(request):
     auth_logout(request)
-    return redirect('community:community_index')
+    return redirect('movies:movie_index')
 
 
 @require_safe
