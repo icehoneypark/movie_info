@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Detail</h1>
+<p>{{ post.movie_title }}</p>
+<p>{{ post.title }}</p>
+<p>{{ post.content }}</p>
+<p>{{ post.rank }}</p>
+<a href="{% url 'community:community_index' %}">back</a>
+<a href="{% url 'community:community_update' post.pk %}">update</a>
+<form action="{% url 'community:community_delete' post.pk %}" method="POST">
+{% csrf_token %}
+<button>Delete</button>
+</form>
+{% endblock %}

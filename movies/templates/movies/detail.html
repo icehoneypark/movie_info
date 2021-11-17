@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Detail</h1>
+<hr>
+<h3>{{ movie.title }}</h3>
+<p>{{ movie.overview }}</p>
+<p><img src="{{ movie.poster_path }}" alt="img" width = 500></p>
+<hr>
+<a href="{% url 'movies:movie_index' %}">back</a>
+
+{% endblock content %}

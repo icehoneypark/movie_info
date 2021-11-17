@@ -1,23 +1,67 @@
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from .serializers import UserSerializer
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import get_object_or_404, redirect, render
+from .forms import CustomUserCreationForm
+from django.contrib.auth import get_user_model, login as auth_login
+from django.contrib.auth import logout as auth_logout
+from django.views.decorators.http import require_http_methods, require_safe
 
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
+@require_http_methods(['GET', 'POST'])
 def signup(request):
-    password = request.data.get('password')
-    password_confirmation = request.data.get('passwordConfirmation')
+    if not request.user.is_authenticated:
+        if request.method == 'POST':
+            form = CustomUserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                auth_login(request, user)
+                return redirect('community:community_index')
+        else:
+            form = CustomUserCreationForm()
+        context = {
+            'form': form,
+        }
+        return render(request, 'accounts/signup.html', context)
+    # 이미 로그인이 돼있으면 index로 redirect
+    else:
+        return redirect('community:community_index')
 
-    if password != password_confirmation:
-        return Response({'error': '비밀번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    serializer = UserSerializer(data=request.data)
-    
-    if serializer.is_valid(raise_exception=True):
-        user = serializer.save()
-        user.set_password(request.data.get('password'))
-        user.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+@require_http_methods(['GET', 'POST'])
+def login(request):
+    if not request.user.is_authenticated:
+        if request.method == 'POST':
+            form = AuthenticationForm(request, request.POST)
+            if form.is_valid():
+                auth_login(request, form.get_user())
+                return redirect(request.GET.get('next') or 'community:community_index')
+        else:
+            form = AuthenticationForm()
+        context = {
+            'form': form,
+        }
+        return render(request, 'accounts/login.html', context)
+    else:
+        return redirect('community:community_index')
+
+
+def logout(request):
+    auth_logout(request)
+    return redirect('community:community_index')
+
+
+@require_safe
+def profile(request, username):
+    person = get_object_or_404(get_user_model(), username=username)
+    context = {
+        'person': person,
+    }
+    return render(request, 'accounts/profile.html', context)
+
+
+def follow(request, username):
+    person = get_object_or_404(get_user_model(), username=username)
+    if person.followers.filter(pk=request.user.pk).exists():
+        person.followers.remove(request.user)
+    else:
+        person.followers.add(request.user)
+    return redirect('accounts:profile', person.username)
