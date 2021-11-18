@@ -21,7 +21,9 @@ def community_create(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
-            post = form.save()
+            post = form.save(commit=False)
+            post.user = request.user
+            post.save()
             return redirect('community:community_detail', post.pk)
     else:
         form = PostForm()
