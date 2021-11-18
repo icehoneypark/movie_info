@@ -55,15 +55,10 @@
 {% if request.user == post.user %}
   <a href="{% url 'community:community_update' post.pk %}">
   <button class="btn-gold">UPDATE</button>
-{% endif %}
-{% endblock %}
-<a href="{% url 'community:community_update' post.pk %}">
-<button class="btn-gold">UPDATE</button>
-</a>
 <form action="{% url 'community:community_delete' post.pk %}" method="POST">
 {% csrf_token %}
 <button class="btn-gold">DELETE</button>
 </form>
 {% endif %}
 </div>
-{% endblock %} {% endcomment %}
+{% endblock %}
