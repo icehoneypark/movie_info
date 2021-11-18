@@ -1,10 +1,10 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import get_object_or_404, redirect, render
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth import get_user_model, login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.views.decorators.http import require_http_methods, require_safe
-
+from django.views.decorators.http import require_http_methods, require_safe, require_POST
+from django.contrib.auth.decorators import login_required
 
 @require_http_methods(['GET', 'POST'])
 def signup(request):
@@ -47,6 +47,29 @@ def login(request):
 def logout(request):
     auth_logout(request)
     return redirect('movies:movie_index')
+
+
+@login_required
+def change(request):
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('accounts:profile', request.user)
+    else:
+    	form = CustomUserChangeForm(instance=request.user)
+    context = {
+    	'form':form,
+    }
+    return render(request, 'accounts/change.html', context)
+
+
+@require_POST
+def delete(request):
+    if request.user.is_authenticated:
+        request.user.delete()
+        auth_logout(request)
+    return redirect('accounts:login')
 
 
 @require_safe

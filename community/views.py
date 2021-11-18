@@ -21,7 +21,9 @@ def community_create(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
-            post = form.save()
+            post = form.save(commit=False)
+            post.user = request.user
+            post.save()
             return redirect('community:community_detail', post.pk)
     else:
         form = PostForm()
@@ -75,37 +77,39 @@ def community_delete(request, pk):
 
 
 @require_POST
-def community_comment_create(requset, post_pk):
-    if requset.user.is_authenticated:
+def community_comment_create(request, post_pk):
+    if request.user.is_authenticated:
         post = get_object_or_404(Post, pk=post_pk)
-        comment_form = CommunityCommentForm(requset.POST)
+        comment_form = CommunityCommentForm(request.POST)
         if comment_form.is_valid():
             comment = comment_form.save(commit=False)
             comment.post = post
-            comment.user = requset.user
+            comment.user = request.user
             comment.save()
         return redirect('community:community_detail', post.pk)
     return redirect('accounts:login')
 
 
-# @login_required
-# @require_http_methods(['GET', 'POST'])
-# def community_comment_update(request, comment_pk):
+@login_required
+def community_comment_update(request, post_pk, comment_pk):
+    comment = get_object_or_404(CommunityComment, pk=comment_pk)
+    if request.method == 'POST':
+        comment_form = CommunityCommentForm(request.POST, instance=comment)
+        if comment_form.is_valid():
+            comment.save()
+            return redirect('community:community_detail', post_pk)
+    else:
+        comment_form = CommunityCommentForm(instance=comment)
+    context = {
+        'comment_form': comment_form,
+    }
+    return render(request, 'community/detail.html', context)
 
-#     comment = get_object_or_404(CommunityComment, pk=comment_pk)
-#     post = get_object_or_404(Post, pk=comment.post.pk)
 
-#     if request.user != comment.author:
-#         return redirect(post)
-
-#     if request.method == "POST":
-#         comment_form = CommunityCommentForm(request.POST, instance=comment)
-#         if comment_form.is_valid():
-#             comment_form.save()
-#             return redirect(post)
-#     else:
-#         form = CommunityCommentForm(instance=comment)
-#     context = {
-#         'comment_form': comment_form,
-#     }
-#     return render(request,'community/community_detail.html', context)
+@require_POST
+def community_comment_delete(request, post_pk, comment_pk):
+    if request.user.is_authenticated:
+        comment = get_object_or_404(CommunityComment, pk=comment_pk)
+        if request.user == comment.user:
+            comment.delete()
+    return redirect('community:community_detail', post_pk)

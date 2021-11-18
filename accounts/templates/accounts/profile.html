@@ -8,6 +8,7 @@
 &nbsp&nbsp&nbsp
 <span>followings : {{ person.followings.all|length }}</span>
 <br>
+<span>e-mail : {{ person.email }}</span>
 <br>
 <br>
 {% if request.user.is_authenticated and request.user != person %}
@@ -24,6 +25,14 @@
 {% for post in person.post_set.all %}
 <p><a href="{% url 'community:community_detail' post.pk %}">{{ post.title }}</a></p>
 {% endfor %}
+{% if request.user == person %}
+<a href="{% url 'accounts:change' %}">회원정보수정</a>
+<form action="{% url 'accounts:delete' %}" method=POST>
+{% csrf_token %}
+<input type="submit" value="회원탈퇴">
+</form>
+</a>
+{% endif %}
 {% comment %} 
 <h3>{{ person.username }}가 작성한 댓글</h3>
 {% for review in person.post_set.all %}
