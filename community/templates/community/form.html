@@ -4,17 +4,24 @@
 <hr>
 <form action="" method="POST">
 {% csrf_token %}
-{{ form.as_p }}
+{% comment %} {{ form.as_p }} {% endcomment %}
+<p style="margin-bottom: 0;"><label for="id_title">Title</label></p>
+<input type="text" name="title" value="{{ post.title }}" maxlength="20" required="" id="id_title">
+<br><br>
+<p style="margin-bottom: 0;"><label for="id_content">Content</label></p>
+<textarea name="content" cols="40" rows="10" required="" id="id_content">
+{{ post.content }}
+</textarea></p>
 <button class="btn-gold">{{ btn_name }}</button>
-</form>
-<br>
+&nbsp&nbsp
 {% if site_name == "Create" %}
 <a href="{% url 'community:community_index' %}">
-<button class="btn-gold">Back</button>
+<button type="button" class="btn-gold">Back</button>
 </a>
 {% else %}
 <a href="{% url 'community:community_detail' post.pk  %}">
-<button class="btn-gold">Back</button>
+<button type="button" class="btn-gold">Back</button>
 </a>
 {% endif %}
+</form>
 {% endblock %}

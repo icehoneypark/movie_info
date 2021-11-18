@@ -44,6 +44,55 @@
     font-family: "Helvetica Neue", Helvetica, Arials, sans;
     text-decoration : none;
   }
+
+  a:hover {
+    color: rgba(223,190,106,0.4);
+    font-family: "Helvetica Neue", Helvetica, Arials, sans;
+    text-decoration : none;
+  }
+
+  .nav-link {
+    color: rgba(223,190,106,0.7);
+    font-family: "Helvetica Neue", Helvetica, Arials, sans;
+    text-decoration : none;
+  }
+
+  .nav-link:hover {
+    color: rgba(223,190,106,0.4);
+    font-family: "Helvetica Neue", Helvetica, Arials, sans;
+    text-decoration : none;
+  }
+  
+  .nav-link:focus {
+    color: rgba(223,190,106,0.4);
+    font-family: "Helvetica Neue", Helvetica, Arials, sans;
+    text-decoration : none;
+  }
+
+  .nav-link:active {
+    color: rgba(223,190,106,0.4);
+    font-family: "Helvetica Neue", Helvetica, Arials, sans;
+    text-decoration : none;
+    background-color : rgba(50, 40, 31, 0.55);
+  }
+
+  nav > .nav-item > ul
+   {
+    background-color : rgba(50, 40, 31, 0.55);
+    color : rgba(223,190,106,0.7);
+  }
+
+  nav > .nav-item > ul > a > button
+   { 
+    outline: 0;
+    width: 158px;
+    border: 0;
+    background-color : rgba(50, 40, 31, 0.55);
+    color: rgba(223,190,106,0.7);
+  }
+
+
+  nav > .nav-item > ul > 
   {% block css %}
   {% endblock css %}
   </style>
@@ -52,25 +101,49 @@
 <nav style="position: sticky; top: 0px; background: #231f20; line-height: 50px; height: 50px; margin: 10px; display: flex; justify-content: space-between;">
   <div>
     <div style="display: flex; width: 160px; justify-content: space-between; margin-left: 20px;">
-      <div><a href="{% url 'movies:movie_index' %}">MOVIE</a></div>
+      <div><a href="{% url 'movies:movie_index' %}" style="color: ;">MOVIE</a></div>
       <div><a href="{% url 'community:community_index' %}">Community</a></div>
     </div>
   </div>
-  {% if request.user.is_authenticated %}  
-  <div style="display: flex; width: 150px; justify-content: space-between; margin-right: 20px;">
-    <a href="{% url 'accounts:profile' request.user.username%}">My Profile</a>
-    <a href="{% url 'accounts:logout' %}">Logout</a>
-  {% else %}  
-  <div style="display: flex; width: 130px; justify-content: space-between; margin-right: 20px;">
-    <a href="{% url 'accounts:login' %}">Login</a>
-    <a href="{% url 'accounts:signup' %}">Signup</a>
-  {% endif %}
+  <div class="nav-item dropdown" style="margin-right: 20px;">
+    <a class="nav-link dropdown" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Accounts
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: rgba(50, 40, 31, 1); opacity : 1;">
+    {% if request.user.is_authenticated %}
+      <a href="{% url 'accounts:profile' request.user.username%}"><button>My Profile</button></a>
+      <br>
+      <a href="{% url 'accounts:logout' %}"><button>Logout</button></a>
+      {% else %}
+      {% comment %} <li><hr class="dropdown-divider"></li> {% endcomment %}      
+      <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"><button>Login</button></a>
+      <br>
+      <a href="{% url 'accounts:signup' %}"><button>Signup</button></a>
+      {% endif %}
+    </ul>
   </div>
 </nav>
-  <div class="container" style="margin-top: 15px;">
+<div class="container" style="margin-top: 15px;">
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="background-color : rgba(50, 40, 31, 0.55);">
+      <div class="modal-content" style="background-color : rgba(50, 40, 31, 0.55);">
+        <h5 style="margin-left: 15px; margin-top: 20px;">Login</h5>
+        <hr>
+        <div class="modal-body">
+          <form action="{% url 'accounts:login' %}" method="POST">
+            {% csrf_token %}
+            <p><label for="id_username">Username:</label> <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username"></p>
+            <p><label for="id_password">Password:</label> <input type="password" name="password" autocomplete="current-password" required="" id="id_password"></p>
+            <button class="btn-gold">Login</button>
+            <button type="button" class="btn-gold" data-bs-dismiss="modal" aria-label="Close" style="margin-left: 10px;">Close</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   {% block content %}  
   {% endblock content %}
-  </div>
+</div>
 
   {% block script %}
   {% endblock script %}
