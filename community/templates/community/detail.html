@@ -4,17 +4,16 @@
 </style>
 {% endblock css %}
 {% block content %}
-<h1>Detail</h1>
-<p>{{ post.movie_title }}</p>
-<p>{{ post.title }}</p>
-<p>{{ post.content }}</p>
-<p>{{ post.rank }}</p>
+<h1>{{ post.title }}</h1> 
+<p>&nbsp작성자 : <span><a href="{% url 'accounts:profile' post.user%}"  style="width: 10%;">{{ post.user }}</a></span></p>
+<br>
+<p style="border: solid 1px; height: 300px; padding: 10px;">{{ post.content }}</p>
 <div style="display: flex; width: 700px; justify-content: space-between;">
-<a href="{% url 'community:community_index' %}">
-<button class="btn-gold">BACK</button>
-</a>
 <a href="{% url 'community:community_update' post.pk %}">
 <button class="btn-gold">UPDATE</button>
+</a>
+<a href="{% url 'community:community_index' %}">
+<button class="btn-gold">BACK</button>
 </a>
 <form action="{% url 'community:community_delete' post.pk %}" method="POST">
 {% csrf_token %}

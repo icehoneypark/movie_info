@@ -1,18 +1,46 @@
 {% extends 'base.html' %}
+{% block css %}
+{% endblock css %}
 {% block content %}
 <h1>커뮤니티</h1>
+<br>
 <a href="{% url 'community:community_create' %}">
 <button class="btn-gold">작성하기</button>
 </a>
-
+<br>
+<br>
 <hr>
-{% for post in posts %}
-<div class="container">
-  <p>{{ post.pk }} {{ post.title }}</p>
-  <a href="{% url 'community:community_detail' post.pk %}">detail</a>
+<div class="container px-0">
+<div style="display: flex">
+  <p style="width: 10%;">번호</p>
+  <p style="width: 70%;">제목</p>
+  <p style="width: 10%;">글쓴이</p>
+  <p style="width: 20%;">등록일</p>
+  </div>
+  {% for post in posts %}
+  <div style="display: flex">
+      <p style="width: 10%;">{{ post.pk }}</p>
+      <p style="width: 70%;"><a href="{% url 'community:community_detail' post.pk %}">{{ post.title }}</a></p>    
+    <p style="width: 10%;"><a href="{% url 'accounts:profile' post.user%}">{{ post.user }}</a></p>
+    <p style="width: 20%;">등록일</p>
+  </div>
+  {% endfor %}
 </div>
-<hr>
-{% empty %}
-<p>no posts...</p>
-{% endfor %}
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
 {% endblock %}
