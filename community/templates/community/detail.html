@@ -4,17 +4,45 @@
 </style>
 {% endblock css %}
 {% block content %}
-<h1>Detail</h1>
-<p>{{ post.movie_title }}</p>
-<p>{{ post.title }}</p>
+<h2>{{ post.title }}</h2>
+<h4>작성자 : {{ post.user.username }}</h4>
+<br>
 <p>{{ post.content }}</p>
-<p>{{ post.rank }}</p>
+<br>
+<p>생성 시간 : {{ post.created_at }}</p>
+<p>수정 시간 : {{ post.updated_at }}</p>
+
+{% comment %} if문을 통해 댓글이 있을 때만 개수와 댓글내용 표시 {% endcomment %}
+{% if comments %}
+  <p>{{ comments|length }}개의 댓글이 있습니다.</p>
+{% endif %}
+<ul>
+  {% for comment in comments %}
+    {{ comment.user }} {{ comment.content|linebreaks }} 생성 : {{ comment.created_at}} / 수정 : {{comment.updated_at}}
+    {% comment %} <a href="{% url 'community:community_comment_update' comment.pk %}">수정</a> {% endcomment %}
+  {% endfor %}
+</ul>
+<hr>
+{% if request.user.is_authenticated %}
+  <form action="{% url 'community:community_comment_create' post.pk %}" method="POST">
+    {% csrf_token %}
+    {{ comment_form }}
+    <input type="submit" value="Enter">
+  </form>
+{% else %}
+  <a href="{% url 'accounts:login' %}">login</a>
+{% endif %}
+
+<hr>
+
 <div style="display: flex; width: 700px; justify-content: space-between;">
 <a href="{% url 'community:community_index' %}">
 <button class="btn-gold">BACK</button>
 </a>
-<a href="{% url 'community:community_update' post.pk %}">
-<button class="btn-gold">UPDATE</button>
+{% if request.user == post.user %}
+  <a href="{% url 'community:community_update' post.pk %}">
+  <button class="btn-gold">UPDATE</button>
+{% endif %}
 </a>
 <form action="{% url 'community:community_delete' post.pk %}" method="POST">
 {% csrf_token %}

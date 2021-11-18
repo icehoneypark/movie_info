@@ -1,12 +1,11 @@
 
-from .forms import PostForm
-from community.models import Post
+from .forms import PostForm, CommunityCommentForm
+from community.models import Post, CommunityComment
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods, require_POST, require_safe
 from django.contrib.auth.decorators import login_required
 
 
-# Create your views here.
 @require_safe
 def community_index(request):
     posts = Post.objects.all()
@@ -14,6 +13,7 @@ def community_index(request):
         'posts': posts,
     }
     return render(request, 'community/index.html', context)
+
 
 @login_required
 @require_http_methods(['GET', 'POST'])
@@ -32,13 +32,19 @@ def community_create(request):
     }
     return render(request, 'community/form.html', context)
 
+
 @require_safe
 def community_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    comment_form = CommunityCommentForm()
+    comments = post.communitycomment_set.all()
     context = {
         'post': post,
+        'comment_form': comment_form,
+        'comments': comments,
     }
     return render(request, 'community/detail.html', context)
+
 
 @login_required
 @require_http_methods(['GET', 'POST'])
@@ -59,9 +65,47 @@ def community_update(request, pk):
     }
     return render(request, 'community/form.html', context)
 
+
 @login_required
 @require_POST
 def community_delete(request, pk):
     community = get_object_or_404(Post, pk=pk)
     community.delete()
     return redirect('community:community_index')
+
+
+@require_POST
+def community_comment_create(requset, post_pk):
+    if requset.user.is_authenticated:
+        post = get_object_or_404(Post, pk=post_pk)
+        comment_form = CommunityCommentForm(requset.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.post = post
+            comment.user = requset.user
+            comment.save()
+        return redirect('community:community_detail', post.pk)
+    return redirect('accounts:login')
+
+
+# @login_required
+# @require_http_methods(['GET', 'POST'])
+# def community_comment_update(request, comment_pk):
+
+#     comment = get_object_or_404(CommunityComment, pk=comment_pk)
+#     post = get_object_or_404(Post, pk=comment.post.pk)
+
+#     if request.user != comment.author:
+#         return redirect(post)
+
+#     if request.method == "POST":
+#         comment_form = CommunityCommentForm(request.POST, instance=comment)
+#         if comment_form.is_valid():
+#             comment_form.save()
+#             return redirect(post)
+#     else:
+#         form = CommunityCommentForm(instance=comment)
+#     context = {
+#         'comment_form': comment_form,
+#     }
+#     return render(request,'community/community_detail.html', context)

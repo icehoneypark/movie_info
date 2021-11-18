@@ -9,7 +9,7 @@ class Movie(models.Model):
     def __str__(self):
         return self.title
 
-class Comment(models.Model):
+class MovieComment(models.Model):
     RANKS = [
         (1, '★'),
         (2, '★★'),
