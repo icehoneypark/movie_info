@@ -20,7 +20,7 @@ def community_index(request):
 @require_http_methods(['GET', 'POST'])
 def community_create(request):
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.user = request.user
@@ -54,7 +54,7 @@ def community_detail(request, post_pk):
 def community_update(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
+        form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
             return redirect('community:community_detail', post.pk)

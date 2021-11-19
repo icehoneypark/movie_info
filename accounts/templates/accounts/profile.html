@@ -10,6 +10,10 @@
 <br>
 <span>e-mail : {{ person.email }}</span>
 <br>
+{% if person.profile_img %}
+  <span>profile image : <img src="{{ person.profile_img.url }}" alt="profile_img" style="width: 50px; height: 50px;"></span>
+{% endif %}
+<br>
 <br>
 {% if request.user.is_authenticated and request.user != person %}
   <form action="{% url 'accounts:follow' person.username %}" method="POST">

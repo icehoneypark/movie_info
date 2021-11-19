@@ -27,4 +27,4 @@ def movie_detail(request, movie_pk):
         'movie_comment_form': movie_comment_form,
         'movie_comments': movie_comments,
     }
-    return render(request, 'community/detail.html', context)
+    return render(request, 'movies/detail.html', context)

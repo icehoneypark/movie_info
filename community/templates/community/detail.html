@@ -13,6 +13,9 @@
 {% else %}
 <p style="border: solid 1px; padding: 10px; word-wrap: break-word; font-size: 20px;">{{ post.content }}</p>
 {% endif %}
+{% if post.community_img %}
+<img src="{{ post.community_img.url }}" alt="community_img" style="width:500px; height:300px;">
+{% endif %}
 <p>작성일자 : {{ post.created_at | date:'Y년 m월 d일 h시 i분' }}</p>
 <p>수정일자 : {{ post.updated_at | date:'Y년 m월 d일 h시 i분' }}</p>
 {{post.content|length}}

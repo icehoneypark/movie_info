@@ -2,26 +2,36 @@
 {% block content %}
 <h1>{{ site_name }}</h1>
 <hr>
-<form action="" method="POST">
+
+<form action="" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
-{% comment %} {{ form.as_p }} {% endcomment %}
+
 <p style="margin-bottom: 0;"><label for="id_title">Title</label></p>
 <input type="text" name="title" value="{{ post.title }}" maxlength="20" required="" id="id_title">
 <br><br>
+
 <p style="margin-bottom: 0;"><label for="id_content">Content</label></p>
 <textarea name="content" cols="40" rows="10" required="" id="id_content">
 {{ post.content }}
 </textarea></p>
+
+<p style="margin-bottom: 0;"><label for="id_img">Img</label></p>
+<input type="file" name="community_img" value="{{ post.community_img }}" maxlength="20" required="" id="community_img" accept="image/*" onchange="loadFile(this)">
+<br><br>
+
 <button class="btn-gold">{{ btn_name }}</button>
 &nbsp&nbsp
+
 {% if site_name == "Create" %}
 <a href="{% url 'community:community_index' %}">
 <button type="button" class="btn-gold">Back</button>
 </a>
+
 {% else %}
 <a href="{% url 'community:community_detail' post.pk  %}">
 <button type="button" class="btn-gold">Back</button>
 </a>
+
 {% endif %}
 </form>
 {% endblock %}

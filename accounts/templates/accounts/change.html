@@ -2,11 +2,15 @@
 {% block content %}
 <h1>회원정보수정</h1>
 <hr>
-<form action="{% url 'accounts:change' %}" method="POST">
+<form action="{% url 'accounts:change' %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 {% comment %} {{ form.as_p }} {% endcomment %}
-<p><label for="id_username">Username:</label> <input type="text" name="username" value="{{ user.username }}" maxlength="150" required="" id="id_username"></p>
+<p><label for="id_password">Password:</label> <input type="password" name="password" value="{{ user.password }}" maxlength="150" required="" id="id_password"></p>
 <p><label for="id_email">Email address:</label> <input type="email" name="email" value="{{ user.email }}" maxlength="254" id="id_email"></p>
+<label for="id_profile_img">Profile Img:</label>
+<input type="file" name="profile_img" value="{{ user.profile_img }}" maxlength="254" id="id_profile_img" accept="image/*" onchange="loadFile(this)">
+<br>
+<br>
 <button class="btn-gold">change</button>
 </form>
 {% endblock %}

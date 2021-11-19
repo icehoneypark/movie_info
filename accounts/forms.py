@@ -6,11 +6,10 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = get_user_model()
         # fields = '__all__'
-        fields = ('username', 'password1', 'email', 'password2')
+        fields = ('username', 'password1', 'password2', 'email')
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = get_user_model()
-
-        fields = ('username', 'email')
+        fields = ('password', 'email', 'profile_img')
         # fields= '__all__'

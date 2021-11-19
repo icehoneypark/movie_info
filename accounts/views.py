@@ -52,7 +52,7 @@ def logout(request):
 @login_required
 def change(request):
     if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST, instance=request.user)
+        form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect('accounts:profile', request.user)
