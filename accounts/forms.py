@@ -5,11 +5,11 @@ from django.contrib.auth import get_user_model
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = get_user_model()
-        fields = '__all__'
-        # fields = ('username',)
+        # fields = '__all__'
+        fields = ('username', 'password1', 'email', 'password2')
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = get_user_model()
-        # fields = ('username', 'password', 'email')
-        fields= '__all__'
+        fields = ('username', 'email')
+        # fields= '__all__'

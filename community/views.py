@@ -4,6 +4,7 @@ from community.models import Post, CommunityComment
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods, require_POST, require_safe
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 
 @require_safe
@@ -39,7 +40,7 @@ def community_create(request):
 def community_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comment_form = CommunityCommentForm()
-    comments = post.communitycomment_set.all()
+    comments = post.communitycomment_set.order_by('-pk')
     context = {
         'post': post,
         'comment_form': comment_form,
@@ -57,6 +58,7 @@ def community_update(request, pk):
         if form.is_valid():
             form.save()
             return redirect('community:community_detail', post.pk)
+            
     else:
         form = PostForm(instance=post)
     context = {
@@ -92,15 +94,24 @@ def community_comment_create(request, post_pk):
 
 @login_required
 def community_comment_update(request, post_pk, comment_pk):
+    post = get_object_or_404(Post, pk=post_pk)
     comment = get_object_or_404(CommunityComment, pk=comment_pk)
     if request.method == 'POST':
         comment_form = CommunityCommentForm(request.POST, instance=comment)
         if comment_form.is_valid():
-            comment.save()
+            comment_tmp = comment_form.save(commit=False)
+            comment_tmp.user = request.user
+            comment_tmp.save()
+            context = {
+                'comment_tmp': comment_tmp,
+            }
+            # return JsonResponse(context)
             return redirect('community:community_detail', post_pk)
     else:
         comment_form = CommunityCommentForm(instance=comment)
     context = {
+        'post': post,
+        'comment_tmp': comment,
         'comment_form': comment_form,
     }
     return render(request, 'community/detail.html', context)
