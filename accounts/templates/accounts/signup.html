@@ -4,16 +4,13 @@
 <hr>
 <form action="" method="POST">
 {% csrf_token %}
-{{ form.as_p }}
-<button class="btn-gold">signup</button>
+{% comment %} {{ form.as_p }} {% endcomment %}
+<p><label for="id_username">Username:</label> <input type="text" name="username" maxlength="150" autofocus="" required="" id="id_username"></p>
+<p><label for="id_password1">Password:</label> <input type="password" name="password1" autocomplete="new-password" required="" id="id_password1"> </p>
+<p><label for="id_email">Email address:</label> <input type="email" name="email" maxlength="254" id="id_email"></p>
+<p><label for="id_password2">Password confirmation:</label> <input type="password" name="password2" autocomplete="new-password" required="" id="id_password2"></p>
+<button class="btn-gold">Signup</button>
+
+
 </form>
 {% endblock %}
-{% comment %} <p><label for="id_username">Username:</label>
-<input type="text" name="username" maxlength="150" autofocus="" required="" id="id_username"> 
-</p>
-<p><label for="id_password1">Password:</label>
-<input type="password" name="password1" autocomplete="new-password" required="" id="id_password1"> 
-</p>
-<p><label for="id_password2">Password confirmation:</label> 
-<input type="password" name="password2" autocomplete="new-password" required="" id="id_password2">
-</p> {% endcomment %}

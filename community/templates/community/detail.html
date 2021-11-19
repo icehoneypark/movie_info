@@ -6,7 +6,7 @@
 {% block content %}
 
 <h1>{{ post.title }}</h1> 
-<p>&nbsp작성자 : <span><a href="{% url 'accounts:profile' post.user%}"  style="width: 10%;">{{ post.user }}</a></span></p>
+{% comment %} <p>&nbsp작성자 : <span><a href="{% url 'accounts:profile' post.user%}"  style="width: 10%;">{{ post.user }}</a></span></p> {% endcomment %}
 <br>
 {% if post.content|length < 1099 %}
 <p style="border: solid 1px; height: 300px; padding: 10px; word-wrap: break-word; font-size: 20px;">{{ post.content }}</p>
@@ -19,46 +19,106 @@
 
 {% if comments %}
   <p>{{ comments|length }}개의 댓글이 있습니다.</p>
+{% else %} 
+<p>0개의 댓글이 있습니다</p>
 {% endif %}
-<ul>
-  {% for comment in comments %}
-    {{ comment.user }} {{ comment.content|linebreaks }} 생성 : {{ comment.created_at}} / 수정 : {{comment.updated_at}}
-
-    {% if user == comment.user %}
-      <form action="{% url 'community:community_comment_update' post.pk comment.pk %}" method="POST">
-        {% csrf_token %}
-        <input type="submit" value="Update">
-      </form>
-      <form action="{% url 'community:community_comment_delete' post.pk comment.pk %}" method="POST" class="d-inline">
-        {% csrf_token %}
-        <input type="submit" value="Delete">
-      </form>
-    {% endif %}
-    <br><br>
-  {% endfor %}
-</ul>
-<hr>
-{% if request.user.is_authenticated %}
+{% comment %} 댓글작성 {% endcomment %}
+  {% if request.user.is_authenticated %}
   <form action="{% url 'community:community_comment_create' post.pk %}" method="POST">
     {% csrf_token %}
     {{ comment_form }}
     <input type="submit" value="Enter">
   </form>
-{% else %}
-  <a href="{% url 'accounts:login' %}">login</a>
+<br>
 {% endif %}
+{% for comment in comments %}
 
-<div style="display: flex; width: 700px; justify-content: space-between;">
-<a href="{% url 'community:community_index' %}">
-<button class="btn-gold">BACK</button>
-</a>
-{% if request.user == post.user %}
-  <a href="{% url 'community:community_update' post.pk %}">
-  <button class="btn-gold">UPDATE</button>
-<form action="{% url 'community:community_delete' post.pk %}" method="POST">
-{% csrf_token %}
-<button class="btn-gold">DELETE</button>
-</form>
-{% endif %}
+<div style="border: solid 1px; padding: 10px;">
+{% comment %} 댓글내용 {% endcomment %}
+  <p>작성자 : {{ comment.user }}</p> 
+  <p>댓글내용 : {{ comment.content }}</p> 
+    <p>생성 : {{ comment.created_at | date:'Y년 m월 d일 h시 i분'}} / 수정 : {{comment.updated_at | date:'Y년 m월 d일 h시 i분'}}&nbsp&nbsp</p>
+  {% if user == comment.user %}     
+  {% comment %} 댓글내용 수정 {% endcomment %}
+    <div style="display: flex;">
+    <button class="comment-update-btn btn-gold" data-comment-id="{{ comment.pk }}" style="width: 150px; height: 40px; padding: 10px;">댓글수정</button>
+    &nbsp&nbsp&nbsp
+    <form action="{% url 'community:community_comment_delete' post.pk comment.pk %}" method="POST" class="d-inline">
+      {% csrf_token %}
+        <button class="btn-gold" style="width: 150px; height: 40px; padding: 10px;">Delete</button>
+    </form>
+    </div>
+    <form class="comment-form comment-form-{{ comment.pk }}" data-form-id="{{ comment.pk }}" data-post-id="{{ post.pk }}" action="{% url 'community:community_comment_update' post.pk comment.pk %}" method="POST" style="display: none;">    
+      {% csrf_token %}
+      <input type="text" class="comment-input-{{ comment.pk }}" name="content" maxlength="100" required="" value={{ comment.content }} size=55 >
+      <button class="btn-gold comment-btn-{{ comment.pk }}" style="width: 150px; height: 40px; padding: 10px; margin-top: 10px;">수정확인</button>
+    </form>    
+       
+  {% endif %}    
 </div>
-{% endblock %}
+  <br><br>
+{% endfor %}
+  <hr>
+  <div style="display: flex; width: 700px; justify-content: space-between;">
+  <a href="{% url 'community:community_index' %}">
+  <button class="btn-gold">BACK</button>
+  </a>
+
+  {% if request.user == post.user %}
+  <a href="{% url 'community:community_update' post.pk %}">
+  <button class="btn-gold">UPDATE</button></a>
+  <form action="{% url 'community:community_delete' post.pk %}" method="POST">
+  {% csrf_token %}
+  <button class="btn-gold">DELETE</button>
+  </form>
+  {% endif %} 
+  
+    </div> 
+  {% endblock %}
+
+{% block script %}
+<script>
+  
+  const buttons = document.querySelectorAll('.comment-update-btn')
+  const forms = document.querySelectorAll('.comment-form')
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+
+  buttons.forEach(button => {
+    button.addEventListener('click', function (event) {
+      event.preventDefault()
+      const commentId = event.target.dataset.commentId
+      const commentForm = document.querySelector(`.comment-form-${commentId}`)
+      if (commentForm.style.display) {
+        commentForm.style.display = "";
+      } else {
+        commentForm.style.display = "none";
+      }
+      console.log('!!!!')
+      //document.getElementById(id).style.visibility = "visible";
+    })
+  })
+/*
+  forms.forEach(form => {
+    form.addEventListener('submit', function (event) {
+      event.preventDefault()
+      const formId = event.target.dataset.formId
+      const postId = event.target.dataset.postId
+      const commentInput = form.querySelector(`.comment-input-${ formId }`)
+      axios({
+        method: 'post',
+        url: `http://127.0.0.1:8000/community/${postId}/comments/${formId}/update/`,
+        headers: {'X-CSRFToken': csrftoken},
+      })
+      .then(res => {
+      const comment_tmp = res.data.comment_form
+      console.log(event)
+      console.log(res)
+      console.log(comment_tmp)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
+    })
+  })*/
+</script>
+{% endblock script %}
