@@ -36,8 +36,8 @@ def community_create(request):
 
 
 @require_safe
-def community_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+def community_detail(request, post_pk):
+    post = get_object_or_404(Post, pk=post_pk)
     comment_form = CommunityCommentForm()
     comments = post.communitycomment_set.all()
     context = {
@@ -92,6 +92,7 @@ def community_comment_create(request, post_pk):
 
 @login_required
 def community_comment_update(request, post_pk, comment_pk):
+    post = get_object_or_404(Post, pk=post_pk)
     comment = get_object_or_404(CommunityComment, pk=comment_pk)
     if request.method == 'POST':
         comment_form = CommunityCommentForm(request.POST, instance=comment)
@@ -101,6 +102,7 @@ def community_comment_update(request, post_pk, comment_pk):
     else:
         comment_form = CommunityCommentForm(instance=comment)
     context = {
+        'post': post,
         'comment_form': comment_form,
     }
     return render(request, 'community/detail.html', context)

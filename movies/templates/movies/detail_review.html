@@ -1,11 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>{{ mode }}</h1>
-<form action="" method="POST">
-{% csrf_token %}
-{{ form.as_p }}
-<button>{{ btn_name }}</button>
-</form>
+
+
+
 <a href="{% url 'movies:movie_index' %}">back</a>
 
 

@@ -33,18 +33,4 @@
 </form>
 </a>
 {% endif %}
-{% comment %} 
-<h3>{{ person.username }}가 작성한 댓글</h3>
-{% for review in person.post_set.all %}
-<p>{{ review.title }}</p>
-{% endfor %}
- {% endcomment %}
-
-{% comment %} 
-{% if request.user.is_authenticated and request.user == person %}
-<h3>내가 좋아요 누른 글 목록</h3>
-{% for review in person.post_set.all %}
-<p>{{ review.title }}</p>
-{% endfor %}
- {% endcomment %}
 {% endblock %}

@@ -76,6 +76,35 @@
 
 #### 1118
 
+- Apps
+
+  ````markdown
+  # accounts
+  - templates
+  change 추가
+  
+  - forms
+  CustomUserChangeForm 추가
+  
+  - urls / views
+  change / delete 추가
+  ````
+
+  ```markdown
+  # community
+  - models
+  created_at, updated_at 추가
+  
+  - urls / views
+  `community_`comment_create, comment_delete 추가
+  ```
+
+- 댓글을 수정할 수 있는 기능을 만들고 싶었는데... 하루를 다 투자해도 해결이 안됨. 추후에 더 고민해봐야 할 과제로..
+
+- 회원정보수정 기능을 만들었는데, 코드 어딘가를 잘못 수정했는지 다시 또 동작을 안함. 다시 찾아볼 예정
+
+- 회원탈퇴를 별도의 인증없이 가능하게 구현했고, 기본적인 기능들을 전부 완료하면 인증도 추가해보고 싶긴 하다.
+
 
 
 ## 🎞 
