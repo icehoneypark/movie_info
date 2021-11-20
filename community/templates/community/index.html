@@ -21,7 +21,7 @@
   <div style="display: flex">
       <p style="width: 10%;">{{ post.pk }}</p>
       <p style="width: 70%; text-overflow: ellipsis;"><a href="{% url 'community:community_detail' post.pk %}">{{ post.title }}</a></p>    
-    <p style="width: 10%;"><a href="{% url 'accounts:profile' post.user%}">{{ post.user }}</a></p>
+    <p style="width: 10%;"><a href="{% url 'accounts:profile' post.user %}">{{ post.user }}</a></p>
     <p style="width: 20%;">{{ post.created_at | date:'Y년 m월 d일 h시 i분' }}</p>
   </div>
   {% endfor %}
