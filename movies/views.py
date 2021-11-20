@@ -7,12 +7,14 @@ from django.core.paginator import Paginator
 
 def movie_index(request):
     movies = Movie.objects.all()
-    paginator = Paginator(movies, 20)
-    page = request.GET.get('page')
+    top_10 = Movie.objects.order_by('-popularity')[:10]
+    # paginator = Paginator(movies, 20)
+    # page = request.GET.get('page')
     context = {
         'movies': movies,
-        'paginator': paginator,
-        'page': page,
+        'top_10': top_10,
+        # 'paginator': paginator,
+        # 'page': page,
     }
     return render(request, 'movies/index.html', context)
 
