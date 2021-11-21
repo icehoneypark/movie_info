@@ -1,10 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Detail</h1>
+<h1>{{ movie.title }}</h1>
 <hr>
-<h3>{{ movie.title }}</h3>
-<p>{{ movie.overview }}</p>
-<p><img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="img" width = 500></p>
+<div style="display: flex;">
+<p style="margin-right: 30px;"><img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="img" style="width: 500px;"></p>
+  <div>
+  <p style="font-size: 35px;">줄거리</p>
+  <p style="font-size: 20px;">{{ movie.overview }}</p>
+  <hr>
+  <p style="font-size: 20px;">개봉일</p><p>
+  {{ date_str1 }}{{ date_str2 }}{{ date_str3 }}{{ date_str4 }}년
+  {{ date_str5 }}{{ date_str6 }}월
+  {{ date_str7 }}{{ date_str8 }}일</p>
+  <p>
+  <hr>
+  {% comment %} <p><span style="font-size: 20px;">개봉일 </span><span>{{ movie.released_date }}</span><p> {% endcomment %}
+  <p style="font-size: 20px;">관객수</p>
+  <p>{{ movie.popularity }}K</p>
+  <hr>
+  <p style="font-size: 20px;">평점</p>
+  <p>{{ movie.vote_avg }}</p>
+  <hr>
+  <p style="font-size: 20px;">장르</p>
+  <p>{{ movie.genres }}</p>
+  </div>
+</div>
 <hr>
 
 {% endblock content %}

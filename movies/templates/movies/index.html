@@ -37,7 +37,7 @@ body{
 	display: block;
 	position: absolute;
 	width: 186px;
-	height: 300px;
+	height: 255px;
 	left: 10px;
 	top: 10px;
 	{% comment %} background: black; {% endcomment %}
@@ -70,28 +70,194 @@ img:hover{
 		transform: rotateY(0deg);
 	}
 	to{
-		transform: rotateY(360deg);
+		transform: rotateY(-360deg);
 	}
 }
 {% endblock css %}
 {% block content %}
-<h1>Home</h1>
+<h1>TOP 10</h1>
 <hr>
 <div class="container-carousel" style="margin-bottom: 200px;">
 		<div id="carousel">
-      {% for top in top_10 %}
-        <figure>
+      {% comment %} {% for top in top_10 %}			 {% endcomment %}
+				{% comment %} <a href="{% url 'movies:movie_detail' top.pk %}">
         <img src="https://image.tmdb.org/t/p/w500/{{ top.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
         <div style="display: flex; justify-content: center; margin-top: 10px;">
           <h6 style="color: rgba(223,190,106,0.7);">{{ top.title }}</h6>
         </div>
-        </figure>        
-      {% endfor %}
+				</a> {% endcomment %}
+				{% comment %} ----------------- 1등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 1</h6>
+				<a href="{% url 'movies:movie_detail' top1.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top1.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top1.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 2등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 2</h6>
+				<a href="{% url 'movies:movie_detail' top2.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top2.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top2.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 3등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 3</h6>
+				<a href="{% url 'movies:movie_detail' top3.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top3.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top3.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 4등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 4</h6>
+				<a href="{% url 'movies:movie_detail' top4.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top4.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top4.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 5등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 5</h6>
+				<a href="{% url 'movies:movie_detail' top5.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top5.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top5.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 6등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 6</h6>
+				<a href="{% url 'movies:movie_detail' top6.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top6.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top6.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 7등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 7</h6>
+				<a href="{% url 'movies:movie_detail' top7.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top7.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top7.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 8등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 8</h6>
+				<a href="{% url 'movies:movie_detail' top8.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top8.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top8.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 9등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 9</h6>
+				<a href="{% url 'movies:movie_detail' top9.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top9.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top9.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 10등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 10</h6>
+				<a href="{% url 'movies:movie_detail' top10.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top10.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top10.title }}</h6>
+        </div>
+				</a>
+        </figure>
+      {% comment %} {% endfor %} {% endcomment %}
 		</div>
 	</div>
-{% for top in top_10 %}
-<p>{{ top.title }}</p>
-{% endfor %}
+	<br>
+	<br>
+	<div style="display: flex;">
+		<div style="width: 10%;">
+		순위
+		</div>
+		<div style="width: 70%;">
+		영화 제목
+		</div>
+		<div style="width: 20%;">
+		장르
+		</div>
+		<div style="width: 10%;">
+		평점
+		</div>
+	</div>
+	<hr>
+	<div style="display: flex; margin-bottom: 100px;">
+			<div style="width: 10%;">
+			<p>1</p>
+			<p>2</p>
+			<p>3</p>
+			<p>4</p>
+			<p>5</p>
+			<p>6</p>
+			<p>7</p>
+			<p>8</p>
+			<p>9</p>
+			<p>10</p>
+			</div>
+			<div style="width: 70%;">
+			<p><a href="{% url 'movies:movie_detail' top1.pk %}">{{ top1.title }}</a></p>
+			<p><a href="{% url 'movies:movie_detail' top2.pk %}">{{ top2.title }}</a></p>
+			<p><a href="{% url 'movies:movie_detail' top3.pk %}">{{ top3.title }}</a></p>
+			<p><a href="{% url 'movies:movie_detail' top4.pk %}">{{ top4.title }}</a></p>
+			<p><a href="{% url 'movies:movie_detail' top5.pk %}">{{ top5.title }}</a></p>
+			<p><a href="{% url 'movies:movie_detail' top6.pk %}">{{ top6.title }}</a></p>
+			<p><a href="{% url 'movies:movie_detail' top7.pk %}">{{ top7.title }}</a></p>
+			<p><a href="{% url 'movies:movie_detail' top8.pk %}">{{ top8.title }}</a></p>
+			<p><a href="{% url 'movies:movie_detail' top9.pk %}">{{ top9.title }}</a></p>
+			<p><a href="{% url 'movies:movie_detail' top10.pk %}">{{ top10.title }}</a></p>
+			</div>
+			<div style="width: 20%;">
+				<p>{{ top1.genres }}</p>
+				<p>{{ top2.genres }}</p>
+				<p>{{ top3.genres }}</p>
+				<p>{{ top4.genres }}</p>
+				<p>{{ top5.genres }}</p>
+				<p>{{ top6.genres }}</p>
+				<p>{{ top7.genres }}</p>
+				<p>{{ top8.genres }}</p>
+				<p>{{ top9.genres }}</p>
+				<p>{{ top10.genres }}</p>
+			</div>
+			<div style="width: 10%;">
+				<p>{{ top1.vote_avg }}</p>
+				<p>{{ top2.vote_avg }}</p>
+				<p>{{ top3.vote_avg }}</p>
+				<p>{{ top4.vote_avg }}</p>
+				<p>{{ top5.vote_avg }}</p>
+				<p>{{ top6.vote_avg }}</p>
+				<p>{{ top7.vote_avg }}</p>
+				<p>{{ top8.vote_avg }}</p>
+				<p>{{ top9.vote_avg }}</p>
+				<p>{{ top10.vote_avg }}</p>
+			</div>
+
+	</div>
+
 {% comment %} {% for movie in movies %}
 <div>{{ movie.pk }} :
 <a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.title }}</a>

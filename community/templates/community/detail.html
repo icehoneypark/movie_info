@@ -6,20 +6,24 @@
 {% block content %}
 
 <h1>{{ post.title }}</h1> 
-{% comment %} <p>&nbsp작성자 : <span><a href="{% url 'accounts:profile' post.user%}"  style="width: 10%;">{{ post.user }}</a></span></p> {% endcomment %}
-<br>
-{% if post.content|length < 1099 %}
-<p style="border: solid 1px; height: 300px; padding: 10px; word-wrap: break-word; font-size: 20px;">{{ post.content }}</p>
-{% else %}
-<p style="border: solid 1px; padding: 10px; word-wrap: break-word; font-size: 20px;">{{ post.content }}</p>
-{% endif %}
+<hr>
 {% if post.community_img %}
 <img src="{{ post.community_img.url }}" alt="community_img" style="width:500px; height:300px;">
+<br><br>
 {% endif %}
-<p>작성일자 : {{ post.created_at | date:'Y년 m월 d일 h시 i분' }}</p>
-<p>수정일자 : {{ post.updated_at | date:'Y년 m월 d일 h시 i분' }}</p>
-{{post.content|length}}
-
+<div style="display: flex; justify-content: space-between;">
+{% comment %} <p>&nbsp작성자 : <span><a href="{% url 'accounts:profile' post.user%}"  style="width: 10%;">{{ post.user }}</a></span></p> {% endcomment %}
+{% if post.content|length < 1099 %}
+<p style="word-wrap: break-word; font-size: 20px; width: 100%;">{{ post.content }}</p>
+{% comment %} <p style="border: solid 1px; height: 300px; padding: 10px; word-wrap: break-word; font-size: 20px;">{{ post.content }}</p> {% endcomment %}
+{% else %}
+<p style="word-wrap: break-word; font-size: 20px;">{{ post.content }}</p>
+{% comment %} <p style="border: solid 1px; padding: 10px; word-wrap: break-word; font-size: 20px;">{{ post.content }}</p> {% endcomment %}
+{% endif %}
+</div>
+<hr>
+<div style="display: flex; justify-content: space-between;">
+<div>
 {% if comments %}
   <p>{{ comments|length }}개의 댓글이 있습니다.</p>
 {% else %} 
@@ -32,13 +36,21 @@
     {{ comment_form }}
     <input type="submit" value="Enter">
   </form>
-<br>
 {% endif %}
+</div>
+<div style="display: flex; align-items: end;">
+<div>
+<p>작성일자 : {{ post.created_at | date:'Y년 m월 d일 h시 i분' }}</p>
+<p>수정일자 : {{ post.updated_at | date:'Y년 m월 d일 h시 i분' }}</p>
+</div>
+</div>
+</div>
+{% if comments %}
+<div>
 {% for comment in comments %}
-
-<div style="border: solid 1px; padding: 10px;">
 {% comment %} 댓글내용 {% endcomment %}
-  <p>작성자 : {{ comment.user }}</p> 
+    <hr>
+  <p style="margin-top: 10px;">작성자 : {{ comment.user }}</p> 
   <p>댓글내용 : {{ comment.content }}</p> 
     <p>생성 : {{ comment.created_at | date:'Y년 m월 d일 h시 i분'}} / 수정 : {{comment.updated_at | date:'Y년 m월 d일 h시 i분'}}&nbsp&nbsp</p>
   {% if user == comment.user %}     
@@ -57,10 +69,10 @@
       <button class="btn-gold comment-btn-{{ comment.pk }}" style="width: 150px; height: 40px; padding: 10px; margin-top: 10px;">수정확인</button>
     </form>    
        
-  {% endif %}    
-</div>
-  <br><br>
+  {% endif %}
 {% endfor %}
+</div>
+{% endif %}
   <hr>
   <div style="display: flex; width: 700px; justify-content: space-between;">
   <a href="{% url 'community:community_index' %}">
