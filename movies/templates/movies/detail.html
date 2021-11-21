@@ -1,10 +1,111 @@
 {% extends 'base.html' %}
+{% block css %}
+<style>
+</style>
+{% endblock css %}
 {% block content %}
+
 <h1>Detail</h1>
 <hr>
 <h3>{{ movie.title }}</h3>
 <p>{{ movie.overview }}</p>
 <p><img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="img" width = 500></p>
 <hr>
+{% if reviews %}
+  <p>{{ reviews|length }}개의 댓글이 있습니다.</p>
+{% else %} 
+<p>0개의 댓글이 있습니다</p>
+{% endif %}
+{% if request.user.is_authenticated %}
+<form action="{% url 'movies:movie_review_create' movie.pk %}" method="POST">
+  {% csrf_token %}
+  {{ review_form }}
+  <input type="submit" value="Enter">
+</form>
+<br>
+{% endif %}
+{% for review in reviews %}
+
+<div style="border: solid 1px; padding: 10px;">
+  <p>작성자 : {{ review.user }}</p> 
+  <p>댓글내용 : {{ review.content }}</p> 
+  <p>평점 : {{ review.rank }}</p>
+    <p>생성 : {{ review.created_at | date:'Y년 m월 d일 h시 i분'}} / 수정 : {{ review.updated_at | date:'Y년 m월 d일 h시 i분'}}&nbsp&nbsp</p>
+  {% if user == review.user %}
+    <div style="display: flex;">
+    <button class="review-update-btn btn-gold" data-review-id="{{ review.pk }}" style="width: 150px; height: 40px; padding: 10px;">댓글수정</button>
+    &nbsp&nbsp&nbsp
+    <form action="{% url 'movies:movie_review_delete' movie.pk review.pk %}" method="POST" class="d-inline">
+      {% csrf_token %}
+        <button class="btn-gold" style="width: 150px; height: 40px; padding: 10px;">Delete</button>
+    </form>
+    </div>
+    <form class="review-form review-form-{{ review.pk }}" data-form-id="{{ review.pk }}" data-movie-id="{{ movie.pk }}" action="{% url 'movies:movie_review_update' movie.pk review.pk %}" method="POST" style="display: none;">    
+      {% csrf_token %}
+      <input type="text" class="review-input-{{ review.pk }}" name="content" maxlength="100" required="" value={{ review.content }} size=55 >
+      <select class="review-input-{{ review.pk }}" name="rank" value={{ review.rank }}>
+        <option value="1">★</option>
+        <option value="2">★★</option>
+        <option value="3">★★★</option>
+        <option value="4">★★★★</option>
+        <option value="5">★★★★★</option>
+      </select>
+      <button class="btn-gold review-btn-{{ review.pk }}" style="width: 150px; height: 40px; padding: 10px; margin-top: 10px;">수정확인</button>
+    </form>
+  {% endif %}
+</div>
+<br><br>
+{% endfor %}
+
+<div style="display: flex; width: 700px; justify-content: space-between;">
+<a href="{% url 'movies:movie_index' %}">
+<button class="btn-gold">BACK</button>
+</a>
 
 {% endblock content %}
+{% block script %}
+<script>
+  
+  const buttons = document.querySelectorAll('.review-update-btn')
+  const forms = document.querySelectorAll('.review-form')
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+
+  buttons.forEach(button => {
+    button.addEventListener('click', function (event) {
+      event.preventDefault()
+      const reviewId = event.target.dataset.reviewId
+      const reviewForm = document.querySelector(`.review-form-${reviewId}`)
+      if (reviewForm.style.display) {
+        reviewForm.style.display = "";
+      } else {
+        reviewForm.style.display = "none";
+      }
+      console.log('!!!!')
+      //document.getElementById(id).style.visibility = "visible";
+    })
+  })
+/*
+  forms.forEach(form => {
+    form.addEventListener('submit', function (event) {
+      event.preventDefault()
+      const formId = event.target.dataset.formId
+      const postId = event.target.dataset.postId
+      const reviewInput = form.querySelector(`.review-input-${ formId }`)
+      axios({
+        method: 'post',
+        url: `http://127.0.0.1:8000/community/${postId}/reviews/${formId}/update/`,
+        headers: {'X-CSRFToken': csrftoken},
+      })
+      .then(res => {
+      const review_tmp = res.data.review_form
+      console.log(event)
+      console.log(res)
+      console.log(review_tmp)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
+    })
+  })*/
+</script>
+{% endblock script %}

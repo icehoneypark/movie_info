@@ -124,3 +124,15 @@ def community_comment_delete(request, post_pk, comment_pk):
         if request.user == comment.user:
             comment.delete()
     return redirect('community:community_detail', post_pk)
+
+
+@require_POST
+def community_likes(request, post_pk):
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=post_pk)
+        if post.like_users.filter(pk=request.user.pk).exists():
+            post.like_users.remove(request.user)
+        else:
+            post.like_users.add(request.user)
+        return redirect('community:community_detail', post_pk)
+    return redirect('accounts:login')

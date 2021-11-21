@@ -14,7 +14,7 @@ class Movie(models.Model):
     def __str__(self):
         return self.title
 
-class MovieComment(models.Model):
+class MovieReview(models.Model):
     RANKS = [
         (1, '★'),
         (2, '★★'),
@@ -26,6 +26,8 @@ class MovieComment(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     rank = models.IntegerField(choices=RANKS, default=5)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.content

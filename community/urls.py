@@ -11,4 +11,5 @@ urlpatterns = [
     path('<int:post_pk>/comments/<int:comment_pk>/update/', views.community_comment_update, name='community_comment_update'),
     path('<int:post_pk>/comments/<int:comment_pk>/delete/', views.community_comment_delete, name='community_comment_delete'),
     path('<int:post_pk>/comments/create/', views.community_comment_create, name='community_comment_create'),
+    path('<int:post_pk>/likes/', views.community_likes, name='community_likes'),
 ]

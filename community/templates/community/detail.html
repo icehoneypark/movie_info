@@ -16,6 +16,16 @@
 {% if post.community_img %}
 <img src="{{ post.community_img.url }}" alt="community_img" style="width:500px; height:300px;">
 {% endif %}
+
+<form action="{% url 'community:community_likes' post.pk %}" method='POST'>
+  {% csrf_token %}
+  <span>{{ post.like_users.all|length }}</span>
+  {% if user in post.like_users.all %}
+    <button><i class="fas fa-heart" style='color: red'></i>  {{ post.like_users.all|length }}</button>
+    {% else %}
+    <button><i class="fas fa-heart"></i>  {{ post.like_users.all|length }}</button>
+  {% endif %}
+</form>
 <p>작성일자 : {{ post.created_at | date:'Y년 m월 d일 h시 i분' }}</p>
 <p>수정일자 : {{ post.updated_at | date:'Y년 m월 d일 h시 i분' }}</p>
 {{post.content|length}}
@@ -55,7 +65,7 @@
       {% csrf_token %}
       <input type="text" class="comment-input-{{ comment.pk }}" name="content" maxlength="100" required="" value={{ comment.content }} size=55 >
       <button class="btn-gold comment-btn-{{ comment.pk }}" style="width: 150px; height: 40px; padding: 10px; margin-top: 10px;">수정확인</button>
-    </form>    
+    </form>
        
   {% endif %}    
 </div>

@@ -107,6 +107,86 @@
 
 
 
+### 1119
+
+- Apps
+
+  ```markdown
+  # accounts
+  - templates
+  profile -> 프로필 이미지 업로드 추가
+  
+  - models
+  커스텀 모델에 이미지 필드 추가
+  
+  - urls / views
+  change -> request.FILES 추가
+  ```
+
+  ```markdown
+  # community
+  - templates
+  form -> 게시글 내 이미지 업로드 추가
+  
+  - models
+  이미지 필드 추가
+  
+  - urls / views
+  `community_`index / create / detail / update / delete
+  ```
+
+  ```markdown
+  # movies
+  - fixtures
+  TMDB API를 이용해 영화 데이터 추가
+  
+  - models
+  영화 정보를 받아오기 위한 모델필드 조정
+  ```
+
+- 어제 서버를 킬 때는 문제가 없었는데 오늘 코드를 추가하는 도중에 프로필과 커뮤니티 댓글을 불러오는 부분에서 pk값을 인식하지 못하는 에러가 났었다. 문제를 찾아내는 데 시간이 꽤 오래 걸렸는데 이 경험을 기회 삼아 문제가 생겼을 때 정보가 이동하는 경로를 천천히 찾아보는 습관을 들여야 할 것 같다.
+
+
+
+### 1120
+
+- Apps
+
+  ```markdown
+  # accounts
+  - templates
+  signup -> 생년월일 양식 추가
+  
+  - models
+  비밀번호 검증용 필드 추가
+  ```
+
+  ```markdown
+  # community
+  
+  
+  - templates
+  detail -> 좋아요 버튼 추가
+  
+  - models
+  필드 추가
+  
+  - urls / views
+  `community_`likes
+  ```
+
+  ```markdown
+  # movies
+  - urls / views
+  `movie_comment_`create / update / delete
+  ```
+
+- 어느 순간부터 회원가입이 안되는데 내일 날잡고 손을 봐야할 것 같다.
+
+- 영화 Detail 항목에서 댓글 기능을 넣었는데 양식이 안떠서 추가적인 확인 필요
+
+
+
 ## 🎞 
 
 ### A. 
