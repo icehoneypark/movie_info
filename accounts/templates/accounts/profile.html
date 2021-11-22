@@ -1,24 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
 <div style="display: flex;">
-<h1>{{ person.username }}</h1>
+<h1>{{ person.username }}</h1>&nbsp&nbsp&nbsp&nbsp&nbsp
 {% if request.user == person %}
-&nbsp&nbsp&nbsp
 <a href="{% url 'accounts:change' %}"><button class="btn-gold" style="width: 150px; height: 40px; padding: 10px;">회원정보 수정</button></a>
 &nbsp&nbsp&nbsp
-<form action="{% url 'accounts:delete' %}" method=POST>
+<form action="{% url 'accounts:delete' %}" method="POST">
 {% csrf_token %}
 <button class="btn-gold" style="width: 150px; height: 40px; padding: 10px;">회원탈퇴</button>
 </form>
+{% else %}
+<div>
+  <form id="follow-form" data-user-id="{{ person.pk }}" style="margin-top: 5px;">
+        {% csrf_token %}
+        {% if user in person.followers.all %}
+          <button class="btn-gold" style="width: 120px; padding: 10px;">언팔로우</button>
+        {% else %}
+          <button class="btn-gold" style="width: 120px; padding: 10px;">팔로우</button>
+        {% endif %}
+      </form>
+</div>
 {% endif %}
 </div>
-<hr>
+<hr style="margin-top: 8px;">
+<div style="display: flex;">
 <span>게시글 : {{ person.post_set.all|length }}</span>
-
+,&nbsp&nbsp&nbsp
 {% with followings=person.followings.all followers=person.followers.all %}
   <div id="follow-cnt">
-    <div>팔로잉 수 : {{ followings|length }} / 팔로워 수 : {{ followers|length }}</div>
+    <div><a href="#"data-bs-toggle="modal" data-bs-target="#exampleModal-followings" class="follow">팔로우 : {{ followings|length }}</a>
+    ,&nbsp&nbsp&nbsp<a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal-followers" class="follower">팔로워 : {{ followers|length }}</a></div>
   </div>
+  {% comment %} ---
   {% if user != person %}
     <div>
       <form id="follow-form" data-user-id="{{ person.pk }}">
@@ -31,20 +44,20 @@
       </form>
     </div>
   {% endif %}
+  --- {% endcomment %}
 {% endwith %}
-
-<br><br>
-
+</div>
 {% if person.email %}
 <br>
-<span>e-mail : {{ person.email }}</span>
+<span>이메일 : {{ person.email }}</span>
 <br>
 {% endif %}
 <br>
 {% if person.profile_img %}
-  <span>profile image : <img src="{{ person.profile_img.url }}" alt="profile_img" style="width: 50px; height: 50px;"></span>
+  <span>프로필 사진 : <img src="{{ person.profile_img.url }}" alt="profile_img" style="width: 50px; height: 50px;"></span>
 {% endif %}
 <br>
+<hr>
 <h3>{{ person.username }}가 작성한 글</h3>
 {% for post in person.post_set.all %}
 <p><a href="{% url 'community:community_detail' post.pk %}">{{ post.title }}</a></p>
@@ -70,7 +83,39 @@
 {% for moviereview in person.moviereview_set.all %}
 <p><a href="{% url 'movies:movie_detail' moviereview.movie.pk %}">{{ moviereview.movie }}</a></p>
 {% endfor %}
-{% endblock content %}
+<div class="modal fade" id="exampleModal-followings" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="background-color : rgba(50, 40, 31, 0.55);">
+      <div class="modal-content" style="background-color : rgba(50, 40, 31, 0.55);">
+      <p style="margin: 15px 10px 0; font-size: 20px">팔로우</p>
+      <hr>
+      {% for follow in person.followings.all %}
+      <p><a href={% url 'accounts:profile' follow.username %}><img src="{{ follow.profile_img.url }}" alt="" style="
+      width: 50px; height: 50px; 
+      margin-left: 15px;
+      -webkit-border-radius: 30px;">
+      &nbsp&nbsp{{ follow.username }}</a></p>
+      {% endfor %}      
+      <button type="button" class="btn-gold" data-bs-dismiss="modal" aria-label="Close" style="">Close</button>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="exampleModal-followers" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="background-color : rgba(50, 40, 31, 0.55);">
+      <div class="modal-content" style="background-color : rgba(50, 40, 31, 0.55);">
+      <p style="margin: 15px 10px 0; font-size: 20px">팔로워</p>
+      <hr>
+      {% for follower in person.followers.all %}
+      <p><a href={% url 'accounts:profile' follower.username %}><img src="{{ follower.profile_img.url }}" alt="" style="
+      width: 50px; height: 50px; 
+      margin-left: 15px;
+      -webkit-border-radius: 30px;">
+      &nbsp&nbsp{{ follower.username }}</a></p>
+      {% endfor %}
+      <button type="button" class="btn-gold" data-bs-dismiss="modal" aria-label="Close" style="">Close</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
 
 {% block script %}
   <script>
@@ -91,14 +136,16 @@
           const isFollowed = response.data.isFollowed
           const followers_cnt = response.data.followers_cnt
           const followings_cnt = response.data.followings_cnt
-          const followCountDiv = document.querySelector('#follow-cnt > div')
+          const followCountDivfollow = document.querySelector('#follow-cnt > div > .follow')
+          const followCountDivfollower = document.querySelector('#follow-cnt > div > .follower')
 
           if (isFollowed === true) {
             followBtn.innerText = '언팔로우'
           } else {
             followBtn.innerText = '팔로우'
           }
-          followCountDiv.innerText = `팔로잉 수 : ${followings_cnt} / 팔로워 수 : ${followers_cnt}`
+          followCountDivfollow.innerText = `팔로우 : ${followings_cnt}`
+          followCountDivfollower.innerText = `팔로워 : ${followers_cnt}`
         })
     })
   </script>
