@@ -6,7 +6,6 @@ from .models import Movie, MovieReview
 from .forms import MovieReviewForm
 from django.core.paginator import Paginator
 
-
 @require_http_methods(['GET', 'POST'])
 def main(request):
     context= {
@@ -154,3 +153,37 @@ def movie_list(request):
         'movies6': movies6,
     }
     return render(request, 'movies/movie_list.html', context)
+
+# -----------------------tmdb API-----------------------
+
+import requests
+
+class TMDBHelper:
+    def __init__(self, api_key=None):
+        self.api_key = api_key
+
+
+    def get_request_url(self, method, **kwargs):
+        base_url = 'https://api.themoviedb.org/3'
+        request_url = base_url + method
+        request_url += f'?api_key={self.api_key}'
+
+        for k, v in kwargs.items():
+            request_url += f'&{k}={v}'
+
+        return request_url
+    def get_movie_id(self, title):
+        request_url = self.get_request_url('/search/movie', query=title, region='KR', language='ko')
+        data = requests.get(request_url).json()
+
+tmdb_helper = TMDBHelper('6163fbe091536a27c8951c10ecb40d6c')
+
+def tmdb(request):
+    # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
+    url = tmdb_helper.get_request_url('/movie/upcoming',region='KR', language='ko')
+    data = requests.get(url).json()
+    data_results = data['results']
+    context = {
+        'movies': data_results
+    }
+    return render(request, 'movies/tmdb.html', context)
