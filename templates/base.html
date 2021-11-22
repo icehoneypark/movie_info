@@ -1,101 +1,26 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,700&subset=latin-ext" rel="stylesheet">
+
   <title>Document</title>
-  <style>  
-  .btn-gold {
-    display: inline-block;
-    background: transparent;
-    text-transform: uppercase;
-    font-weight: 500;
-    font-style: normal;
-    font-size: 0.8rem;
-    letter-spacing: 0.3em;
-    color: rgba(223,190,106,0.7);
-    border-radius: 0;
-    padding: 18px 80px 20px;
-    transition: all 0.7s ease-out;
-    background: linear-gradient(270deg, rgba(223,190,106,0.8), rgba(146,111,52,0.8), rgba(34,34,34,0), rgba(34,34,34,0));
-    background-position: 1% 50%;
-    background-size: 300% 300%;
-    text-decoration: none;
-    margin: 0;
-    border: none;
-    border: 1px solid rgba(223,190,106,0.3);
-  }
-  .btn-gold:hover {
-    color: #fff;
-    border: 1px solid rgba(223,190,106,0);
-    color: $white;
-    background-position: 99% 50%;
-  }
-  body {
-    background: #231f20;
-    color: rgba(223,190,106,0.7);
-    font-family: "Helvetica Neue", Helvetica, Arials, sans;
-  }
-
-  a {    
-    color: rgba(223,190,106,0.7);
-    font-family: "Helvetica Neue", Helvetica, Arials, sans;
-    text-decoration : none;
-  }
-
-  a:hover {
-    color: rgba(223,190,106,0.4);
-    font-family: "Helvetica Neue", Helvetica, Arials, sans;
-    text-decoration : none;
-  }
-
-  .nav-link {
-    color: rgba(223,190,106,0.7);
-    font-family: "Helvetica Neue", Helvetica, Arials, sans;
-    text-decoration : none;
-  }
-
-  .nav-link:hover {
-    color: rgba(223,190,106,0.4);
-    font-family: "Helvetica Neue", Helvetica, Arials, sans;
-    text-decoration : none;
-  }
-  
-  .nav-link:focus {
-    color: rgba(223,190,106,0.4);
-    font-family: "Helvetica Neue", Helvetica, Arials, sans;
-    text-decoration : none;
-  }
-
-  .nav-link:active {
-    color: rgba(223,190,106,0.4);
-    font-family: "Helvetica Neue", Helvetica, Arials, sans;
-    text-decoration : none;
-    background-color : rgba(50, 40, 31, 0.55);
-  }
-
-  nav > .nav-item > ul
-   {
-    background-color : rgba(50, 40, 31, 0.55);
-    color : rgba(223,190,106,0.7);
-  }
-
-  nav > .nav-item > ul > a > button
-   { 
-    outline: 0;
-    width: 158px;
-    border: 0;
-    background-color : rgba(50, 40, 31, 0.55);
-    color: rgba(223,190,106,0.7);
-  }
-
-
-  nav > .nav-item > ul > 
+  <style>
   {% block css %}
   {% endblock css %}
   </style>
+  
+  <link rel="stylesheet" href="{% static "css/base.css" %}">
 </head>
 <body>
 <nav style="position: sticky; top: 0px; background: #231f20; line-height: 50px; height: 50px; margin: 10px; display: flex; justify-content: space-between;">
@@ -107,7 +32,13 @@
   </div>
   <div class="nav-item dropdown" style="margin-right: 20px;">
     <a class="nav-link dropdown" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Accounts
+    {% if request.user.is_authenticated %}
+    <img src="{{ user.profile_img.url }}" alt="" style="
+    width: 50px; height: 50px; 
+    -webkit-border-radius: 30px;">
+    {% else %}
+    Accounts
+    {% endif %}
     </a>
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: rgba(50, 40, 31, 1); opacity : 1;">
     {% if request.user.is_authenticated %}

@@ -1,7 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<div style="display: flex;">
 <h1>{{ person.username }}</h1>
+{% if request.user == person %}
+&nbsp&nbsp&nbsp
+<a href="{% url 'accounts:change' %}"><button class="btn-gold" style="width: 150px; height: 40px; padding: 10px;">회원정보 수정</button></a>
+&nbsp&nbsp&nbsp
+<form action="{% url 'accounts:delete' %}" method=POST>
+{% csrf_token %}
+<button class="btn-gold" style="width: 150px; height: 40px; padding: 10px;">회원탈퇴</button>
+</form>
+{% endif %}
+</div>
+<hr>
 <span>게시글 : {{ person.post_set.all|length }}</span>
 &nbsp&nbsp&nbsp
 <span>followers : {{ person.followers.all|length }}</span>
@@ -9,13 +20,14 @@
 <span>followings : {{ person.followings.all|length }}</span>
 <br>
 {% if person.email %}
+<br>
 <span>e-mail : {{ person.email }}</span>
+<br>
 {% endif %}
 <br>
 {% if person.profile_img %}
   <span>profile image : <img src="{{ person.profile_img.url }}" alt="profile_img" style="width: 50px; height: 50px;"></span>
 {% endif %}
-<br>
 <br>
 {% if request.user.is_authenticated and request.user != person %}
   <form action="{% url 'accounts:follow' person.username %}" method="POST">
@@ -27,16 +39,30 @@
     {% endif %}
   </form>
 {% endif %}
+<hr>
 <h3>{{ person.username }}가 작성한 글</h3>
 {% for post in person.post_set.all %}
 <p><a href="{% url 'community:community_detail' post.pk %}">{{ post.title }}</a></p>
+{% empty %}
+<p>작성한 글이 없습니다.</p>
 {% endfor %}
-{% if request.user == person %}
-<a href="{% url 'accounts:change' %}">회원정보수정</a>
-<form action="{% url 'accounts:delete' %}" method=POST>
-{% csrf_token %}
-<input type="submit" value="회원탈퇴">
-</form>
-</a>
-{% endif %}
+<hr>
+<h3>{{ person.username }}가 작성한 댓글</h3>
+{% for comment in person.communitycomment_set.all %}
+<p><a href="{% url 'community:community_detail' comment.post.pk %}">{{ comment.content }}</a></p>
+{% empty %}
+<p>작성한 댓글이 없습니다.</p>
+{% endfor %}
+<hr>
+<h3>{{ person.username }}가 좋아요 누른 글</h3>
+{% for post in person.like_post.all %}
+<p><a href="{% url 'community:community_detail' post.pk %}">{{ post.title }}</a></p>
+{% empty %}
+좋아요 누른 글이 없습니다.
+{% endfor %}
+<hr>
+<h3>{{ person.username }}가 평점 남긴 영화</h3>
+{% for moviereview in person.moviereview_set.all %}
+<p><a href="{% url 'movies:movie_detail' moviereview.movie.pk %}">{{ moviereview.movie }}</a></p>
+{% endfor %}
 {% endblock %}

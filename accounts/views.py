@@ -1,8 +1,9 @@
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.shortcuts import get_object_or_404, redirect, render
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from django.contrib.auth import get_user_model, login as auth_login
+from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth import update_session_auth_hash, get_user_model
 from django.views.decorators.http import require_http_methods, require_safe, require_POST
 from django.contrib.auth.decorators import login_required
 
@@ -88,3 +89,19 @@ def follow(request, username):
     else:
         person.followers.add(request.user)
     return redirect('accounts:profile', person.username)
+
+@login_required
+@require_http_methods(['GET', 'POST'])
+def password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return redirect('community:community_index')
+    else:
+        form = PasswordChangeForm(request.user)
+    context = {
+        'form': form,
+    }
+    return render(request, 'accounts/password.html', context)

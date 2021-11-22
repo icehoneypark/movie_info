@@ -45,7 +45,7 @@
 {% endif %}
 {% for review in reviews %}
 
-<div style="border: solid 1px; padding: 10px;">
+<hr>
   <p>작성자 : {{ review.user }}</p> 
   <p>댓글내용 : {{ review.content }}</p> 
   <p>평점 : {{ review.rank }}</p>
@@ -72,9 +72,8 @@
       <button class="btn-gold review-btn-{{ review.pk }}" style="width: 150px; height: 40px; padding: 10px; margin-top: 10px;">수정확인</button>
     </form>
   {% endif %}
-</div>
-<br><br>
 {% endfor %}
+<hr>
 
 <div style="display: flex; width: 700px; justify-content: space-between;">
 <a href="{% url 'movies:movie_index' %}">

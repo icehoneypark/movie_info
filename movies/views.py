@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_safe, require_POST
+from django.views.decorators.http import require_safe, require_POST, require_http_methods
 from django.contrib.auth.decorators import login_required
 from .models import Movie, MovieReview
 from .forms import MovieReviewForm
 
+
+@require_http_methods(['GET', 'POST'])
+def main(request):
+    context= {
+    }
+    return render(request, 'main.html', context)
 
 def movie_index(request):
     # movies = Movie.objects.all()
@@ -115,19 +121,21 @@ def movie_review_delete(request, movie_pk, review_pk):
 
 
 def movie_list(request):
+    movies = Movie.objects.order_by('-released_date')[1:60]
     movies1_start = Movie.objects.order_by('-released_date')[0]
     movies1 = Movie.objects.order_by('-released_date')[1:10]
     movies2_start = Movie.objects.order_by('-released_date')[10]
     movies2 = Movie.objects.order_by('-released_date')[11:20]
     movies3_start = Movie.objects.order_by('-released_date')[20]
-    movies3 = Movie.objects.order_by('-released_date')[21:10]
+    movies3 = Movie.objects.order_by('-released_date')[21:30]
     movies4_start = Movie.objects.order_by('-released_date')[30]  
-    movies4 = Movie.objects.order_by('-released_date')[31:10]  
+    movies4 = Movie.objects.order_by('-released_date')[31:40]  
     movies5_start = Movie.objects.order_by('-released_date')[40]
-    movies5 = Movie.objects.order_by('-released_date')[41:10]
+    movies5 = Movie.objects.order_by('-released_date')[41:50]
     movies6_start = Movie.objects.order_by('-released_date')[50]
-    movies6 = Movie.objects.order_by('-released_date')[51:10]
+    movies6 = Movie.objects.order_by('-released_date')[51:60]
     context = {
+        'movies': movies,
         'movies1_start': movies1_start,
         'movies1': movies1,
         'movies2_start': movies2_start,
