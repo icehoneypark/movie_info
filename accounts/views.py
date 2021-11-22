@@ -1,3 +1,4 @@
+from django.http.response import JsonResponse
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import get_object_or_404, redirect, render
 from .forms import CustomUserCreationForm, CustomUserChangeForm
@@ -80,11 +81,23 @@ def profile(request, username):
     }
     return render(request, 'accounts/profile.html', context)
 
-
-def follow(request, username):
-    person = get_object_or_404(get_user_model(), username=username)
-    if person.followers.filter(pk=request.user.pk).exists():
-        person.followers.remove(request.user)
-    else:
-        person.followers.add(request.user)
-    return redirect('accounts:profile', person.username)
+@require_POST
+def follow(request, user_pk):
+    if request.user.is_authenticated:
+        person = request.user
+        another = get_object_or_404(get_user_model(), pk=user_pk)
+        if another != person:
+            if another.followers.filter(pk=person.pk).exists():
+                another.followers.remove(person)
+                isFollowed = False
+            else:
+                another.followers.add(person)
+                isFollowed = True
+            data = {
+                'isFollowed': isFollowed,
+                'followings_cnt': another.followings.count(),
+                'followers_cnt': another.followers.count(),
+            }
+            return JsonResponse(data)
+        return redirect('accounts:profile', another.username)
+    return redirect('accounts:login')

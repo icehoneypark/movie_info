@@ -195,11 +195,14 @@ img:hover{
 		<div style="width: 10%;">
 		순위
 		</div>
-		<div style="width: 70%;">
+		<div style="width: 50%;">
 		영화 제목
 		</div>
 		<div style="width: 20%;">
 		장르
+		</div>
+		<div style="width: 20%;">
+		관객수
 		</div>
 		<div style="width: 10%;">
 		평점
@@ -219,7 +222,7 @@ img:hover{
 			<p>9</p>
 			<p>10</p>
 			</div>
-			<div style="width: 70%;">
+			<div style="width: 50%;">
 			<p><a href="{% url 'movies:movie_detail' top1.pk %}">{{ top1.title }}</a></p>
 			<p><a href="{% url 'movies:movie_detail' top2.pk %}">{{ top2.title }}</a></p>
 			<p><a href="{% url 'movies:movie_detail' top3.pk %}">{{ top3.title }}</a></p>
@@ -232,16 +235,28 @@ img:hover{
 			<p><a href="{% url 'movies:movie_detail' top10.pk %}">{{ top10.title }}</a></p>
 			</div>
 			<div style="width: 20%;">
-				<p>{{ top1.genres }}</p>
-				<p>{{ top2.genres }}</p>
-				<p>{{ top3.genres }}</p>
-				<p>{{ top4.genres }}</p>
-				<p>{{ top5.genres }}</p>
-				<p>{{ top6.genres }}</p>
-				<p>{{ top7.genres }}</p>
-				<p>{{ top8.genres }}</p>
-				<p>{{ top9.genres }}</p>
-				<p>{{ top10.genres }}</p>
+				<p>{{ top1.genres|slice:"2:-2"|cut:"'" }}</p>
+				<p>{{ top2.genres|slice:"2:-2"|cut:"'" }}</p>
+				<p>{{ top3.genres|slice:"2:-2"|cut:"'" }}</p>
+				<p>{{ top4.genres|slice:"2:-2"|cut:"'" }}</p>
+				<p>{{ top5.genres|slice:"2:-2"|cut:"'" }}</p>
+				<p>{{ top6.genres|slice:"2:-2"|cut:"'" }}</p>
+				<p>{{ top7.genres|slice:"2:-2"|cut:"'" }}</p>
+				<p>{{ top8.genres|slice:"2:-2"|cut:"'" }}</p>
+				<p>{{ top9.genres|slice:"2:-2"|cut:"'" }}</p>
+				<p>{{ top10.genres|slice:"2:-2"|cut:"'" }}</p>
+			</div>
+			<div style="width: 20%;">
+				<p>{{ top1.popularity }}</p>
+				<p>{{ top2.popularity }}</p>
+				<p>{{ top3.popularity }}</p>
+				<p>{{ top4.popularity }}</p>
+				<p>{{ top5.popularity }}</p>
+				<p>{{ top6.popularity }}</p>
+				<p>{{ top7.popularity }}</p>
+				<p>{{ top8.popularity }}</p>
+				<p>{{ top9.popularity }}</p>
+				<p>{{ top10.popularity }}</p>
 			</div>
 			<div style="width: 10%;">
 				<p>{{ top1.vote_avg }}</p>

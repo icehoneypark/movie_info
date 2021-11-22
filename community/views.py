@@ -88,6 +88,7 @@ def community_comment_create(request, post_pk):
             comment.post = post
             comment.user = request.user
             comment.save()
+        # return JsonResponse(comment)
         return redirect('community:community_detail', post.pk)
     return redirect('accounts:login')
 
@@ -132,7 +133,13 @@ def community_likes(request, post_pk):
         post = get_object_or_404(Post, pk=post_pk)
         if post.like_users.filter(pk=request.user.pk).exists():
             post.like_users.remove(request.user)
+            likes = False
         else:
             post.like_users.add(request.user)
-        return redirect('community:community_detail', post_pk)
+            likes = True
+        context = {
+            'likes': likes,
+            'count': post.like_users.count(),
+        }
+        return JsonResponse(context)
     return redirect('accounts:login')

@@ -25,8 +25,8 @@
   <p style="font-size: 20px;">평점</p>
   <p>{{ movie.vote_avg }}</p>
   <hr>
-  <p style="font-size: 20px;">장르</p>
-  <p>{{ movie.genres }}</p>
+  <p id="genresList" style="font-size: 20px;">장르</p>
+  <p>{{ movie.genres|slice:"2:-2"|cut:"'" }}</p>
   </div>
 </div>
 <hr>
@@ -84,7 +84,6 @@
 {% endblock content %}
 {% block script %}
 <script>
-  
   const buttons = document.querySelectorAll('.review-update-btn')
   const forms = document.querySelectorAll('.review-form')
   const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value

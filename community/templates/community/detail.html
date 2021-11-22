@@ -5,18 +5,24 @@
 {% endblock css %}
 {% block content %}
 <div style="display: flex; justify-content: space-between;">
-<h1>{{ post.title }}</h1> 
-<form action="{% url 'community:community_likes' post.pk %}" method='POST'>
-  {% csrf_token %}
-  <span>{{ post.like_users.all|length }}</span>
-  {% if user in post.like_users.all %}
-    <button><i class="fas fa-heart" style='color: red'></i>  {{ post.like_users.all|length }}</button>
-    {% else %}
-    <button><i class="fas fa-heart"></i>  {{ post.like_users.all|length }}</button>
-  {% endif %}
-</form>
+  <h1>{{ post.title }}</h1> 
+  <div>
+    <form class="like-form" data-post-id="{{ post.pk }}">
+      {% csrf_token %}
+      {% if user in post.like_users.all %}
+        <button id="like-button-{{ post.pk }}">좋아요 취소</button>
+      {% else %}
+        <button id="like-button-{{ post.pk }}">좋아요</button>
+      {% endif %}
+    </form>
+    <p>
+      <span id="like-count-{{ post.pk }}">{{ post.like_users.all|length }}</span>명이 이 글을 좋아합니다.
+    </p>
+  </div>
 </div>
+
 <hr>
+
 {% if post.community_img %}
 <img src="{{ post.community_img.url }}" alt="community_img" style="width:500px; height:300px;">
 <br><br>
@@ -31,6 +37,8 @@
 {% comment %} <p style="border: solid 1px; padding: 10px; word-wrap: break-word; font-size: 20px;">{{ post.content }}</p> {% endcomment %}
 {% endif %}
 </div>
+<p>작성일자 : {{ post.created_at | date:'Y년 m월 d일 h시 i분' }}</p>
+<p>수정일자 : {{ post.updated_at | date:'Y년 m월 d일 h시 i분' }}</p>
 <hr>
 <div style="display: flex; justify-content: space-between;">
 <div>
@@ -39,6 +47,13 @@
 {% else %} 
 <p>0개의 댓글이 있습니다</p>
 {% endif %}
+
+</div>
+<div style="display: flex; align-items: end;">  
+<div>
+</div>
+</div>
+</div>
 {% comment %} 댓글작성 {% endcomment %}
   {% if request.user.is_authenticated %}
   <form action="{% url 'community:community_comment_create' post.pk %}" method="POST">
@@ -47,24 +62,18 @@
     <input type="submit" value="Enter">
   </form>
 {% endif %}
-</div>
-<div style="display: flex; align-items: end;">
-<div>
-<p>작성일자 : {{ post.created_at | date:'Y년 m월 d일 h시 i분' }}</p>
-<p>수정일자 : {{ post.updated_at | date:'Y년 m월 d일 h시 i분' }}</p>
-</div>
-</div>
-</div>
-{% if comments %}
-<div>
-{% for comment in comments %}
+
+
+<div class="community-comments">
 {% comment %} 댓글내용 {% endcomment %}
+{% for comment in comments %}
     <hr>
   <p style="margin-top: 10px;">작성자 : {{ comment.user }}</p> 
   <p>댓글내용 : {{ comment.content }}</p> 
-    <p>생성 : {{ comment.created_at | date:'Y년 m월 d일 h시 i분'}} / 수정 : {{comment.updated_at | date:'Y년 m월 d일 h시 i분'}}&nbsp&nbsp</p>
-  {% if user == comment.user %}     
+  <p>생성 : {{ comment.created_at | date:'Y년 m월 d일 h시 i분'}} / 수정 : {{comment.updated_at | date:'Y년 m월 d일 h시 i분'}}&nbsp&nbsp</p>
+
   {% comment %} 댓글내용 수정 {% endcomment %}
+  {% if user == comment.user %}
     <div style="display: flex;">
     <button class="comment-update-btn btn-gold" data-comment-id="{{ comment.pk }}" style="width: 150px; height: 40px; padding: 10px;">댓글수정</button>
     &nbsp&nbsp&nbsp
@@ -78,13 +87,12 @@
       <input type="text" class="comment-input-{{ comment.pk }}" name="content" maxlength="100" required="" value={{ comment.content }} size=55 >
       <button class="btn-gold comment-btn-{{ comment.pk }}" style="width: 150px; height: 40px; padding: 10px; margin-top: 10px;">수정확인</button>
     </form>
-       
   {% endif %}
 {% endfor %}
 </div>
-{% endif %}
-  <hr>
-  <div style="display: flex; width: 700px; justify-content: space-between;">
+
+<hr>
+<div style="display: flex; width: 700px; justify-content: space-between;">
   <a href="{% url 'community:community_index' %}">
   <button class="btn-gold">BACK</button>
   </a>
@@ -97,16 +105,18 @@
   <button class="btn-gold">DELETE</button>
   </form>
   {% endif %} 
-  
-    </div> 
-  {% endblock %}
+</div> 
+{% endblock %}
 
 {% block script %}
 <script>
-  
+  {% comment %} 댓글 작성 {% endcomment %}
+
+  {% comment %} 댓글 수정 {% endcomment %}
+
   const buttons = document.querySelectorAll('.comment-update-btn')
-  const forms = document.querySelectorAll('.comment-form')
-  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+  const formsUpdate = document.querySelectorAll('.comment-form')
+  const csrftokenUpdate = document.querySelector('[name=csrfmiddlewaretoken]').value
 
   buttons.forEach(button => {
     button.addEventListener('click', function (event) {
@@ -119,31 +129,37 @@
         commentForm.style.display = "none";
       }
       console.log('!!!!')
-      //document.getElementById(id).style.visibility = "visible";
     })
   })
-/*
-  forms.forEach(form => {
+
+  {% comment %} 좋아요 {% endcomment %}
+
+  const formsLike = document.querySelectorAll('.like-form')
+  const csrftokenLike = document.querySelector('[name=csrfmiddlewaretoken]').value
+  formsLike.forEach(form => {
     form.addEventListener('submit', function (event) {
       event.preventDefault()
-      const formId = event.target.dataset.formId
       const postId = event.target.dataset.postId
-      const commentInput = form.querySelector(`.comment-input-${ formId }`)
+
       axios({
         method: 'post',
-        url: `http://127.0.0.1:8000/community/${postId}/comments/${formId}/update/`,
-        headers: {'X-CSRFToken': csrftoken},
+        url: `http://127.0.0.1:8000/community/${postId}/likes/`,
+        headers: {'X-CSRFToken': csrftokenLike},
       })
-      .then(res => {
-      const comment_tmp = res.data.comment_form
-      console.log(event)
-      console.log(res)
-      console.log(comment_tmp)
-      })
-      .catch(err => {
-        console.log(err.response)
-      })
+        .then(response => {
+          const likes = response.data.likes
+          const likeButton = document.querySelector(`#like-button-${postId}`)
+          const likeCount = document.querySelector(`#like-count-${postId}`)
+          const count = response.data.count
+
+          if (likes === true) {
+            likeButton.innerText = '좋아요 취소'
+          } else {
+            likeButton.innerText = '좋아요'
+          }
+          likeCount.innerText = count
+        })
     })
-  })*/
+  })
 </script>
 {% endblock script %}
