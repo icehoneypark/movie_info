@@ -192,24 +192,61 @@ img:hover{
 	<br>
 	<br>
 	<div style="display: flex;">
-		<div style="width: 10%;">
-		순위
-		</div>
-		<div style="width: 50%;">
-		영화 제목
-		</div>
-		<div style="width: 20%;">
-		장르
-		</div>
-		<div style="width: 20%;">
-		관객수
-		</div>
-		<div style="width: 10%;">
-		평점
-		</div>
+		<div style="width: 10%;">순위</div>
+		<div style="width: 50%;">영화 제목</div>
+		<div style="width: 20%;">장르</div>
+		<div style="width: 20%;">관객수</div>
+		<div style="width: 10%;">평점</div>
 	</div>
 	<hr>
-	<div style="display: flex; margin-bottom: 100px;">
+
+  {% for movie in paginators %}
+    <div style="display: flex; margin-bottom: 100px;">
+      <p style="width: 10%;">{{ movie.pk }}</p>
+      <p style="width: 50%;"><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.title }}</a></p>    
+      <p style="width: 20%;">{{ movie.genres|slice:"2:-2"|cut:"'" }}</p>
+      <p style="width: 20%;">{{ movie.popularity }}</p>
+      <p style="width: 10%;">{{ movie.vote_avg }}</a></p>
+    </div>
+  {% endfor %}
+
+  <div class="row mt-2">
+    <div class="col-12">
+      <nav>
+        <ul class="pagination justify-content-center">
+          {% if paginators.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ paginators.previous_page_number }}">Previous</a>
+            </li>
+            
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#">Previous</a>
+          </li>
+
+          {% endif %}
+
+          <li class="page-item">
+            <a class="page-link" href="#">{{ paginators.number }}/{{ paginators.paginator.num_pages }}</a>
+          </li>
+
+          {% if paginators.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ paginators.next_page_number }}">Next</a>
+            </li>
+
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#">Next</a>
+          </li>
+
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+	{% comment %} <div style="display: flex; margin-bottom: 100px;">
 			<div style="width: 10%;">
 			<p>1</p>
 			<p>2</p>
@@ -231,7 +268,7 @@ img:hover{
 			<p><a href="{% url 'movies:movie_detail' top6.pk %}">{{ top6.title }}</a></p>
 			<p><a href="{% url 'movies:movie_detail' top7.pk %}">{{ top7.title }}</a></p>
 			<p><a href="{% url 'movies:movie_detail' top8.pk %}">{{ top8.title }}</a></p>
-			<p><a href="{% url 'movies:movie_detail' top9.pk %}">{{ top9.title }}</a></p>
+			<p><a 	href="{% url 'movies:movie_detail' top9.pk %}">{{ top9.title }}</a></p>
 			<p><a href="{% url 'movies:movie_detail' top10.pk %}">{{ top10.title }}</a></p>
 			</div>
 			<div style="width: 20%;">
@@ -271,7 +308,7 @@ img:hover{
 				<p>{{ top10.vote_avg }}</p>
 			</div>
 
-	</div>
+	</div> {% endcomment %}
 
 {% comment %} {% for movie in movies %}
 <div>{{ movie.pk }} :

@@ -70,7 +70,7 @@
 {% for moviereview in person.moviereview_set.all %}
 <p><a href="{% url 'movies:movie_detail' moviereview.movie.pk %}">{{ moviereview.movie }}</a></p>
 {% endfor %}
-
+{% endblock content %}
 
 {% block script %}
   <script>

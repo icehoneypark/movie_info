@@ -1,8 +1,10 @@
+from django.core import paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_safe, require_POST, require_http_methods
 from django.contrib.auth.decorators import login_required
 from .models import Movie, MovieReview
 from .forms import MovieReviewForm
+from django.core.paginator import Paginator
 
 
 @require_http_methods(['GET', 'POST'])
@@ -12,10 +14,11 @@ def main(request):
     return render(request, 'main.html', context)
 
 def movie_index(request):
-    # movies = Movie.objects.all()
+    movies = Movie.objects.order_by('-popularity')
+    paginator = Paginator(movies, 10)
+    page = request.GET.get('page')
+    paginators = paginator.get_page(page)
     # top_10 = Movie.objects.order_by('-popularity')[:10]
-    # paginator = Paginator(movies, 20)
-    # page = request.GET.get('page')
     top_1 = Movie.objects.order_by('-popularity')[0]
     top_2 = Movie.objects.order_by('-popularity')[1]
     top_3 = Movie.objects.order_by('-popularity')[2]
@@ -31,6 +34,7 @@ def movie_index(request):
         # 'top_10': top_10,
         # 'paginator': paginator,
         # 'page': page,
+        'paginators': paginators,
         'top1': top_1,
         'top2': top_2,
         'top3': top_3,
@@ -121,7 +125,7 @@ def movie_review_delete(request, movie_pk, review_pk):
 
 
 def movie_list(request):
-    movies = Movie.objects.order_by('-released_date')[1:60]
+    movies = Movie.objects.order_by('-released_date')[1:60] 
     movies1_start = Movie.objects.order_by('-released_date')[0]
     movies1 = Movie.objects.order_by('-released_date')[1:10]
     movies2_start = Movie.objects.order_by('-released_date')[10]

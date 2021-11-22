@@ -11,22 +11,69 @@
 <br>
 <hr>
 <div class="container px-0">
-<div style="display: flex">
-  <p style="width: 10%;">번호</p>
-  <p style="width: 70%;">제목</p>
-  <p style="width: 10%;">글쓴이</p>
-  <p style="width: 20%;">등록일</p>
-  </div>
-  {% for post in posts %}
   <div style="display: flex">
-      <p style="width: 10%;">{{ post.pk }}</p>
-      <p style="width: 70%; text-overflow: ellipsis;"><a href="{% url 'community:community_detail' post.pk %}">{{ post.title }}</a></p>    
-    <p style="width: 10%;"><a href="{% url 'accounts:profile' post.user %}">{{ post.user }}</a></p>
-    <p style="width: 20%;">{{ post.created_at | date:'Y년 m월 d일 h시 i분' }}</p>
+    <p style="width: 10%;">번호</p>
+    <p style="width: 70%;">제목</p>
+    <p style="width: 10%;">글쓴이</p>
+    <p style="width: 20%;">등록일</p>
   </div>
+  {% for post in paginators %}
+    <div style="display: flex">
+        <p style="width: 10%;">{{ post.pk }}</p>
+        <p style="width: 70%; text-overflow: ellipsis;"><a href="{% url 'community:community_detail' post.pk %}">{{ post.title }}</a></p>    
+      <p style="width: 10%;"><a href="{% url 'accounts:profile' post.user %}">{{ post.user }}</a></p>
+      <p style="width: 20%;">{{ post.created_at | date:'Y년 m월 d일 h시 i분' }}</p>
+    </div>
   {% endfor %}
+
+  <div class="row mt-2">
+    <div class="col-12">
+      <nav>
+        <ul class="pagination justify-content-center">
+          {% if paginators.has_previous %}                         
+            <li class="page-item">
+              <a class="page-link" href="?page={{ paginators.previous_page_number }}">Previous</a>
+            </li>
+            
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#">Previous</a>
+          </li>
+
+          {% endif %}
+
+          <li class="page-item">
+            <a class="page-link" href="#">{{ paginators.number }}/{{ paginators.paginator.num_pages }}</a>
+          </li>
+
+          {% if paginators.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ paginators.next_page_number }}">Next</a>
+            </li>
+
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#">Next</a>
+          </li>
+
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </div>
 </div>
-<nav aria-label="Page navigation example">
+{% comment %} {% if post_page.has_pervious %}
+<a href="?page=1">맨 앞으로</a>
+<a href="?page={{ post_page.previous_page_number }}">이전으로</a>
+{% endif %}
+<span>{{ post.number }}</span>
+<span>/</span>
+{% if post_page.has_next %}
+<a href="?page={{post.next_page_number}}">다음으로</a>
+<a href="?page={{post.paginator.num_pages}}">맨 뒤로</a>
+{% endif %} {% endcomment %}
+
+{% comment %} <nav aria-label="Page navigation example">
   <ul class="pagination">
     <li class="page-item">
       <a class="page-link" href="#" aria-label="Previous">
@@ -42,5 +89,5 @@
       </a>
     </li>
   </ul>
-</nav>
+</nav> {% endcomment %}
 {% endblock %}

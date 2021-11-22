@@ -1,17 +1,22 @@
 
+from django.core import paginator
 from .forms import PostForm, CommunityCommentForm
 from community.models import Post, CommunityComment
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods, require_POST, require_safe
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-
+from django.core.paginator import Paginator
 
 @require_safe
 def community_index(request):
     posts = Post.objects.all()
+    paginator = Paginator(posts, '5')
+    page = request.GET.get('page')
+    paginators = paginator.get_page(page)
     context = {
         'posts': posts,
+        'paginators': paginators,
     }
     return render(request, 'community/index.html', context)
 
