@@ -5,13 +5,15 @@
 <form action="{% url 'accounts:change' %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 {% comment %} {{ form.as_p }} {% endcomment %}
-<p><label for="id_email">Email address:</label> <input type="email" name="email" value="{{ user.email }}" maxlength="254" id="id_email"></p>
+<p><label for="id_email">이메일:</label> <input type="email" name="email" value="{{ user.email }}" maxlength="254" id="id_email"></p>
 <br>
-<p><label for="id_profile_img">Profile img:</label> Currently: <a href="http://127.0.0.1:8000/media/{{ user.profile_img }}">{{ user.profile_img }}</a>
+<p><label for="id_profile_img">프로필사진:&nbsp</label><a href="http://127.0.0.1:8000/media/{{ user.profile_img }}">{{ user.profile_img }}</a>
+<div>
 <input type="checkbox" name="profile_img-clear" id="profile_img-clear_id">
-<label for="profile_img-clear_id">Clear</label><br>
+<label for="profile_img-clear_id">사진삭제</label><br>
+</div>
 <br>
-Change:
+프로필사진 변경:
 <input type="file" name="profile_img" accept="image/*" id="id_profile_img"></p>
 <br>
 <div style="display: flex;">

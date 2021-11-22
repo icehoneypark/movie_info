@@ -4,11 +4,12 @@
 <hr>
 <form action="" method="POST">
 {% csrf_token %}
-{{ form.as_p }}
-{% comment %} <p><label for="id_username">Username:</label> <input type="text" name="username" maxlength="150" autofocus="" required="" id="id_username"></p>
-<p><label for="id_password">Password:</label> <input type="password" name="password" autocomplete="new-password" required="" id="id_password"> </p>
-<p><label for="id_password_confirm">Password confirmation:</label> <input type="password" name="password_confirm" autocomplete="new-password" required="" id="id_password_confirm"></p>
+{% comment %} {{ form.as_p }} {% endcomment %}
+<p><label for="id_username">Username:</label> <input type="text" name="username" maxlength="150" autofocus="" required="" id="id_username"> <span class="helptext">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</span></p>
+<p><label for="id_password1">Password:</label> <input type="password" name="password1" autocomplete="new-password" required="" id="id_password1"> <span class="helptext"></span></p><ul><li>Your password can’t be too similar to your other personal information.</li><li>Your password must contain at least 8 characters.</li><li>Your password can’t be a commonly used password.</li><li>Your password can’t be entirely numeric.</li></ul><p></p>
+<p><label for="id_password2">Password confirmation:</label> <input type="password" name="password2" autocomplete="new-password" required="" id="id_password2"> <span class="helptext">Enter the same password as before, for verification.</span></p>
 <p><label for="id_email">Email address:</label> <input type="email" name="email" maxlength="254" id="id_email"></p>
+{% comment %}
 <div>
   <h3><label for="yy">생년월일</label></h3>
   <div id="birth_wrap">
@@ -46,7 +47,7 @@
   </div>
   <span class="error_next_box"></span>    
 </div> {% endcomment %}
-<button class="btn-gold">Signup</button>
+<button class="btn-gold">회원가입</button>
 
 
 </form>
