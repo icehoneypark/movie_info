@@ -10,6 +10,7 @@ for num in range(1, 4):
     movie_get = requests.get(movie_url)
     movies = movie_get.json().get('results')
 
+
     for movie in movies:
         if movie.get('release_date', ''):
             fields = {
@@ -22,7 +23,6 @@ for num in range(1, 4):
                 'poster_path': movie['poster_path'],
                 'genres': movie['genre_ids']
             }
-
             data = {
                 "pk": idx,
                 "model": "movies.movie",
@@ -31,6 +31,14 @@ for num in range(1, 4):
 
             total_data.append(data)
             idx += 1
+            
+        genres_json = open('fixtures/genres.json', encoding='UTF8')
+        genres_list = json.load(genres_json)
+
+        for i in range(len(movie['genre_ids'])):
+            for j in range(len(genres_list)):
+                if movie['genre_ids'][i] == genres_list[j]['id']:
+                    movie['genre_ids'][i] = genres_list[j]['name']
 
 with open("movie_data.json", "w", encoding="utf-8") as w:
     json.dump(total_data, w, indent="\t", ensure_ascii=False)

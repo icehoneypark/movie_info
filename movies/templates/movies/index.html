@@ -225,16 +225,16 @@ img:hover{
 		<p><a href="{% url 'movies:movie_detail' top10.pk %}">{{ top10.title }}</a></p>
 		</div>
 		<div style="width: 20%;">
-			<p>{{ top1.genres|slice:"2:-2"|cut:"'" }}</p>
-			<p>{{ top2.genres|slice:"2:-2"|cut:"'" }}</p>
-			<p>{{ top3.genres|slice:"2:-2"|cut:"'" }}</p>
-			<p>{{ top4.genres|slice:"2:-2"|cut:"'" }}</p>
-			<p>{{ top5.genres|slice:"2:-2"|cut:"'" }}</p>
-			<p>{{ top6.genres|slice:"2:-2"|cut:"'" }}</p>
-			<p>{{ top7.genres|slice:"2:-2"|cut:"'" }}</p>
-			<p>{{ top8.genres|slice:"2:-2"|cut:"'" }}</p>
-			<p>{{ top9.genres|slice:"2:-2"|cut:"'" }}</p>
-			<p>{{ top10.genres|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top1.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top2.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top3.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top4.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top5.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top6.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top7.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top8.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top9.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top10.genre_ids|slice:"2:-2"|cut:"'" }}</p>
 		</div>
 		<div style="width: 20%;">
 			<p>{{ top1.popularity }}</p>
@@ -249,16 +249,16 @@ img:hover{
 			<p>{{ top10.popularity }}</p>
 		</div>
 		<div style="width: 10%;">
-			<p>{{ top1.vote_avg }}</p>
-			<p>{{ top2.vote_avg }}</p>
-			<p>{{ top3.vote_avg }}</p>
-			<p>{{ top4.vote_avg }}</p>
-			<p>{{ top5.vote_avg }}</p>
-			<p>{{ top6.vote_avg }}</p>
-			<p>{{ top7.vote_avg }}</p>
-			<p>{{ top8.vote_avg }}</p>
-			<p>{{ top9.vote_avg }}</p>
-			<p>{{ top10.vote_avg }}</p>
+			<p>{{ top1.vote_average }}</p>
+			<p>{{ top2.vote_average }}</p>
+			<p>{{ top3.vote_average }}</p>
+			<p>{{ top4.vote_average }}</p>
+			<p>{{ top5.vote_average }}</p>
+			<p>{{ top6.vote_average }}</p>
+			<p>{{ top7.vote_average }}</p>
+			<p>{{ top8.vote_average }}</p>
+			<p>{{ top9.vote_average }}</p>
+			<p>{{ top10.vote_average }}</p>
 		</div>
 	</div>
 </div>

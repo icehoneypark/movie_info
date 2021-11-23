@@ -26,7 +26,7 @@
   <p>{{ movie.vote_avg }}</p>
   <hr>
   <p id="genresList" style="font-size: 20px;">장르</p>
-  <p>{{ movie.genres|slice:"2:-2"|cut:"'" }}</p>
+  <p>{{ movie.genres|slice:"2:-2"|cut:"'"|cut:"," }}</p>
   </div>
 </div>
 <hr>

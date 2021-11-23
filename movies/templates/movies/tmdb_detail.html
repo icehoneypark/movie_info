@@ -23,7 +23,9 @@
   <p>{{ movie.vote_average }}</p>
   <hr>
   <p id="genresList" style="font-size: 20px;">장르</p>
-  <p>{{ movie.genres }}</p>
+  {% for genre in movie.genre_ids %}
+    <span>{{ genre.name }}</span>
+  {% endfor %}
   </div>
 </div>
 <hr>

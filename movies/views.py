@@ -1,4 +1,3 @@
-from django.core import paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_safe, require_POST, require_http_methods
 from django.contrib.auth.decorators import login_required
@@ -173,11 +172,23 @@ def tmdb_upcoming(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/upcoming',region='KR', language='ko')
     data = requests.get(url).json()
-    data_results = data['results']
-    data_results[0]['tmp'] = 1
+    movies = data['results']
+    movies[0]['tmp'] = 1
+    genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
+    genres_list = requests.get(genres_url).json()
+    genres = genres_list['genres']
+    for movie in movies:
+        for i in range(len(movie['genre_ids'])):
+            for j in range(len(genres)):
+                if movie['genre_ids'][i] == genres[j]['id']:
+                    movie['genre_ids'][i] = genres[j]['name']
+    paginator = Paginator(movies, 10)
+    page = request.GET.get('page')
+    paginators = paginator.get_page(page)
     context = {
-        'movies': data_results,
-        'page_name': '개봉 예정 영화'
+        'paginators': paginators,
+        'movies': movies,
+        'page_name': '개봉 예정 영화',
     }
     return render(request, 'movies/tmdb_list_form.html', context)
 
@@ -186,11 +197,23 @@ def tmdb_toprate(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/top_rated',region='KR', language='ko')
     data = requests.get(url).json()
-    data_results = data['results']
-    data_results[0]['tmp'] = 1
+    movies = data['results']
+    movies[0]['tmp'] = 1
+    genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
+    genres_list = requests.get(genres_url).json()
+    genres = genres_list['genres']
+    for movie in movies:
+        for i in range(len(movie['genre_ids'])):
+            for j in range(len(genres)):
+                if movie['genre_ids'][i] == genres[j]['id']:
+                    movie['genre_ids'][i] = genres[j]['name']
+    paginator = Paginator(movies, 10)
+    page = request.GET.get('page')
+    paginators = paginator.get_page(page)
     context = {
-        'movies': data_results,
-        'page_name': '높은 평점 영화'
+        'paginators': paginators,
+        'movies': movies,
+        'page_name': '높은 평점 영화',
     }
     return render(request, 'movies/tmdb_list_form.html', context)
 
@@ -198,11 +221,23 @@ def tmdb_popular(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/popular',region='KR', language='ko')
     data = requests.get(url).json()
-    data_results = data['results']
-    data_results[0]['tmp'] = 1
+    movies = data['results']
+    movies[0]['tmp'] = 1
+    genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
+    genres_list = requests.get(genres_url).json()
+    genres = genres_list['genres']
+    for movie in movies:
+        for i in range(len(movie['genre_ids'])):
+            for j in range(len(genres)):
+                if movie['genre_ids'][i] == genres[j]['id']:
+                    movie['genre_ids'][i] = genres[j]['name']
+    paginator = Paginator(movies, 10)
+    page = request.GET.get('page')
+    paginators = paginator.get_page(page)
     context = {
-        'movies': data_results,
-        'page_name': '인기 영화'
+        'paginators': paginators,
+        'movies': movies,
+        'page_name': '인기 영화',
     }
     return render(request, 'movies/tmdb_list_form.html', context)
 
@@ -210,11 +245,23 @@ def tmdb_now_playing(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/now_playing',region='KR', language='ko')
     data = requests.get(url).json()
-    data_results = data['results']
-    data_results[0]['tmp'] = 1
+    movies = data['results']
+    movies[0]['tmp'] = 1
+    genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
+    genres_list = requests.get(genres_url).json()
+    genres = genres_list['genres']
+    for movie in movies:
+        for i in range(len(movie['genre_ids'])):
+            for j in range(len(genres)):
+                if movie['genre_ids'][i] == genres[j]['id']:
+                    movie['genre_ids'][i] = genres[j]['name']
+    paginator = Paginator(movies, 10)
+    page = request.GET.get('page')
+    paginators = paginator.get_page(page)
     context = {
-        'movies': data_results,
-        'page_name': '현재 상영 중인 영화'
+        'paginators': paginators,
+        'movies': movies,
+        'page_name': '현재 상영 중인 영화',
     }
     return render(request, 'movies/tmdb_list_form.html', context)
 
@@ -222,10 +269,43 @@ def tmdb_search(request):
     title = request.GET.get('search')
     movie_id = tmdb_helper.get_movie_id(title)
     url = tmdb_helper.get_request_url(f'/movie/{movie_id}',region='KR', language='ko')
-
     movie = requests.get(url).json()
-
+    print(movie['genre_ids'][0]['name'])
     context = {
         'movie': movie,
     }
     return render(request,'movies/tmdb_detail.html',context)
+
+# ------------------- Face Recognization -------------------
+import json
+import requests
+def face_recommends(request):
+    client_id = "nSNNt9Iyb9ef1PxjBLPF"
+    client_secret = "yjeOVJx1Qz"
+
+    url = "https://openapi.naver.com/v1/vision/face" 
+
+    files = {'image': open(request.user.profile_img, 'rb')}
+    headers = {'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
+
+    response = requests.post(url,  files=files, headers=headers)
+    rescode = response.status_code
+    result = json.loads(response.text)
+
+    age_front = int(result['faces'][0]['age']['value'].split('~')[0])
+    age_end = int(result['faces'][0]['age']['value'].split('~')[1])
+    age_average = (age_front + age_end) / 2
+
+    # 20세 미만의 경우 adult=True인 영화 필터링
+    # 20~29세 이용자는 release_date 가 2015년 이후인 영화 추천
+    # 30세 이상 이용자는 release_date 가 2015년 이전인 영화 추천
+    if 20 <= age_average < 30:
+        pass
+    elif age_average < 20:
+        pass
+    else:
+        pass
+    context = {
+        'age_average': age_average,
+    }
+    return render(request, 'movies/movie_recommends.html', context)
