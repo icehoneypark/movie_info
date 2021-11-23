@@ -11,7 +11,7 @@ from django.core.paginator import Paginator
 @require_safe
 def community_index(request):
     posts = Post.objects.all()
-    paginator = Paginator(posts, '5')
+    paginator = Paginator(posts, '10')
     page = request.GET.get('page')
     paginators = paginator.get_page(page)
     context = {

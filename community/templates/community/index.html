@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block css %}
-{% endblock css %}
+{% endblock %}
 {% block content %}
 <h1>커뮤니티</h1>
 <br>
@@ -10,24 +10,28 @@
 <br>
 <br>
 <hr>
-<div class="container px-0">
-  <div style="display: flex">
-    <p style="width: 10%;">번호</p>
-    <p style="width: 70%;">제목</p>
-    <p style="width: 10%;">글쓴이</p>
-    <p style="width: 20%;">등록일</p>
-  </div>
-  {% for post in paginators %}
+<div id="list" class="container px-0;">
+  <div>
     <div style="display: flex">
-        <p style="width: 10%;">{{ post.pk }}</p>
-        <p style="width: 70%; text-overflow: ellipsis;"><a href="{% url 'community:community_detail' post.pk %}">{{ post.title }}</a></p>    
-      <p style="width: 10%;"><a href="{% url 'accounts:profile' post.user %}">{{ post.user }}</a></p>
-      <p style="width: 20%;">{{ post.created_at | date:'Y년 m월 d일 h시 i분' }}</p>
+      <p style="width: 10%;">번호</p>
+      <p style="width: 70%;">제목</p>
+      <p style="width: 10%;">글쓴이</p>
+      <p style="width: 20%;">등록일</p>
     </div>
-  {% endfor %}
+    <div style="height: 536px;">
+    {% for post in paginators %}
+      <div style="display: flex; margin-top: 10px;">
+          <p style="width: 10%;">{{ post.pk }}</p>
+          <p style="width: 70%; text-overflow: ellipsis;"><a href="{% url 'community:community_detail' post.pk %}">{{ post.title }}</a></p>    
+        <p style="width: 10%;"><a href="{% url 'accounts:profile' post.user %}">{{ post.user }}</a></p>
+        <p style="width: 20%;">{{ post.created_at | date:'Y년 m월 d일 h시 i분' }}</p>
+      </div>
+    {% endfor %}
+    </div>
+  </div>
 
   <div class="row mt-2">
-    <div class="col-12">
+    <div class="col-12" style="display: flex; justify-content: center; align-content: space-between;">
       <nav>
         <ul class="pagination justify-content-center">
           {% if paginators.has_previous %}                         

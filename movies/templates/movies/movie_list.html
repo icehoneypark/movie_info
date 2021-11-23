@@ -2,61 +2,63 @@
 {% block css %}
 {% endblock css %}
 {% block content %}
+<div class="search" style="text-align: center;">
+  <form action="{% url 'movies:tmdb_detail' %}" method="GET" style="">
+    <label for="search-input"></label>
+    <input type="search" class='search-input' placeholder="영화 제목을 입력하세요." name='search' size=100 style="
+    color: rgba(223,190,106,0.7); background: #231f20; padding: 0; border-color: rgba(223,190,106,0.7);">
+  </form>
+  <br>
+</div>
 <div class="container-fluid">
-    <div class="row">
-      <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="carousel carousel-showmanymoveone slide" id="itemslider">
-          <div class="carousel-inner">
-
-            <div class="item active">
-              <div class="col-xs-12 col-sm-6 col-md-2">
-                <a href="{% url 'movies:movie_detail' movies1_start.pk %}"><img src="https://image.tmdb.org/t/p/w500/{{ movies1_start.poster_path }}" class="img-responsive center-block"></a>
-                <h4 class="text-center" style="margin-top:10px;">{{ movies1_start }}</h4>
-              </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+      <div class="carousel carousel-showmanymoveone slide" id="itemslider">
+        <div class="carousel-inner">
+          <div class="item active">
+            <div class="col-xs-12 col-sm-6 col-md-2">
+              <a href="{% url 'movies:movie_detail' movies1_start.pk %}"><img src="https://image.tmdb.org/t/p/w500/{{ movies1_start.poster_path }}" class="img-responsive center-block"></a>
+              <h4 class="text-center" style="margin-top:10px;">{{ movies1_start }}</h4>
             </div>
-
-          {% for movie in movies %}
-            <div class="item">
-              <div class="col-xs-12 col-sm-6 col-md-2">
-                <a href="{% url 'movies:movie_detail' movie.pk %}"><img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="img-responsive center-block"></a>
-                <h4 class="text-center" style="margin-top:10px;">{{ movie.title }}</h4>
-              </div>
+          </div>
+        {% for movie_1 in movies_1 %}
+          <div class="item">
+            <div class="col-xs-12 col-sm-6 col-md-2">
+              <a href="{% url 'movies:movie_detail' movie_1.pk %}"><img src="https://image.tmdb.org/t/p/w500/{{ movie_1.poster_path }}" class="img-responsive center-block"></a>
+              <h4 class="text-center" style="margin-top:10px;">{{ movie_1.title }}</h4>
             </div>
-          {% endfor %}
-
-
           </div>
-
-          <div id="slider-control">
-          <a class="left carousel-control" href="#itemslider" data-slide="prev"><img src="https://cdn0.iconfinder.com/data/icons/website-kit-2/512/icon_402-512.png" alt="Left" class="img-responsive"></a>
-          <a class="right carousel-control" href="#itemslider" data-slide="next"><img src="http://pixsector.com/cache/81183b13/avcc910c4ee5888b858fe.png" alt="Right" class="img-responsive"></a>
-          </div>
+        {% endfor %}
+        </div>
+        <div id="slider-control">
+        <a class="left carousel-control" href="#itemslider" data-slide="prev"><img src="https://cdn0.iconfinder.com/data/icons/website-kit-2/512/icon_402-512.png" alt="Left" class="img-responsive"></a>
+        <a class="right carousel-control" href="#itemslider" data-slide="next"><img src="http://pixsector.com/cache/81183b13/avcc910c4ee5888b858fe.png" alt="Right" class="img-responsive"></a>
         </div>
       </div>
     </div>
   </div>
+</div>
 
+<div style="width: 95%; justify-content: center; margin-left: 30px;">
 <hr>
-{% comment %} <div class="container px-0">
 	<div style="display: flex;">
-		<div style="width: 10%;">순위</div>
+		{% comment %} <div style="width: 10%;">순위</div> {% endcomment %}
 		<div style="width: 50%;">영화 제목</div>
 		<div style="width: 20%;">장르</div>
 		<div style="width: 20%;">관객수</div>
 		<div style="width: 10%;">평점</div>
 	</div>
-  <hr>
-
+	<hr>
   {% for movie in paginators %}
-    <div style="display: flex; margin-bottom: 100px;">
-      <p style="width: 10%;">{{ movie.pk }}</p>
-      <p style="width: 50%;"><a href="{% url 'movies:movie_list' movie.pk %}">{{ movie.title }}</a></p>    
-      <p style="width: 20%;">{{ movie.popularity }}</p>
+    <div style="display: flex;">
+      {% comment %} <p style="width: 10%;">{{ movie.pk }}</p> {% endcomment %}
+      <p style="width: 50%;"><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.title }}</a></p>    
       <p style="width: 20%;">{{ movie.genres|slice:"2:-2"|cut:"'" }}</p>
+      <p style="width: 20%;">{{ movie.popularity }}</p>
       <p style="width: 10%;">{{ movie.vote_avg }}</a></p>
     </div>
+    <br>
   {% endfor %}
-
   <div class="row mt-2">
     <div class="col-12">
       <nav>
@@ -92,7 +94,7 @@
       </nav>
     </div>
   </div>
-</div> {% endcomment %}
+</div>
 {% endblock content %}
 {% block script %}
 <script>

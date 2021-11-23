@@ -48,7 +48,7 @@
 <hr>
   <p>작성자 : {{ review.user }}</p> 
   <p>댓글내용 : {{ review.content }}</p> 
-  <p>평점 : {{ review.rank }}</p>
+  <p>평점 : {{ review.get_rank_display }}</p>
     <p>생성 : {{ review.created_at | date:'Y년 m월 d일 h시 i분'}} / 수정 : {{ review.updated_at | date:'Y년 m월 d일 h시 i분'}}&nbsp&nbsp</p>
   {% if user == review.user %}
     <div style="display: flex;">
