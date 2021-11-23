@@ -124,33 +124,17 @@ def movie_review_delete(request, movie_pk, review_pk):
 
 
 def movie_list(request):
-    movies = Movie.objects.order_by('-released_date')[1:60] 
+    movies_1 = Movie.objects.order_by('-released_date')[1:60] 
     movies1_start = Movie.objects.order_by('-released_date')[0]
-    movies1 = Movie.objects.order_by('-released_date')[1:10]
-    movies2_start = Movie.objects.order_by('-released_date')[10]
-    movies2 = Movie.objects.order_by('-released_date')[11:20]
-    movies3_start = Movie.objects.order_by('-released_date')[20]
-    movies3 = Movie.objects.order_by('-released_date')[21:30]
-    movies4_start = Movie.objects.order_by('-released_date')[30]  
-    movies4 = Movie.objects.order_by('-released_date')[31:40]  
-    movies5_start = Movie.objects.order_by('-released_date')[40]
-    movies5 = Movie.objects.order_by('-released_date')[41:50]
-    movies6_start = Movie.objects.order_by('-released_date')[50]
-    movies6 = Movie.objects.order_by('-released_date')[51:60]
+    
+    movies = Movie.objects.order_by('-released_date')
+    paginator = Paginator(movies, 10)
+    page = request.GET.get('page')
+    paginators = paginator.get_page(page)
     context = {
-        'movies': movies,
+        'movies_1': movies_1,
         'movies1_start': movies1_start,
-        'movies1': movies1,
-        'movies2_start': movies2_start,
-        'movies2': movies2,
-        'movies3_start': movies3_start,
-        'movies3': movies3,
-        'movies4_start': movies4_start,
-        'movies4': movies4,
-        'movies5_start': movies5_start,
-        'movies5': movies5,
-        'movies6_start': movies6_start,
-        'movies6': movies6,
+        'paginators': paginators,
     }
     return render(request, 'movies/movie_list.html', context)
 
@@ -175,15 +159,73 @@ class TMDBHelper:
     def get_movie_id(self, title):
         request_url = self.get_request_url('/search/movie', query=title, region='KR', language='ko')
         data = requests.get(request_url).json()
+        results = data.get('results')
+        if results:
+            movie = results[0]
+            movie_id = movie['id']
+            return movie_id
+        else:
+            return None
 
 tmdb_helper = TMDBHelper('6163fbe091536a27c8951c10ecb40d6c')
 
-def tmdb(request):
+def tmdb_upcoming(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/upcoming',region='KR', language='ko')
     data = requests.get(url).json()
     data_results = data['results']
+    data_results[0]['tmp'] = 1
     context = {
-        'movies': data_results
+        'movies': data_results,
+        'page_name': '개봉 예정 영화'
     }
-    return render(request, 'movies/tmdb.html', context)
+    return render(request, 'movies/tmdb_list_form.html', context)
+
+
+def tmdb_toprate(request):
+    # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
+    url = tmdb_helper.get_request_url('/movie/top_rated',region='KR', language='ko')
+    data = requests.get(url).json()
+    data_results = data['results']
+    data_results[0]['tmp'] = 1
+    context = {
+        'movies': data_results,
+        'page_name': '높은 평점 영화'
+    }
+    return render(request, 'movies/tmdb_list_form.html', context)
+
+def tmdb_popular(request):
+    # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
+    url = tmdb_helper.get_request_url('/movie/popular',region='KR', language='ko')
+    data = requests.get(url).json()
+    data_results = data['results']
+    data_results[0]['tmp'] = 1
+    context = {
+        'movies': data_results,
+        'page_name': '인기 영화'
+    }
+    return render(request, 'movies/tmdb_list_form.html', context)
+
+def tmdb_now_playing(request):
+    # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
+    url = tmdb_helper.get_request_url('/movie/now_playing',region='KR', language='ko')
+    data = requests.get(url).json()
+    data_results = data['results']
+    data_results[0]['tmp'] = 1
+    context = {
+        'movies': data_results,
+        'page_name': '현재 상영 중인 영화'
+    }
+    return render(request, 'movies/tmdb_list_form.html', context)
+
+def tmdb_search(request):
+    title = request.GET.get('search')
+    movie_id = tmdb_helper.get_movie_id(title)
+    url = tmdb_helper.get_request_url(f'/movie/{movie_id}',region='KR', language='ko')
+
+    movie = requests.get(url).json()
+
+    context = {
+        'movie': movie,
+    }
+    return render(request,'movies/tmdb_detail.html',context)

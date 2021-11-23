@@ -75,7 +75,7 @@ img:hover{
 }
 {% endblock css %}
 {% block content %}
-<h1>TOP 10</h1>
+<h1>TOP 10 (관객수 별)</h1>
 <hr>
 <div class="container-carousel" style="margin-bottom: 200px;">
 		<div id="carousel">
@@ -190,7 +190,7 @@ img:hover{
 		</div>
 	</div>
 	<br>
-	<br>
+	<br>	
 	<div style="display: flex;">
 		<div style="width: 10%;">순위</div>
 		<div style="width: 50%;">영화 제목</div>
@@ -199,125 +199,69 @@ img:hover{
 		<div style="width: 10%;">평점</div>
 	</div>
 	<hr>
-
-  {% for movie in paginators %}
-    <div style="display: flex; margin-bottom: 100px;">
-      <p style="width: 10%;">{{ movie.pk }}</p>
-      <p style="width: 50%;"><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.title }}</a></p>    
-      <p style="width: 20%;">{{ movie.genres|slice:"2:-2"|cut:"'" }}</p>
-      <p style="width: 20%;">{{ movie.popularity }}</p>
-      <p style="width: 10%;">{{ movie.vote_avg }}</a></p>
-    </div>
-  {% endfor %}
-
-  <div class="row mt-2">
-    <div class="col-12">
-      <nav>
-        <ul class="pagination justify-content-center">
-          {% if paginators.has_previous %}
-            <li class="page-item">
-              <a class="page-link" href="?page={{ paginators.previous_page_number }}">Previous</a>
-            </li>
-            
-          {% else %}
-          <li class="page-item disabled">
-            <a class="page-link" href="#">Previous</a>
-          </li>
-
-          {% endif %}
-
-          <li class="page-item">
-            <a class="page-link" href="#">{{ paginators.number }}/{{ paginators.paginator.num_pages }}</a>
-          </li>
-
-          {% if paginators.has_next %}
-            <li class="page-item">
-              <a class="page-link" href="?page={{ paginators.next_page_number }}">Next</a>
-            </li>
-
-          {% else %}
-          <li class="page-item disabled">
-            <a class="page-link" href="#">Next</a>
-          </li>
-
-          {% endif %}
-        </ul>
-      </nav>
-    </div>
-  </div>
+	<div style="display: flex; margin-bottom: 100px;">
+		<div style="width: 10%;">
+		<p>1</p>
+		<p>2</p>
+		<p>3</p>
+		<p>4</p>
+		<p>5</p>
+		<p>6</p>
+		<p>7</p>
+		<p>8</p>
+		<p>9</p>
+		<p>10</p>
+		</div>
+		<div style="width: 50%;">
+		<p><a href="{% url 'movies:movie_detail' top1.pk %}">{{ top1.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top2.pk %}">{{ top2.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top3.pk %}">{{ top3.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top4.pk %}">{{ top4.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top5.pk %}">{{ top5.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top6.pk %}">{{ top6.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top7.pk %}">{{ top7.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top8.pk %}">{{ top8.title }}</a></p>
+		<p><a 	href="{% url 'movies:movie_detail' top9.pk %}">{{ top9.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top10.pk %}">{{ top10.title }}</a></p>
+		</div>
+		<div style="width: 20%;">
+			<p>{{ top1.genres|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top2.genres|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top3.genres|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top4.genres|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top5.genres|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top6.genres|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top7.genres|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top8.genres|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top9.genres|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top10.genres|slice:"2:-2"|cut:"'" }}</p>
+		</div>
+		<div style="width: 20%;">
+			<p>{{ top1.popularity }}</p>
+			<p>{{ top2.popularity }}</p>
+			<p>{{ top3.popularity }}</p>
+			<p>{{ top4.popularity }}</p>
+			<p>{{ top5.popularity }}</p>
+			<p>{{ top6.popularity }}</p>
+			<p>{{ top7.popularity }}</p>
+			<p>{{ top8.popularity }}</p>
+			<p>{{ top9.popularity }}</p>
+			<p>{{ top10.popularity }}</p>
+		</div>
+		<div style="width: 10%;">
+			<p>{{ top1.vote_avg }}</p>
+			<p>{{ top2.vote_avg }}</p>
+			<p>{{ top3.vote_avg }}</p>
+			<p>{{ top4.vote_avg }}</p>
+			<p>{{ top5.vote_avg }}</p>
+			<p>{{ top6.vote_avg }}</p>
+			<p>{{ top7.vote_avg }}</p>
+			<p>{{ top8.vote_avg }}</p>
+			<p>{{ top9.vote_avg }}</p>
+			<p>{{ top10.vote_avg }}</p>
+		</div>
+	</div>
 </div>
-	{% comment %} <div style="display: flex; margin-bottom: 100px;">
-			<div style="width: 10%;">
-			<p>1</p>
-			<p>2</p>
-			<p>3</p>
-			<p>4</p>
-			<p>5</p>
-			<p>6</p>
-			<p>7</p>
-			<p>8</p>
-			<p>9</p>
-			<p>10</p>
-			</div>
-			<div style="width: 50%;">
-			<p><a href="{% url 'movies:movie_detail' top1.pk %}">{{ top1.title }}</a></p>
-			<p><a href="{% url 'movies:movie_detail' top2.pk %}">{{ top2.title }}</a></p>
-			<p><a href="{% url 'movies:movie_detail' top3.pk %}">{{ top3.title }}</a></p>
-			<p><a href="{% url 'movies:movie_detail' top4.pk %}">{{ top4.title }}</a></p>
-			<p><a href="{% url 'movies:movie_detail' top5.pk %}">{{ top5.title }}</a></p>
-			<p><a href="{% url 'movies:movie_detail' top6.pk %}">{{ top6.title }}</a></p>
-			<p><a href="{% url 'movies:movie_detail' top7.pk %}">{{ top7.title }}</a></p>
-			<p><a href="{% url 'movies:movie_detail' top8.pk %}">{{ top8.title }}</a></p>
-			<p><a 	href="{% url 'movies:movie_detail' top9.pk %}">{{ top9.title }}</a></p>
-			<p><a href="{% url 'movies:movie_detail' top10.pk %}">{{ top10.title }}</a></p>
-			</div>
-			<div style="width: 20%;">
-				<p>{{ top1.genres|slice:"2:-2"|cut:"'" }}</p>
-				<p>{{ top2.genres|slice:"2:-2"|cut:"'" }}</p>
-				<p>{{ top3.genres|slice:"2:-2"|cut:"'" }}</p>
-				<p>{{ top4.genres|slice:"2:-2"|cut:"'" }}</p>
-				<p>{{ top5.genres|slice:"2:-2"|cut:"'" }}</p>
-				<p>{{ top6.genres|slice:"2:-2"|cut:"'" }}</p>
-				<p>{{ top7.genres|slice:"2:-2"|cut:"'" }}</p>
-				<p>{{ top8.genres|slice:"2:-2"|cut:"'" }}</p>
-				<p>{{ top9.genres|slice:"2:-2"|cut:"'" }}</p>
-				<p>{{ top10.genres|slice:"2:-2"|cut:"'" }}</p>
-			</div>
-			<div style="width: 20%;">
-				<p>{{ top1.popularity }}</p>
-				<p>{{ top2.popularity }}</p>
-				<p>{{ top3.popularity }}</p>
-				<p>{{ top4.popularity }}</p>
-				<p>{{ top5.popularity }}</p>
-				<p>{{ top6.popularity }}</p>
-				<p>{{ top7.popularity }}</p>
-				<p>{{ top8.popularity }}</p>
-				<p>{{ top9.popularity }}</p>
-				<p>{{ top10.popularity }}</p>
-			</div>
-			<div style="width: 10%;">
-				<p>{{ top1.vote_avg }}</p>
-				<p>{{ top2.vote_avg }}</p>
-				<p>{{ top3.vote_avg }}</p>
-				<p>{{ top4.vote_avg }}</p>
-				<p>{{ top5.vote_avg }}</p>
-				<p>{{ top6.vote_avg }}</p>
-				<p>{{ top7.vote_avg }}</p>
-				<p>{{ top8.vote_avg }}</p>
-				<p>{{ top9.vote_avg }}</p>
-				<p>{{ top10.vote_avg }}</p>
-			</div>
-
-	</div> {% endcomment %}
-
-{% comment %} {% for movie in movies %}
-<div>{{ movie.pk }} :
-<a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.title }}</a>
-</div>
-<hr>
-{% empty%}
-<p>no movies...</p>
-{% endfor %} {% endcomment %}
 {% endblock content %}
 {% block script %}
 <script>

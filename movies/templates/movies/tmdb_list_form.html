@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<h1>&nbsp&nbsp{{ page_name }}</h1>
+{% comment %} ---
+---movie 구성 요소---
+adult
+backdrop_path
+genre_ids
+id
+original_language
+original_title
+overview
+popularity
+poster_path
+release_date
+title
+video
+vote_average
+vote_count
+--- {% endcomment %}
+<div class="container-fluid" style="padding: 0;">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+      <div class="carousel carousel-showmanymoveone slide" id="itemslider">
+        <div class="carousel-inner">
+        {% for movie in movies %}
+        {% if movie.tmp %}
+          <div class="item active">
+            <div class="col-xs-12 col-sm-6 col-md-2">
+              <a href="#">
+              {% if movie.poster_path %}
+              <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="img-responsive center-block">
+              {% else %}
+              <p style="height: 277.5px; line-height: 277.5px; text-align: center;">포스터 없음</p>
+              {% endif %}
+              </a>
+              <h4 class="text-center" style="margin-top:10px;">{{ movie.title }}</h4>
+            </div>
+          </div>
+        {% else %}
+          <div class="item">
+            <div class="col-xs-12 col-sm-6 col-md-2">            
+              <a href="#">
+              {% if movie.poster_path %}
+              <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="img-responsive center-block">
+              {% else %}
+              <p style="height: 277.5px; line-height: 277.5px; text-align: center;">포스터 없음</p>
+              {% endif %}
+              </a>
+              <h4 class="text-center" style="margin-top:10px;">{{ movie.title }}</h4>
+            </div>
+          </div>
+        {% endif %}
+        {% endfor %}
+        </div>
+
+        <div id="slider-control">
+        <a class="left carousel-control" href="#itemslider" data-slide="prev"><img src="https://cdn0.iconfinder.com/data/icons/website-kit-2/512/icon_402-512.png" alt="Left" class="img-responsive"></a>
+        <a class="right carousel-control" href="#itemslider" data-slide="next"><img src="http://pixsector.com/cache/81183b13/avcc910c4ee5888b858fe.png" alt="Right" class="img-responsive"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="width: 95%; justify-content: center; margin-left: 30px;">
+  <div style="display: flex;">
+    <div style="width: 50%;">영화 제목</div>
+    <div style="width: 20%;">장르</div>
+    <div style="width: 20%;">관객수</div>
+    <div style="width: 10%;">평점</div>
+  </div>
+  <hr>
+  {% for movie in movies %}
+  <div style="display: flex;">
+    <div style="width: 50%;">{{ movie.title }}</div>
+    <div style="width: 20%;">{{ movie.genre_ids }}</div>
+    <div style="width: 20%;">{{ movie.popularity }}</div>
+    <div style="width: 10%;">{{ movie.vote_average }}</div>
+    {% comment %} {{ movie.poster_path }} {% endcomment %}
+    {% comment %} {% if movie.tmp %}
+    --------{{ movie.tmp }}-------
+    {% endif %} {% endcomment %}
+  <hr>
+  </div>
+{% empty %}
+없음
+{% endfor %}
+</div>
+{% endblock content %}
+{% block script %}
+<script>
+$(document).ready(function(){
+
+$('#itemslider').carousel({ interval: 3000 });
+
+$('.carousel-showmanymoveone .item').each(function(){
+var itemToClone = $(this);
+
+for (var i=1;i<6;i++) {
+itemToClone = itemToClone.next();
+
+if (!itemToClone.length) {
+itemToClone = $(this).siblings(':first');
+}
+
+itemToClone.children(':first-child').clone()
+.addClass("cloneditem-"+(i))
+.appendTo($(this));
+}
+});
+});
+</script>
+{% endblock script %}

@@ -50,13 +50,12 @@
 {% if person.email %}
 <br>
 <span>이메일 : {{ person.email }}</span>
-<br>
 {% endif %}
-<br>
 {% if person.profile_img %}
+<br>
+<br>
   <span>프로필 사진 : <img src="{{ person.profile_img.url }}" alt="profile_img" style="width: 50px; height: 50px;"></span>
 {% endif %}
-<br>
 <hr>
 <h3>{{ person.username }}가 작성한 글</h3>
 {% for post in person.post_set.all %}
@@ -89,11 +88,15 @@
       <p style="margin: 15px 10px 0; font-size: 20px">팔로우</p>
       <hr>
       {% for follow in person.followings.all %}
-      <p><a href={% url 'accounts:profile' follow.username %}><img src="{{ follow.profile_img.url }}" alt="" style="
+      <p><a href={% url 'accounts:profile' follow.username %}>
+      {% if follow.profile_img %}
+      <img src="{{ follow.profile_img.url }}" alt="" style="
       width: 50px; height: 50px; 
       margin-left: 15px;
-      -webkit-border-radius: 30px;">
-      &nbsp&nbsp{{ follow.username }}</a></p>
+      -webkit-border-radius: 30px;">      
+      {% endif %}&nbsp&nbsp
+      {{ follow.username }}
+      </a></p>
       {% endfor %}      
       <button type="button" class="btn-gold" data-bs-dismiss="modal" aria-label="Close" style="">Close</button>
     </div>
@@ -105,11 +108,14 @@
       <p style="margin: 15px 10px 0; font-size: 20px">팔로워</p>
       <hr>
       {% for follower in person.followers.all %}
-      <p><a href={% url 'accounts:profile' follower.username %}><img src="{{ follower.profile_img.url }}" alt="" style="
+      <p><a href={% url 'accounts:profile' follower.username %}>
+      {% if follower.profile_img %}
+      <img src="{{ follower.profile_img.url }}" alt="" style="
       width: 50px; height: 50px; 
       margin-left: 15px;
       -webkit-border-radius: 30px;">
-      &nbsp&nbsp{{ follower.username }}</a></p>
+      {% endif %}&nbsp&nbsp
+      {{ follower.username }}</a></p>
       {% endfor %}
       <button type="button" class="btn-gold" data-bs-dismiss="modal" aria-label="Close" style="">Close</button>
     </div>
