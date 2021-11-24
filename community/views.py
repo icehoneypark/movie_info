@@ -35,8 +35,8 @@ def community_create(request):
         form = PostForm()
     context = {
         'form': form,
-        'site_name': 'Create',
-        'btn_name': 'create',
+        'site_name': '게시글 작성',
+        'btn_name': '작성하기',
     }
     return render(request, 'community/form.html', context)
 
@@ -69,8 +69,8 @@ def community_update(request, pk):
     context = {
         'post': post,
         'form': form,
-        'site_name': 'Update',
-        'btn_name': 'update',
+        'site_name': '게시글 수정',
+        'btn_name': '수정하기',
     }
     return render(request, 'community/form.html', context)
 

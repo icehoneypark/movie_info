@@ -4,13 +4,7 @@
 </style>
 {% endblock css %}
 {% block content %}
-<div style="display: flex;">
 <h1 style="height: 50px; line-height: 50px; margin: 8px 0 0;">{{ movie.title }}</h1>
-&nbsp&nbsp&nbsp
-<a href="{% url 'movies:movie_index' %}">
-<button class="btn-gold">나가기</button>
-</a>
-</div>
 <div style="width: 1400px;">
 <hr>
 <div style="display: flex;">

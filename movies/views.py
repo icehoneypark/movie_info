@@ -12,14 +12,14 @@ def main(request):
     }
     return render(request, 'main.html', context)
 
-def movie_index(request):
+# def movie_index(request):
     
-    movies = Movie.objects.order_by('-popularity')[:10]
-    context = {
-        'movies': movies,
-        'page_name': '관객수',
-    }
-    return render(request, 'movies/index.html', context)
+#     movies = Movie.objects.order_by('-popularity')[:10]
+#     context = {
+#         'movies': movies,
+#         'page_name': '관객수',
+#     }
+#     return render(request, 'movies/index.html', context)
 
 # def movie_index(request):
     
@@ -205,7 +205,9 @@ def tmdb_upcoming(request):
     return render(request, 'movies/tmdb_list_form.html', context)
 
 
-def tmdb_toprate(request):
+# def tmdb_toprate(request):
+    
+def movie_index(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/top_rated',region='KR', language='ko')
     data = requests.get(url).json()
@@ -333,26 +335,27 @@ def face_recommends(request):
     client_secret = "yjeOVJx1Qz"
 
     url = "https://openapi.naver.com/v1/vision/face" 
-
-    files = {'image': request.user.profile_img }
-    headers = {'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
-    response = requests.post(url,  files=files, headers=headers)
-    result = json.loads(response.text)
-    
-    print(result)
-    if result['faces'] == []:
+    if not request.user.profile_img :
         gender = 'None'
         age_average = 'None'
-    elif result['faces'][0]['gender']['value'] == 'male':
-        gender = '남자'
-        age_front = int(result['faces'][0]['age']['value'].split('~')[0])
-        age_end = int(result['faces'][0]['age']['value'].split('~')[1])
-        age_average = (age_front + age_end) / 2
     else:
-        gender = '여자'
-        age_front = int(result['faces'][0]['age']['value'].split('~')[0])
-        age_end = int(result['faces'][0]['age']['value'].split('~')[1])
-        age_average = (age_front + age_end) / 2
+        files = {'image': request.user.profile_img }
+        headers = {'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
+        response = requests.post(url,  files=files, headers=headers)
+        result = json.loads(response.text)
+        if result['faces'] == []:
+            gender = 'None'
+            age_average = 'None'
+        elif result['faces'][0]['gender']['value'] == 'male':
+            gender = '남자'
+            age_front = int(result['faces'][0]['age']['value'].split('~')[0])
+            age_end = int(result['faces'][0]['age']['value'].split('~')[1])
+            age_average = int((age_front + age_end) / 2)
+        else:
+            gender = '여자'
+            age_front = int(result['faces'][0]['age']['value'].split('~')[0])
+            age_end = int(result['faces'][0]['age']['value'].split('~')[1])
+            age_average = int((age_front + age_end) / 2)
 
     url = tmdb_helper.get_request_url('/movie/top_rated',region='KR', language='ko')
     data = requests.get(url).json()
@@ -432,7 +435,7 @@ def genre_recommends(request, genre_ids):
         }
     elif len(movies) == 3:        
         context = {
-            'movies': random.sample(movies, 2)
+            'movies': random.sample(movies, 3)
         }
     else :
         context = {

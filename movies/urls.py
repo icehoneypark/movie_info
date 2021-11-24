@@ -11,7 +11,7 @@ urlpatterns = [
     path('list/', views.movie_list, name='movie_list'),
     # tmdb
     path('tmdb_upcoming/', views.tmdb_upcoming, name="tmdb_upcoming"),
-    path('tmdb_toprate/', views.tmdb_toprate, name="tmdb_toprate"),
+    # path('tmdb_toprate/', views.tmdb_toprate, name="tmdb_toprate"),
     path('tmdb_popular/', views.tmdb_popular, name="tmdb_popular"),
     path('tmdb_now_playing/', views.tmdb_now_playing, name="tmdb_now_playing"),
     path('face_recommends/', views.face_recommends, name="face_recommends"),

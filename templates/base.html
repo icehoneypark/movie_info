@@ -37,8 +37,8 @@
         padding: 0;
         text-align: center;
         ">
-          <a href="{% url 'movies:movie_index' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">관객수별</button></a>
-          <a href="{% url 'movies:tmdb_toprate' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">높은 평점</button></a>
+          {% comment %} <a href="{% url 'movies:movie_index' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">관객수별</button></a> {% endcomment %}
+          <a href="{% url 'movies:movie_index' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">높은 평점</button></a>
           <a href="{% url 'movies:tmdb_popular' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">인기 영화</button></a>
           <a href="{% url 'movies:face_recommends' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">연령대 추천</button></a>
           <a href="{% url 'movies:genre_recommends' 0 %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">장르별</button></a>

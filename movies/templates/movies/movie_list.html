@@ -62,25 +62,25 @@
         <ul class="pagination justify-content-center">
           {% if paginators.has_previous %}
             <li class="page-item">
-              <a class="page-link btn-gold" href="?page={{ paginators.previous_page_number }}">Previous</a>
+              <a class="page-link btn-gold" href="?page={{ paginators.previous_page_number }}"><</a>
             </li>
-            
+
           {% else %}
           <li class="page-item disabled">
-            <a class="page-link btn-gold" href="#">Previous</a>
+            <a class="page-link btn-gold" href="#"><</a>
           </li>
 
           {% endif %}
-          
+
           {% if paginators.number|add:'-4' > 1 %}
             <li class="btn-gold">…</li>
           {% endif %}
 
           {% for i in paginators.paginator.page_range %}
             {% if paginators.number == i %}
-              <li class="page-link btn-gold active">{{ i }}(current)</li>
+              <li class="page-link btn-gold active" style="background-color: rgba(223,190,106,0.4);">{{ i }}</li>
             {% elif i > paginators.number|add:'-3' and i < paginators.number|add:'3' %}
-              <li class="page-link btn-gold"><a href="?page={{ i }}">{{ i }}</a></li>
+              <li class="page-item"><a class="page-link btn-gold" href="?page={{ i }}">{{ i }}</a></li>
             {% endif %}
           {% endfor %}
 
@@ -90,12 +90,12 @@
 
           {% if paginators.has_next %}
             <li class="page-item">
-              <a class="page-link btn-gold" href="?page={{ paginators.next_page_number }}">Next</a>
+              <a class="page-link btn-gold" href="?page={{ paginators.next_page_number }}">></a>
             </li>
 
           {% else %}
           <li class="page-item disabled">
-            <a class="page-link btn-gold" href="#">Next</a>
+            <a class="page-link btn-gold" href="#">></a>
           </li>
 
           {% endif %}

@@ -77,12 +77,13 @@ img:hover{
 {% block content %}
 <h1>&nbsp&nbsp{{ page_name }}</h1>
 <br>
+{% if request.user.profile_img %}
 <h3 style="font-weight: bold;">&nbsp&nbsp&nbsp&nbsp{{ request.user.username }}님의 연령대에 추천하는 영화는??</h3>
 <div style="display: flex; width:95%; justify-content: center; margin-left: 30px;">
   <div style="margin-top: 50px;">
-    <img src="{{ request.user.profile_img.url }}"  alt="profile_img" style="width: 255px; height: 275px;">
+    <img src="{{ request.user.profile_img.url }}"  alt="profile_img" style="width: 255px; height: 275px; border: solid 5px rgba(223,190,106, 1);">
     <div class="card" style="color: rgba(223,190,106,0.7); background-color: #231f20; border: none;">
-      <div class="card-body" style="font-weight: bold;">
+      <div class="card-body" style="font-weight: bold; text-align: center;">
           <h3 class="card-title" style="font-weight: bold;">{{ request.user.username }}님의 프로필 사진</h3>
           <p class="card-text">예상 나이 : {{ age_average }}세</p>
           <p class="card-text"><small>예상 성별 : {{ gender }}</small></p>
@@ -99,7 +100,7 @@ img:hover{
         {% else %}
         <a href="{% url 'movies:movie_detail' carousel_movie.pk %}">
         {% endif %}
-        <img src="https://image.tmdb.org/t/p/w500/{{ carousel_movie.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <img src="https://image.tmdb.org/t/p/w500/{{ carousel_movie.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px rgba(223,190,106, 1);">
         <div style="display: flex; justify-content: center; margin-top: 10px;">
           <h6 style="color: rgba(223,190,106,0.7);">{{ carousel_movie.title }}</h6>
         </div>
@@ -137,8 +138,8 @@ img:hover{
   {% empty %}
   없음
   {% endfor %}
-  <div class="row mt-2">
-    <div class="col-12">
+  <div class="row mt-2" style="height: 720px;">
+    <div class="col-12" style="display: flex; justify-content: center; align-content: space-between;">
       <nav>
         <ul class="pagination justify-content-center">
           {% if paginators.has_previous %}
@@ -177,7 +178,9 @@ img:hover{
     </div>
   </div>
   </div>
-
+{% else %}
+<p style="margin-left: 30px;">프로필 사진이 없습니다.</p>
+{% endif %}
 {% endblock content %}
 {% block script %}
 <script>

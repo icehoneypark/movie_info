@@ -72,13 +72,17 @@
 {% for post in person.like_post.all %}
 <p><a href="{% url 'community:community_detail' post.pk %}">{{ post.title }}</a></p>
 {% empty %}
-좋아요 누른 글이 없습니다.
+<p>좋아요 누른 글이 없습니다.</p>
 {% endfor %}
 <hr>
 <h3>{{ person.username }}가 평점 남긴 영화</h3>
 {% for moviereview in person.moviereview_set.all %}
-<p><a href="{% url 'movies:movie_detail' moviereview.movie.pk %}">{{ moviereview.movie }}</a></p>
+<p><a href="{% url 'movies:movie_detail' moviereview.movie.pk %}">{{ moviereview.movie }} / 내용 : {{ moviereview.content }} 평점 : {{ moviereview.get_rank_display }}</p></a></p>
+{% empty %}
+<p>평점을 남긴 영화가 없습니다.</p>
 {% endfor %}
+
+
 <div class="modal fade" id="exampleModal-followings" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="background-color : rgba(50, 40, 31, 0.55);">
       <div class="modal-content" style="background-color : rgba(50, 40, 31, 0.55);">
