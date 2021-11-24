@@ -43,8 +43,9 @@
 </form>
 <br>
 {% endif %}
-{% for review in reviews %}
 
+{% comment %} 댓글 목록 {% endcomment %}
+{% for review in reviews %}
 <hr>
   <p>작성자 : {{ review.user }}</p> 
   <p>댓글내용 : {{ review.content }}</p> 

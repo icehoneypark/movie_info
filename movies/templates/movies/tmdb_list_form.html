@@ -64,6 +64,7 @@ vote_count
   </div>
 </div>
 <div style="width: 95%; justify-content: center; margin-left: 30px;">
+  <hr>
   <div style="display: flex;">
     <div style="width: 50%;">영화 제목</div>
     <div style="width: 20%;">장르</div>
@@ -74,7 +75,7 @@ vote_count
   {% for movie in paginators %}
     <div style="display: flex;">
       {% comment %} <p style="width: 10%;">{{ movie.pk }}</p> {% endcomment %}
-      <p style="width: 50%;">{{ movie.title }}</p>
+      <p style="width: 50%;"><a href="{% url 'movies:tmdb_detail' movie.id %}" >{{ movie.title }}</a></p>
       <p style="width: 20%; 
       white-space: nowrap;
       overflow: hidden;

@@ -77,117 +77,46 @@ img:hover{
 {% block content %}
 <h1>&nbsp&nbsp{{ page_name }}</h1>
 <br>
-{% if request.user.profile_img %}
-<h3 style="font-weight: bold;">&nbsp&nbsp&nbsp&nbsp{{ request.user.username }}님의 연령대에 추천하는 영화는??</h3>
-<div style="display: flex; width:95%; justify-content: center; margin-left: 30px;">
-  <div style="margin-top: 50px;">
-    <img src="{{ request.user.profile_img.url }}"  alt="profile_img" style="width: 255px; height: 275px; border: solid 5px rgba(223,190,106, 1);">
-    <div class="card" style="color: rgba(223,190,106,0.7); background-color: #231f20; border: none;">
-      <div class="card-body" style="font-weight: bold; text-align: center;">
-          <h3 class="card-title" style="font-weight: bold;">{{ request.user.username }}님의 프로필 사진</h3>
-          <p class="card-text">예상 나이 : {{ age_average }}세</p>
-          <p class="card-text"><small>예상 성별 : {{ gender }}</small></p>
-      </div>
-    </div>  
-  </div>
-
-  <div class="container-carousel" style="margin-bottom: 100px;">
-    <div id="carousel">
-      {% for carousel_movie in carousel_movies %}
-        <figure>
-        {% if tmdb %}
-        <a href="{% url 'movies:tmdb_detail' carousel_movie.title %}">
-        {% else %}
-        <a href="{% url 'movies:movie_detail' carousel_movie.pk %}">
-        {% endif %}
-        <img src="https://image.tmdb.org/t/p/w500/{{ carousel_movie.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px rgba(223,190,106, 1);">
-        <div style="display: flex; justify-content: center; margin-top: 10px;">
-          <h6 style="color: rgba(223,190,106,0.7);">{{ carousel_movie.title }}</h6>
+{% comment %} 온오프라인 여부 확인 {% endcomment %}
+{% if movies %}
+  {% if request.user.profile_img %}
+  <h3 style="font-weight: bold;">&nbsp&nbsp&nbsp&nbsp{{ request.user.username }}님의 연령대에 추천하는 영화는??</h3>
+  <div style="display: flex; flex-direction: column; width:100%; align-items: center;">
+    <div style="margin-top: 50px; margin-left: -60px;">
+      <img src="{{ request.user.profile_img.url }}"  alt="profile_img" style="width: 255px; height: 275px; border: solid 5px rgba(223,190,106, 1);">
+      <div class="card" style="color: rgba(223,190,106,0.7); background-color: #231f20; border: none;">
+        <div class="card-body" style="font-weight: bold; text-align: center;">
+            <h3 class="card-title" style="font-weight: bold;">{{ request.user.username }}님의 프로필 사진</h3>
+            <p class="card-text">예상 나이 : {{ age_average }}세</p>
+            <p class="card-text"><small>예상 성별 : {{ gender }}</small></p>
+            <hr>
         </div>
-        </a>
-        </figure>
+      </div>  
+    </div>
+    <div style="display: flex; flex-wrap: wrap;">
+      {% for movie in movies %}
+        <div style=" width: 10%; margin: 0 4% 0;">
+          <div style="border: solid 1px; width: 200px;">
+            <a href="{% url 'movies:tmdb_detail' movie.id %}">
+              <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="img" style="width: 100%; height: 300px;">
+            </a>
+          </div>
+          <br>
+          <p style="text-align: center; width: 200px; margin-top: -20px;">{{ movie.title }}</p>
+        </div>
+        <hr>
+      {% empty %}
+      <p>조건에 맞는 영화가 없습니다.</p>
       {% endfor %}
     </div>
   </div>
-</div>
-<br><br>
-<div style="width: 95%; justify-content: center; margin-left: 30px;">
-  <div style="display: flex;">
-    <div style="width: 50%;">영화 제목</div>
-    <div style="width: 20%;">장르</div>
-    <div style="width: 20%;">관객수</div>
-    <div style="width: 20%;">개봉일</div>
-    <div style="width: 10%;">평점</div>
-  </div>
-  <hr>
-  {% for movie in paginators %}
-    <div style="display: flex;">
-      {% comment %} <p style="width: 10%;">{{ movie.pk }}</p> {% endcomment %}
-      <p style="width: 50%;"><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.title }}</a></p>
-      <p style="width: 20%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-right: 10px;">
-      {{ movie.genre_ids|cut:"'"|cut:"["|cut:"]" }}</p>
-      <p style="width: 20%;">{{ movie.popularity }}</p>
-      <p style="width: 20%;">{{ movie.release_date|date:'Y-m-d' }}</p>
-      <p style="width: 10%;">{{ movie.vote_average }}</a></p>
-    </div>
-    <br>
-  {% empty %}
-  없음
-  {% endfor %}
-  <div class="row mt-2">
-    <div class="col-12">
-      <nav>
-        <ul class="pagination justify-content-center">
-          {% if paginators.has_previous %}
-            <li class="page-item">
-              <a class="page-link btn-gold" href="?page={{ paginators.previous_page_number }}"><</a>
-            </li>
 
-          {% else %}
-          <li class="page-item disabled">
-            <a class="page-link btn-gold" href="#"><</a>
-          </li>
 
-          {% endif %}
-
-          {% if paginators.number|add:'-4' > 1 %}
-            <li class="btn-gold">…</li>
-          {% endif %}
-
-          {% for i in paginators.paginator.page_range %}
-            {% if paginators.number == i %}
-              <li class="page-link btn-gold active" style="background-color: rgba(223,190,106,0.4);">{{ i }}</li>
-            {% elif i > paginators.number|add:'-3' and i < paginators.number|add:'3' %}
-              <li class="page-item"><a class="page-link btn-gold" href="?page={{ i }}">{{ i }}</a></li>
-            {% endif %}
-          {% endfor %}
-
-          {% if paginators.paginator.num_pages > paginators.number|add:'4' %}
-            <li class="btn-gold">…</li>
-          {% endif %}
-
-          {% if paginators.has_next %}
-            <li class="page-item">
-              <a class="page-link btn-gold" href="?page={{ paginators.next_page_number }}">></a>
-            </li>
-
-          {% else %}
-          <li class="page-item disabled">
-            <a class="page-link btn-gold" href="#">></a>
-          </li>
-
-          {% endif %}
-        </ul>
-      </nav>
-    </div>
-  </div>
-</div>
+  {% else %}
+  <p style="margin-left: 30px;">프로필 사진이 없습니다.</p>
+  {% endif %}
 {% else %}
-<p style="margin-left: 30px;">프로필 사진이 없습니다.</p>
+<p>요청이 잘못되었습니다.</p>
 {% endif %}
 {% endblock content %}
 {% block script %}

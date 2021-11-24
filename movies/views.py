@@ -124,7 +124,7 @@ def movie_review_delete(request, movie_pk, review_pk):
             review.delete()
     return redirect('movies:movie_detail', movie_pk)
 
-
+@require_safe
 def movie_list(request):
     movies_1 = Movie.objects.order_by('-release_date')[1:60] 
     movies1_start = Movie.objects.order_by('-release_date')[0]
@@ -170,6 +170,7 @@ class TMDBHelper:
 
 tmdb_helper = TMDBHelper('6163fbe091536a27c8951c10ecb40d6c')
 
+@require_safe
 def tmdb_upcoming(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/upcoming',region='KR', language='ko')
@@ -206,7 +207,7 @@ def tmdb_upcoming(request):
 
 
 # def tmdb_toprate(request):
-    
+@require_safe
 def movie_index(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/top_rated',region='KR', language='ko')
@@ -237,6 +238,8 @@ def movie_index(request):
         }
         return render(request, 'movies/index.html', context)
 
+
+@require_safe
 def tmdb_popular(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/popular',region='KR', language='ko')
@@ -266,6 +269,8 @@ def tmdb_popular(request):
         }
         return render(request, 'movies/index.html', context)
 
+
+@require_safe
 def tmdb_now_playing(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/now_playing',region='KR', language='ko')
@@ -299,6 +304,8 @@ def tmdb_now_playing(request):
     }
     return render(request, 'movies/tmdb_list_form.html', context)
 
+
+@require_safe
 def tmdb_search(request):
     title = request.GET.get('search')
     url = tmdb_helper.get_request_url('/search/movie',region='KR', language='ko', query = title)
@@ -309,6 +316,7 @@ def tmdb_search(request):
     return render(request,'movies/search.html',context)
 
 
+@require_safe
 def tmdb_detail(request, movie_id):
     url = tmdb_helper.get_request_url(f'/movie/{movie_id}',region='KR', language='ko')
 
@@ -327,8 +335,8 @@ def tmdb_detail(request, movie_id):
     return render(request,'movies/tmdb_detail.html',context)
 
 
+@require_safe
 def ranked_similar(request, movie_id):
-    print(movie_id)
     # 평점 기준 영화 추천 = '/movie/{movie_id}/similar' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url(f'/movie/{movie_id}/similar',region='KR', language='ko')
     ranked_movie_url = tmdb_helper.get_request_url(f'/movie/{movie_id}',region='KR', language='ko')
@@ -368,12 +376,15 @@ def ranked_similar(request, movie_id):
 import json
 import requests
 import datetime
+
+
+@require_safe
 def face_recommends(request):
     client_id = "nSNNt9Iyb9ef1PxjBLPF"
     client_secret = "yjeOVJx1Qz"
 
     url = "https://openapi.naver.com/v1/vision/face"
-
+    
     if not request.user.profile_img :
         gender = 'None'
         age_average = 'None'
@@ -382,6 +393,9 @@ def face_recommends(request):
         headers = {'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
         response = requests.post(url,  files=files, headers=headers)
         result = json.loads(response.text)
+        if not 'faces' in result:
+            return render(request, 'movies/face_recommends.html')
+        
         if result['faces'] == []:
             gender = 'None'
             age_average = 'None'
@@ -397,9 +411,12 @@ def face_recommends(request):
             age_average = int((age_front + age_end) / 2)
 
     url = tmdb_helper.get_request_url('/movie/top_rated',region='KR', language='ko')
-    data = requests.get(url).json()
-    movies = data['results']
-    movies[0]['tmp'] = 1
+    datas, movies = [], []
+    for i in range(1,6):
+        tmp_url = url + '&page=' + str(i)
+        data = requests.get(tmp_url).json()
+        datas.append(data['results'])
+        movies += datas[i-1]
     genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
     genres_list = requests.get(genres_url).json()
     genres = genres_list['genres']
@@ -412,42 +429,66 @@ def face_recommends(request):
     # 20~29세 이용자는 release_date 가 2015년 이후인 영화 추천
     # 30세 이상 이용자는 release_date 가 2015년 이전인 영화 추천
     # 얼굴 인식이 안되는 경우 메시지 출력
+    
+    filter_movies = []
     if age_average == 'None':
-        rec_movie = []
-        carousel_movies = []
-    elif 20 <= age_average < 30:
-        rec_movie = Movie.objects.filter(release_date__gte=datetime.date(2010, 1, 1)).filter(release_date__lte=datetime.date(2019, 12, 31))
-        carousel_movies = rec_movie[:10]
-
+        pass
     elif age_average < 20:
-        rec_movie = Movie.objects.filter(adult=False).filter(release_date__gte=datetime.date(2020, 1, 1))
-        carousel_movies = rec_movie[:10]
+        for i in range(len(movies)):
+            if movies[i]['adult'] == False:
+                if 2020 <= int(movies[i]['release_date'][:4]):
+                    filter_movies.append(movies[i])
+                else:
+                    continue
+        if len(filter_movies) < 10:
+            pass
+        else:
+            filter_movies = filter_movies[:10]
+
+    elif 20 <= age_average < 30:
+        for i in range(len(movies)):
+            if 2010 <= int(movies[i]['release_date'][:4]) <= 2019:
+                filter_movies.append(movies[i])
+            else:
+                continue
+        if len(filter_movies) < 10:
+            pass
+        else:
+            filter_movies = filter_movies[:10]
 
     elif 30 <= age_average < 40:
-        rec_movie = Movie.objects.filter(release_date__gte=datetime.date(2000, 1, 1)).filter(release_date__lte=datetime.date(2009, 12, 31))
-        carousel_movies = rec_movie[:10]
+        for i in range(len(movies)):
+            if 2000 <= int(movies[i]['release_date'][:4]) <= 2009:
+                filter_movies.append(movies[i])
+            else:
+                continue
+        if len(filter_movies) < 10:
+            pass
+        else:
+            filter_movies = filter_movies[:10]
 
     else:
-        rec_movie = Movie.objects.filter(release_date__lte=datetime.date(1999, 12, 31))
-        carousel_movies = rec_movie[:10]
-
-    
-    paginator = Paginator(rec_movie, 10)
-    page = request.GET.get('page')
-    paginators = paginator.get_page(page)
+        for i in range(len(movies)):
+            if int(movies[i]['release_date'][:4]) <= 1999:
+                filter_movies.append(movies[i])
+            else:
+                continue
+        if len(filter_movies) < 10:
+            pass
+        else:
+            filter_movies = filter_movies[:10]
 
     context = {
-        'carousel_movies': carousel_movies,
-        'movies': rec_movie,
+        'movies': filter_movies,
         'gender': gender,
         'age_average': age_average,
-        'paginators': paginators,
         'page_name': '연령대별 추천 영화',
     }
     return render(request, 'movies/face_recommends.html', context)
 
 import random
 
+@require_safe
 def genre_recommends(request, genre_ids):
     url = tmdb_helper.get_request_url(f'/movie/popular',region='KR', language='ko')
     movies = []
@@ -455,8 +496,7 @@ def genre_recommends(request, genre_ids):
         pass
     else: 
         for i in range(1, 11):
-            tmp_url = url + '&page=' + str(i)        
-            print(tmp_url)
+            tmp_url = url + '&page=' + str(i)
             movies_json = requests.get(tmp_url).json()
             for movie in movies_json['results']:
                 if genre_ids in movie['genre_ids']:
