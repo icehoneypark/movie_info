@@ -326,6 +326,44 @@ def tmdb_detail(request, movie_id):
     }
     return render(request,'movies/tmdb_detail.html',context)
 
+
+def ranked_similar(request, movie_id):
+    print(movie_id)
+    # 평점 기준 영화 추천 = '/movie/{movie_id}/similar' (필요한 내용에 대한 url을 수정하면 됨)
+    url = tmdb_helper.get_request_url(f'/movie/{movie_id}/similar',region='KR', language='ko')
+    ranked_movie_url = tmdb_helper.get_request_url(f'/movie/{movie_id}',region='KR', language='ko')
+    data = requests.get(url).json()
+    ranked_movie = requests.get(ranked_movie_url).json()
+    if 'results' in data : 
+        movies= data['results']
+        genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
+        genres_list = requests.get(genres_url).json()
+        genres = genres_list['genres']
+        for movie in movies:
+            for i in range(len(movie['genre_ids'])):
+                for j in range(len(genres)):
+                    if movie['genre_ids'][i] == genres[j]['id']:
+                        movie['genre_ids'][i] = genres[j]['name']
+        data_results_start = data['results'][0]
+        data_results_end = data['results'][1:]
+        paginator = Paginator(movies, 10)
+        page = request.GET.get('page')
+        paginators = paginator.get_page(page)
+    else:
+        data_results_start = ''
+        data_results_end = ''
+        paginators = ''
+        movies = ''
+    context = {
+        'paginators': paginators,
+        'movies': movies,
+        'ranked_movie': ranked_movie,
+        'movie_start': data_results_start,
+        'movie_end': data_results_end,
+        'page_name': '평가한 영화와 비슷한 영화'
+    }
+    return render(request, 'movies/ranked_similar.html', context)
+
 # ------------------- Face Recognization -------------------
 import json
 import requests
@@ -369,7 +407,6 @@ def face_recommends(request):
             for j in range(len(genres)):
                 if movie['genre_ids'][i] == genres[j]['id']:
                     movie['genre_ids'][i] = genres[j]['name']
-
     # 20세 미만의 경우 adult=True인 영화 필터링
     # 20~29세 이용자는 release_date 가 2015년 이후인 영화 추천
     # 30세 이상 이용자는 release_date 가 2015년 이전인 영화 추천
@@ -414,8 +451,7 @@ def genre_recommends(request, genre_ids):
     url = tmdb_helper.get_request_url(f'/movie/popular',region='KR', language='ko')
     movies = []
     for i in range(1, 11):
-        tmp_url = url + '&page=' + str(i)        
-        print(tmp_url)
+        tmp_url = url + '&page=' + str(i)
         movies_json = requests.get(tmp_url).json()
         for movie in movies_json['results']:
             if genre_ids in movie['genre_ids']:

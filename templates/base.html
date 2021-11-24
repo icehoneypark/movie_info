@@ -42,6 +42,7 @@
           <a href="{% url 'movies:tmdb_popular' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">인기 영화</button></a>
           <a href="{% url 'movies:face_recommends' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">연령대 추천</button></a>
           <a href="{% url 'movies:genre_recommends' 0 %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">장르별</button></a>
+          {% comment %} <a href="{% url 'movies:rank_recommends' movie_id %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">평점 연관 추천</button></a> {% endcomment %}
 
         </ul>
       </div>

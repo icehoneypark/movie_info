@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<h1>&nbsp&nbsp{{ page_name }}</h1>
+{% if movies %}
+<div class="container-fluid" style="padding: 0;">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+      <div class="carousel carousel-showmanymoveone slide" id="itemslider">
+        <div class="carousel-inner">
+          <div class="item active">
+            <div class="col-xs-12 col-sm-6 col-md-2">
+              <a href="{% url 'movies:tmdb_detail' movie_start.id %}">
+              {% if movie_start.poster_path %}
+              <img src="https://image.tmdb.org/t/p/w500/{{ movie_start.poster_path }}" class="img-responsive center-block">
+              {% else %}
+              <p style="height: 277.5px; line-height: 277.5px; text-align: center;">포스터 없음</p>
+              {% endif %}
+              </a>
+              <h4 class="text-center" style="margin-top:10px;">{{ movie_start.title }}</h4>
+            </div>
+          </div>
+
+        {% for movie in movie_end %}
+          <div class="item">
+            <div class="col-xs-12 col-sm-6 col-md-2">            
+              <a href="{% url 'movies:tmdb_detail' movie.id %}">
+              {% if movie.poster_path %}
+              <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="img-responsive center-block">
+              {% else %}
+              <p style="height: 277.5px; line-height: 277.5px; text-align: center;">포스터 없음</p>
+              {% endif %}
+              </a>
+              <h4 class="text-center" style="margin-top:10px;">{{ movie.title }}</h4>
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+
+        <div id="slider-control">
+        <a class="left carousel-control" href="#itemslider" data-slide="prev"><img src="https://cdn0.iconfinder.com/data/icons/website-kit-2/512/icon_402-512.png" alt="Left" class="img-responsive"></a>
+        <a class="right carousel-control" href="#itemslider" data-slide="next"><img src="http://pixsector.com/cache/81183b13/avcc910c4ee5888b858fe.png" alt="Right" class="img-responsive"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="width: 95%; justify-content: center; margin-left: 30px;">
+  <div style="display: flex;">
+    <div style="width: 50%;">영화 제목</div>
+    <div style="width: 20%;">장르</div>
+    <div style="width: 20%;">관객수</div>
+    <div style="width: 10%;">평점</div>
+  </div>
+  <hr>
+  {% for movie in paginators %}
+    <div style="display: flex;">
+      <p style="width: 50%;">{{ movie.title }}</p>
+      <p style="width: 20%; 
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: 10px;">{{ movie.genre_ids|cut:"'"|cut:"["|cut:"]" }}</p>
+      <p style="width: 20%;">{{ movie.popularity }}</p>
+      <p style="width: 10%;">{{ movie.vote_average }}</a></p>
+    </div>
+    <br>
+  {% empty %}
+  없음
+  {% endfor %}
+  <div class="row mt-2">
+    <div class="col-12">
+      <nav>
+        <ul class="pagination justify-content-center">
+          {% if paginators.has_previous %}
+            <li class="page-item">
+              <a class="page-link btn-gold" href="?page={{ paginators.previous_page_number }}"><</a>
+            </li>
+
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link btn-gold" href="#"><</a>
+          </li>
+
+          {% endif %}
+
+          {% if paginators.number|add:'-4' > 1 %}
+            <li class="btn-gold">…</li>
+          {% endif %}
+
+          {% for i in paginators.paginator.page_range %}
+            {% if paginators.number == i %}
+              <li class="page-link btn-gold active" style="background-color: rgba(223,190,106,0.4);">{{ i }}</li>
+            {% elif i > paginators.number|add:'-3' and i < paginators.number|add:'3' %}
+              <li class="page-item"><a class="page-link btn-gold" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
+
+          {% if paginators.paginator.num_pages > paginators.number|add:'4' %}
+            <li class="btn-gold">…</li>
+          {% endif %}
+
+          {% if paginators.has_next %}
+            <li class="page-item">
+              <a class="page-link btn-gold" href="?page={{ paginators.next_page_number }}">></a>
+            </li>
+
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link btn-gold" href="#">></a>
+          </li>
+
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+{% else %}
+<hr>
+<h1>&nbsp&nbsp잘못된 요청입니다.</h1>
+{% endif %}
+{% endblock content %}
+{% block script %}
+<script>
+$(document).ready(function(){
+
+$('#itemslider').carousel({ interval: 3000 });
+
+$('.carousel-showmanymoveone .item').each(function(){
+var itemToClone = $(this);
+
+for (var i=1;i<6;i++) {
+itemToClone = itemToClone.next();
+
+if (!itemToClone.length) {
+itemToClone = $(this).siblings(':first');
+}
+
+itemToClone.children(':first-child').clone()
+.addClass("cloneditem-"+(i))
+.appendTo($(this));
+}
+});
+});
+</script>
+{% endblock script %}

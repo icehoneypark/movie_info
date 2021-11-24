@@ -11,11 +11,11 @@ urlpatterns = [
     path('list/', views.movie_list, name='movie_list'),
     # tmdb
     path('tmdb_upcoming/', views.tmdb_upcoming, name="tmdb_upcoming"),
-    # path('tmdb_toprate/', views.tmdb_toprate, name="tmdb_toprate"),
     path('tmdb_popular/', views.tmdb_popular, name="tmdb_popular"),
     path('tmdb_now_playing/', views.tmdb_now_playing, name="tmdb_now_playing"),
     path('face_recommends/', views.face_recommends, name="face_recommends"),
     path('tmdb_search/', views.tmdb_search, name="tmdb_search"),
     path('tmdb_detail/<int:movie_id>/', views.tmdb_detail, name="tmdb_detail"),
     path('genre_recommends/<int:genre_ids>/', views.genre_recommends, name="genre_recommends"),
+    path('<int:movie_id>/similar', views.ranked_similar, name="ranked_similar"),
 ]
