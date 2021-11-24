@@ -187,6 +187,7 @@ def tmdb_upcoming(request):
                         movie['genre_ids'][i] = genres[j]['name']
         data_results_start = data['results'][0]
         data_results_end = data['results'][1:]
+
         paginator = Paginator(data_results, 10)
         page = request.GET.get('page')
         paginators = paginator.get_page(page)
@@ -350,10 +351,21 @@ def face_recommends(request):
     headers = {'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
     response = requests.post(url,  files=files, headers=headers)
     result = json.loads(response.text)
-
-    age_front = int(result['faces'][0]['age']['value'].split('~')[0])
-    age_end = int(result['faces'][0]['age']['value'].split('~')[1])
-    age_average = (age_front + age_end) / 2
+    
+    print(result)
+    if result['faces'] == []:
+        gender = 'None'
+        age_average = 'None'
+    elif result['faces'][0]['gender']['value'] == 'male':
+        gender = '남자'
+        age_front = int(result['faces'][0]['age']['value'].split('~')[0])
+        age_end = int(result['faces'][0]['age']['value'].split('~')[1])
+        age_average = (age_front + age_end) / 2
+    else:
+        gender = '여자'
+        age_front = int(result['faces'][0]['age']['value'].split('~')[0])
+        age_end = int(result['faces'][0]['age']['value'].split('~')[1])
+        age_average = (age_front + age_end) / 2
 
     url = tmdb_helper.get_request_url('/movie/top_rated',region='KR', language='ko')
     data = requests.get(url).json()
@@ -372,17 +384,24 @@ def face_recommends(request):
     # 20~29세 이용자는 release_date 가 2015년 이후인 영화 추천
     # 30세 이상 이용자는 release_date 가 2015년 이전인 영화 추천
     # 얼굴 인식이 안되는 경우 메시지 출력
-    if 20 <= age_average < 30:
+    if age_average == 'None':
+        rec_movie = []
+        carousel_movies = []
+    elif 20 <= age_average < 30:
         rec_movie = Movie.objects.filter(release_date__gte=datetime.date(2010, 1, 1)).filter(release_date__lte=datetime.date(2019, 12, 31))
+        carousel_movies = rec_movie[:10]
 
     elif age_average < 20:
         rec_movie = Movie.objects.filter(adult=False).filter(release_date__gte=datetime.date(2020, 1, 1))
+        carousel_movies = rec_movie[:10]
 
     elif 30 <= age_average < 40:
         rec_movie = Movie.objects.filter(release_date__gte=datetime.date(2000, 1, 1)).filter(release_date__lte=datetime.date(2009, 12, 31))
+        carousel_movies = rec_movie[:10]
 
     else:
         rec_movie = Movie.objects.filter(release_date__lte=datetime.date(1999, 12, 31))
+        carousel_movies = rec_movie[:10]
 
     
     paginator = Paginator(rec_movie, 10)
@@ -390,8 +409,11 @@ def face_recommends(request):
     paginators = paginator.get_page(page)
 
     context = {
+        'carousel_movies': carousel_movies,
         'movies': rec_movie,
+        'gender': gender,
         'age_average': age_average,
         'paginators': paginators,
+        'page_name': '연령대별 추천 영화',
     }
     return render(request, 'movies/face_recommends.html', context)

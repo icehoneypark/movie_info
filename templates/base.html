@@ -40,6 +40,7 @@
           <a href="{% url 'movies:movie_index' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">관객수 별</button></a>
           <a href="{% url 'movies:tmdb_toprate' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">높은 평점</button></a>
           <a href="{% url 'movies:tmdb_popular' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">인기 영화</button></a>
+          <a href="{% url 'movies:face_recommends' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">연령대별 추천</button></a>
         </ul>
       </div>
       {% comment %} <div><a href="{% url 'movies:movie_list' %}">영화 목록</a></div> {% endcomment %}

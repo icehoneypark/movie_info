@@ -19,11 +19,10 @@
   <p style="font-size: 35px;">줄거리</p>
   <p style="font-size: 20px;">{{ movie.overview }}</p>
   <hr>
-  <p style="font-size: 20px;">개봉일</p><p>
-  {{ movie.release_date|date:'Y' }}년
-  {{ movie.release_date|date:'m' }}월
-  {{ movie.release_date|date:'d' }}일
+  <p style="font-size: 20px;">개봉일</p>
   <p>
+  {{ movie.release_date|date:'Y-m-d' }}
+  </p>
   <hr>
   {% comment %} <p><span style="font-size: 20px;">개봉일 </span><span>{{ movie.released_date }}</span><p> {% endcomment %}
   <p style="font-size: 20px;">관객수</p>
