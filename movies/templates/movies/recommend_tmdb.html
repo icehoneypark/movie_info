@@ -82,7 +82,7 @@ img:hover{
       {% for movie in movies %}			
 				<figure>
 				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. {{ forloop.counter }}</h6>
-				<a href="{% url 'movies:movie_detail' movie.pk %}">
+				<a href="{% url 'movies:tmdb_detail' movie.id %}">
         <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
         <div style="display: flex; justify-content: center; margin-top: 10px;">
           <h6 style="color: rgba(223,190,106,0.7);">{{ movie.title }}</h6>
@@ -106,7 +106,7 @@ img:hover{
 	{% for movie in movies %}	
 	<div style="display: flex;margin-bottom: 10px;">
 		<div style="width: 10%;">{{ forloop.counter }}</div>
-		<div style="width: 50%;"><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.title }}</a></div>
+		<div style="width: 50%;"><a href="{% url 'movies:tmdb_detail' movie.id %}">{{ movie.title }}</a></div>
 		<div style="width: 20%;
 			white-space: nowrap;
       overflow: hidden;

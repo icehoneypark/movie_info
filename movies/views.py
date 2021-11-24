@@ -148,7 +148,6 @@ class TMDBHelper:
     def __init__(self, api_key=None):
         self.api_key = api_key
 
-
     def get_request_url(self, method, **kwargs):
         base_url = 'https://api.themoviedb.org/3'
         request_url = base_url + method
@@ -225,7 +224,7 @@ def tmdb_toprate(request):
         'page_name': '높은 평점 영화',
         'tmdb': 1,
         }
-        return render(request, 'movies/index.html', context)
+        return render(request, 'movies/recommend_tmdb.html', context)
 
     else:
         data_results = Movie.objects.order_by('-vote_average')[:10]    
@@ -255,7 +254,7 @@ def tmdb_popular(request):
         'page_name': '인기 영화',
         'tmdb': 1,
         }
-        return render(request, 'movies/index.html', context)
+        return render(request, 'movies/recommend_tmdb.html', context)
 
     else:  
     
@@ -300,27 +299,15 @@ def tmdb_now_playing(request):
 
 def tmdb_search(request):
     title = request.GET.get('search')
-    movie_id = tmdb_helper.get_movie_id(title)
-    url = tmdb_helper.get_request_url(f'/movie/{movie_id}',region='KR', language='ko')
-    movie = requests.get(url).json()
-
-    movie_genre = []
-
-    if 'genres' in movie:
-        for genre in movie['genres'] :
-            # print(genre['name'])
-            movie_genre.append(genre['name'])
-        
-        movie['genres'] = movie_genre
+    url = tmdb_helper.get_request_url('/search/movie',region='KR', language='ko', query = title)
+    movies = requests.get(url).json()
     context = {
-        'movie': movie,
+        'movies': movies['results'],
     }
-    return render(request,'movies/tmdb_detail.html',context)
+    return render(request,'movies/search.html',context)
 
 
-def tmdb_detail(request, movie_title):
-    title = movie_title
-    movie_id = tmdb_helper.get_movie_id(title)
+def tmdb_detail(request, movie_id):
     url = tmdb_helper.get_request_url(f'/movie/{movie_id}',region='KR', language='ko')
 
     movie = requests.get(url).json()
@@ -417,3 +404,38 @@ def face_recommends(request):
         'page_name': '연령대별 추천 영화',
     }
     return render(request, 'movies/face_recommends.html', context)
+
+import random
+
+def genre_recommends(request, genre_ids):
+    url = tmdb_helper.get_request_url(f'/movie/popular',region='KR', language='ko')
+    movies = []
+    for i in range(1, 11):
+        tmp_url = url + '&page=' + str(i)        
+        print(tmp_url)
+        movies_json = requests.get(tmp_url).json()
+        for movie in movies_json['results']:
+            if genre_ids in movie['genre_ids']:
+                movies.append(movie)
+    if len(movies) == 0:
+        context = {
+            'movies': [],
+            'genre': genre_ids
+        }
+    elif len(movies) == 1:        
+        context = {
+            'movies': random.sample(movies, 1)
+        }
+    elif len(movies) == 2:        
+        context = {
+            'movies': random.sample(movies, 2)
+        }
+    elif len(movies) == 3:        
+        context = {
+            'movies': random.sample(movies, 2)
+        }
+    else :
+        context = {
+            'movies': random.sample(movies, 4)
+        }    
+    return render(request, 'movies/genre_recommends.html/', context)

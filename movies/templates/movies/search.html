@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<hr>
+{% for movie in movies %}
+<a href="{% url 'movies:tmdb_detail' movie.id %}">
+<div style="display: flex; height: 250px;">
+<p style="margin-right: 30px;"><img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="img" style="width: 150px; height: 225px;"></p>
+  <div>
+  <h1>{{ movie.title }}</h1>
+  <p style="font-size: 20px;
+      overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* 라인수 */
+    -webkit-box-orient: vertical;
+    word-wrap:break-word; 
+    line-height: 1.2em;
+    height: 6em;">{{ movie.overview }}</p>
+  </div>
+  </div>
+</a>
+<hr>
+{% endfor %}
+{% endblock content %}
+{% block script %}{% endblock script %}
