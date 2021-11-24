@@ -77,8 +77,7 @@
 <hr>
 <h3>{{ person.username }}가 평점 남긴 영화</h3>
 {% for moviereview in person.moviereview_set.all %}
-<p><a href="{% url 'movies:movie_detail' moviereview.movie.pk %}">{{ moviereview.movie }} / 내용 : {{ moviereview.content }} 평점 : {{ moviereview.get_rank_display }}</a></p>
-<p><a href="{% url 'movies:ranked_similar' moviereview.movie.movie_id %}"><button class="btn-gold" style="width: 300px; height: 40px; padding: 10px;">유사한 작품 찾아보기</button></a></p>
+<p><a href="{% url 'movies:movie_detail' moviereview.movie.pk %}">{{ moviereview.movie.title }} / 내용 : {{ moviereview.content }} / 평점 : {{ moviereview.get_rank_display }}</a></p>
 {% empty %}
 <p>평점을 남긴 영화가 없습니다.</p>
 {% endfor %}
