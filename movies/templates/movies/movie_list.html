@@ -2,14 +2,6 @@
 {% block css %}
 {% endblock css %}
 {% block content %}
-<div class="search" style="text-align: center;">
-  <form action="{% url 'movies:tmdb_detail' %}" method="GET" style="">
-    <label for="search-input"></label>
-    <input type="search" class='search-input' placeholder="영화 제목을 입력하세요." name='search' size=100 style="
-    color: rgba(223,190,106,0.7); background: #231f20; padding: 0; border-color: rgba(223,190,106,0.7);">
-  </form>
-  <br>
-</div>
 <div class="container-fluid">
   <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -44,7 +36,7 @@
 	<div style="display: flex;">
 		{% comment %} <div style="width: 10%;">순위</div> {% endcomment %}
 		<div style="width: 50%;">영화 제목</div>
-		<div style="width: 20%;">장르</div>
+		<div style="width: 20%; margin-right: 10px;">장르</div>
 		<div style="width: 20%;">관객수</div>
 		<div style="width: 10%;">평점</div>
 	</div>
@@ -53,7 +45,12 @@
     <div style="display: flex;">
       {% comment %} <p style="width: 10%;">{{ movie.pk }}</p> {% endcomment %}
       <p style="width: 50%;"><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.title }}</a></p>    
-      <p style="width: 20%;">{{ movie.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+      <p style="width: 20%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: 10px;">
+      {{ movie.genre_ids|slice:"2:-2"|cut:"'" }}</p>
       <p style="width: 20%;">{{ movie.popularity }}</p>
       <p style="width: 10%;">{{ movie.vote_average }}</a></p>
     </div>

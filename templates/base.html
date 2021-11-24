@@ -23,39 +23,61 @@
   <link rel="stylesheet" href="{% static "css/base.css" %}">
 </head>
 <body>
-<nav style="position: fixed; top: 0px; background: #231f20; width: 100%; line-height: 50px; height: 50px; margin: 10px; display: flex; justify-content: space-between;">
+<nav style=" position:-webkit-sticky;position:sticky;top:0;z-index:1020; background: #231f20;  line-height: 70px; height: 70px; margin: 0px; display: flex; justify-content: space-between;">
   <div>
     <div style="display: flex; width: 300px; justify-content: space-between; margin-left: 20px;">
       <div><a href="{% url 'main' %}">배배</a></div>
-      <div><a href="{% url 'movies:movie_index' %}">영화 추천</a></div>
-      {% comment %} <div><a href="{% url 'movies:movie_list' %}">영화 목록</a></div> {% endcomment %}
+      {% comment %} <div><a href="{% url 'movies:movie_index' %}">영화 추천</a></div> {% endcomment %}
       <div class="nav-item dropdown" style="">
         <a class="nav-link dropdown" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0;">    
-        <p style=" justify-content: center; padding: 0;">영화 목록</p>
+        <p style=" justify-content: center; padding: 0;">영화 추천</p>
         </a>
         <ul class="dropdown-menu" aria-labelledby="navbarDropdown2" style="
         background-color: rgba(50, 40, 31, 1); opacity : 1; min-width: 110px;
         padding: 0;
         text-align: center;
         ">
-          <a href="{% url 'movies:movie_list' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">전체 목록</button></a>
-          <a href="{% url 'movies:tmdb_upcoming' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">개봉 예정</button></a>
+          <a href="{% url 'movies:movie_index' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">관객수 별</button></a>
           <a href="{% url 'movies:tmdb_toprate' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">높은 평점</button></a>
           <a href="{% url 'movies:tmdb_popular' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">인기 영화</button></a>
+        </ul>
+      </div>
+      {% comment %} <div><a href="{% url 'movies:movie_list' %}">영화 목록</a></div> {% endcomment %}
+      <div class="nav-item dropdown" style="">
+        <a class="nav-link dropdown" href="#" id="navbarDropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0;">    
+        <p style=" justify-content: center; padding: 0;">영화 목록</p>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown3" style="
+        background-color: rgba(50, 40, 31, 1); opacity : 1; min-width: 110px;
+        padding: 0;
+        text-align: center;
+        ">
+          <a href="{% url 'movies:movie_list' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">전체 목록</button></a>
+          <a href="{% url 'movies:tmdb_upcoming' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">개봉 예정</button></a>
           <a href="{% url 'movies:tmdb_now_playing' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">현재 상영 중</button></a>
         </ul>
       </div>
       <div><a href="{% url 'community:community_index' %}">커뮤니티</a></div>
     </div>
   </div>
+  <div class="search" style="text-align: center;">
+  <form action="{% url 'movies:tmdb_search' %}" method="GET" style="">
+    <label for="search-input"></label>
+    <input type="search" class='search-input' placeholder="영화 제목을 입력하세요." name='search' size=100 style="
+    color: rgba(223,190,106,0.7); background: #231f20; padding: 0; border-color: rgba(223,190,106,0.7); line-height: 40px; margin-right: 200px;">
+  </form>
+  <br>
+</div>
   <div class="nav-item dropdown" style="margin-right: 40px;">
     <a class="nav-link dropdown" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     {% if request.user.profile_img %}
     <img src="{{ user.profile_img.url }}" alt="" style="
-    width: 50px; height: 50px; 
-    -webkit-border-radius: 30px;">
+    width: 40px; height: 40px; 
+    -webkit-border-radius: 40px;">
     {% else %}
-    계정
+    <img src="{% static 'images/default-profile-img.png' %}" alt=""style="
+    width: 40px; height: 40px; 
+    -webkit-border-radius: 40px;">
     {% endif %}
     </a>
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: rgba(50, 40, 31, 1); opacity : 1;">
@@ -91,6 +113,7 @@
       </div>
     </div>
   </div>
+  <br>
   <br>
   <br>
   {% block content %}  

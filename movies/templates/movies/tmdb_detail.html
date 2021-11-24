@@ -2,6 +2,7 @@
 {% block css %}
 {% endblock css %}
 {% block content %}
+{% if movie.title %}
 <h1>{{ movie.title }}</h1>
 <hr>
 <div style="display: flex;">
@@ -29,6 +30,9 @@
   </div>
 </div>
 <hr>
+{% else %}
+영화에 대한 정보가 없습니다.
+{% endif %}
 {% endblock content %}
 {% block script %}
 {% endblock script %}

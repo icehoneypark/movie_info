@@ -30,4 +30,9 @@
 </a>
 </div>
 </form>
+<br>
+<form action="{% url 'accounts:delete' %}" method="POST">
+{% csrf_token %}
+<button class="btn-gold">회원탈퇴</button>
+</form>
 {% endblock %}

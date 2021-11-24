@@ -14,6 +14,7 @@ urlpatterns = [
     path('tmdb_toprate/', views.tmdb_toprate, name="tmdb_toprate"),
     path('tmdb_popular/', views.tmdb_popular, name="tmdb_popular"),
     path('tmdb_now_playing/', views.tmdb_now_playing, name="tmdb_now_playing"),
-    path('tmdb_detail/', views.tmdb_search, name="tmdb_detail"),
     path('face_recommends/', views.face_recommends, name="face_recommends"),
+    path('tmdb_search/', views.tmdb_search, name="tmdb_search"),
+    path('tmdb_detail/<str:movie_title>/', views.tmdb_detail, name="tmdb_detail"),
 ]

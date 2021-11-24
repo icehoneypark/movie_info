@@ -20,29 +20,29 @@ video
 vote_average
 vote_count
 --- {% endcomment %}
+{% if movies %}
 <div class="container-fluid" style="padding: 0;">
   <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
       <div class="carousel carousel-showmanymoveone slide" id="itemslider">
         <div class="carousel-inner">
-        {% for movie in movies %}
-        {% if movie.tmp %}
           <div class="item active">
             <div class="col-xs-12 col-sm-6 col-md-2">
-              <a href="#">
-              {% if movie.poster_path %}
-              <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="img-responsive center-block">
+              <a href="{% url 'movies:tmdb_detail' movie_start.title %}">
+              {% if movie_start.poster_path %}
+              <img src="https://image.tmdb.org/t/p/w500/{{ movie_start.poster_path }}" class="img-responsive center-block">
               {% else %}
               <p style="height: 277.5px; line-height: 277.5px; text-align: center;">포스터 없음</p>
               {% endif %}
               </a>
-              <h4 class="text-center" style="margin-top:10px;">{{ movie.title }}</h4>
+              <h4 class="text-center" style="margin-top:10px;">{{ movie_start.title }}</h4>
             </div>
           </div>
-        {% else %}
+
+        {% for movie in movie_end %}
           <div class="item">
             <div class="col-xs-12 col-sm-6 col-md-2">            
-              <a href="#">
+              <a href="{% url 'movies:tmdb_detail' movie.title %}">
               {% if movie.poster_path %}
               <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="img-responsive center-block">
               {% else %}
@@ -52,7 +52,6 @@ vote_count
               <h4 class="text-center" style="margin-top:10px;">{{ movie.title }}</h4>
             </div>
           </div>
-        {% endif %}
         {% endfor %}
         </div>
 
@@ -129,9 +128,16 @@ vote_count
     {% comment %} {{ movie.poster_path }} {% endcomment %}
     {% comment %} {% if movie.tmp %}
     --------{{ movie.tmp }}-------
-    {% endif %}
-  <hr> {% endcomment %}
-  </div>
+    {% endif %} {% endcomment %}
+  <hr>  
+</div>
+{% empty %}
+없음
+{% endfor %}
+{% else %}
+<hr>
+<h1>&nbsp&nbsp잘못된 요청입니다.</h1>
+{% endif %}
 </div>
 {% endblock content %}
 {% block script %}

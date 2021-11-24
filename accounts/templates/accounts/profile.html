@@ -1,17 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <div style="display: flex;">
 <h1>{{ person.username }}</h1>&nbsp&nbsp&nbsp&nbsp&nbsp
 {% if request.user == person %}
 <a href="{% url 'accounts:change' %}"><button class="btn-gold" style="width: 150px; height: 40px; padding: 10px;">회원정보 수정</button></a>
 &nbsp&nbsp&nbsp
-<form action="{% url 'accounts:delete' %}" method="POST">
-{% csrf_token %}
-<button class="btn-gold" style="width: 150px; height: 40px; padding: 10px;">회원탈퇴</button>
-</form>
 {% else %}
 <div>
-  <form id="follow-form" data-user-id="{{ person.pk }}" style="margin-top: 5px;">
+  <form id="follow-form" data-user-id="{{ person.pk }}" data-request-user-name="{{ request.user }}" data-request-user-img="{{ request.user.profile_img }}" style="margin-top: 5px;">
         {% csrf_token %}
         {% if user in person.followers.all %}
           <button class="btn-gold" style="width: 120px; padding: 10px;">언팔로우</button>
@@ -94,6 +91,11 @@
       width: 50px; height: 50px; 
       margin-left: 15px;
       -webkit-border-radius: 30px;">      
+      {% else %}
+      <img src="{% static 'images/default-profile-img.png' %}" alt=""style="
+      width: 50px; height: 50px; 
+      margin-left: 15px;
+      -webkit-border-radius: 30px;">
       {% endif %}&nbsp&nbsp
       {{ follow.username }}
       </a></p>
@@ -107,16 +109,23 @@
       <div class="modal-content" style="background-color : rgba(50, 40, 31, 0.55);">
       <p style="margin: 15px 10px 0; font-size: 20px">팔로워</p>
       <hr>
+      <div class='follower-box'>
       {% for follower in person.followers.all %}
-      <p><a href={% url 'accounts:profile' follower.username %}>
+      <p class="follow-atag-{{ follower }}"><a href={% url 'accounts:profile' follower.username %}>
       {% if follower.profile_img %}
       <img src="{{ follower.profile_img.url }}" alt="" style="
+      width: 50px; height: 50px; 
+      margin-left: 15px;
+      -webkit-border-radius: 30px;">
+      {% else %}
+      <img src="{% static 'images/default-profile-img.png' %}" alt=""style="
       width: 50px; height: 50px; 
       margin-left: 15px;
       -webkit-border-radius: 30px;">
       {% endif %}&nbsp&nbsp
       {{ follower.username }}</a></p>
       {% endfor %}
+      </div>
       <button type="button" class="btn-gold" data-bs-dismiss="modal" aria-label="Close" style="">Close</button>
     </div>
   </div>
@@ -131,6 +140,8 @@
     form.addEventListener('submit', function (event) {
       event.preventDefault()
       const userId = event.target.dataset.userId
+      const requestUserName = event.target.dataset.requestUserName
+      const requestUserImg = event.target.dataset.requestUserImg
 
       axios({
         method: 'post',
@@ -146,9 +157,22 @@
           const followCountDivfollower = document.querySelector('#follow-cnt > div > .follower')
 
           if (isFollowed === true) {
+            const followerBox = document.querySelector('.follower-box')
+            console.log(followerBox)
             followBtn.innerText = '언팔로우'
+            var parentP = document.createElement("p")
+            parentP.innerHTML = `<a href='http://127.0.0.1:8000/accounts/${requestUserName}/'>
+            <img src="/media/${requestUserImg}" alt="" style="
+            width: 50px; height: 50px; 
+            margin-left: 15px;
+            -webkit-border-radius: 30px;">&nbsp&nbsp&nbsp&nbsp${requestUserName}</a>`
+            //parentP.innerText = `${requestUserName}`
+            parentP.setAttribute("class", `follow-atag-${requestUserName}`)
+            followerBox.append(parentP)
           } else {
             followBtn.innerText = '팔로우'
+            const followTag = document.querySelector(`.follow-atag-${requestUserName}`)
+            followTag.remove()
           }
           followCountDivfollow.innerText = `팔로우 : ${followings_cnt}`
           followCountDivfollower.innerText = `팔로워 : ${followers_cnt}`
