@@ -7,13 +7,13 @@ client_secret = "yjeOVJx1Qz"
 
 url = "https://openapi.naver.com/v1/vision/face" 
 
-files = {'image': open('#', 'rb')}
+files = {'image': open('iu.jpg', 'rb')}
 headers = {'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
+print(files)
 
 response = requests.post(url,  files=files, headers=headers)
 rescode = response.status_code
 result = json.loads(response.text)
-
 if(rescode==200):
     # 결과물 출력
     print (response.text)

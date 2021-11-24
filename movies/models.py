@@ -4,12 +4,13 @@ from django.conf import settings
 class Movie(models.Model):
     movie_id = models.CharField(max_length=100)
     title = models.CharField(max_length=100)
-    released_date = models.CharField(max_length=50)
+    release_date = models.DateField()
     popularity = models.DecimalField(max_digits=7, decimal_places=3)
     vote_average = models.DecimalField(max_digits=2, decimal_places=1)
     overview = models.TextField()
     poster_path = models.CharField(max_length=500)
     genre_ids = models.CharField(max_length=50)
+    adult = models.BooleanField()
 
     def __str__(self):
         return self.title

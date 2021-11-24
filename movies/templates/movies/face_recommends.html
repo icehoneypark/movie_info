@@ -2,8 +2,91 @@
 {% block css %}
 {% endblock css %}
 {% block content %}
+<h1>&nbsp&nbsp{{ page_name }}</h1>
+
 
 <p>예상 나이 : {{ age_average }}</p>
+<div style="width: 95%; justify-content: center; margin-left: 30px;">
+  <div style="display: flex;">
+    <div style="width: 50%;">영화 제목</div>
+    <div style="width: 20%;">장르</div>
+    <div style="width: 20%;">관객수</div>
+    <div style="width: 20%;">개봉일</div>
+    <div style="width: 10%;">평점</div>
+  </div>
+  <hr>
+  {% for movie in paginators %}
+    <div style="display: flex;">
+      {% comment %} <p style="width: 10%;">{{ movie.pk }}</p> {% endcomment %}
+      <p style="width: 50%;">{{ movie.title }}</p>
+      <p style="width: 20%;">{{ movie.genre_ids|cut:"'"|cut:"["|cut:"]" }}</p>
+      <p style="width: 20%;">{{ movie.popularity }}</p>
+      <p style="width: 20%;">{{ movie.release_date|date:'Y-m-d' }}</p>
+      <p style="width: 10%;">{{ movie.vote_average }}</a></p>
+    </div>
+    <br>
+  {% empty %}
+  없음
+  {% endfor %}
+  <div class="row mt-2">
+    <div class="col-12">
+      <nav>
+        <ul class="pagination justify-content-center">
+          {% if paginators.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ paginators.previous_page_number }}">Previous</a>
+            </li>
+            
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#">Previous</a>
+          </li>
 
+          {% endif %}
+
+          <li class="page-item">
+            <a class="page-link" href="#">{{ paginators.number }}/{{ paginators.paginator.num_pages }}</a>
+          </li>
+
+          {% if paginators.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ paginators.next_page_number }}">Next</a>
+            </li>
+
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#">Next</a>
+          </li>
+
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </div>
+  </div>
 
 {% endblock content %}
+{% block script %}
+<script>
+$(document).ready(function(){
+
+$('#itemslider').carousel({ interval: 3000 });
+
+$('.carousel-showmanymoveone .item').each(function(){
+var itemToClone = $(this);
+
+for (var i=1;i<6;i++) {
+itemToClone = itemToClone.next();
+
+if (!itemToClone.length) {
+itemToClone = $(this).siblings(':first');
+}
+
+itemToClone.children(':first-child').clone()
+.addClass("cloneditem-"+(i))
+.appendTo($(this));
+}
+});
+});
+</script>
+{% endblock script %}

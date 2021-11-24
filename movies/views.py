@@ -51,26 +51,26 @@ def movie_detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
     review_form = MovieReviewForm()
     reviews = movie.moviereview_set.order_by('-pk')
-    date_str1 = movie.released_date[0]
-    date_str2 = movie.released_date[1]
-    date_str3 = movie.released_date[2]
-    date_str4 = movie.released_date[3]
-    date_str5 = movie.released_date[5]
-    date_str6 = movie.released_date[6]
-    date_str7 = movie.released_date[8]
-    date_str8 = movie.released_date[9]
+    # date_str1 = movie.release_date#[0]
+    # date_str2 = movie.release_date#[1]
+    # date_str3 = movie.release_date#[2]
+    # date_str4 = movie.release_date#[3]
+    # date_str5 = movie.release_date#[5]
+    # date_str6 = movie.release_date#[6]
+    # date_str7 = movie.release_date#[8]
+    # date_str8 = movie.release_date#[9]
     context = {
         'movie': movie,
         'review_form': review_form,
         'reviews': reviews,
-        'date_str1': date_str1,
-        'date_str2': date_str2,
-        'date_str3': date_str3,
-        'date_str4': date_str4,
-        'date_str5': date_str5,
-        'date_str6': date_str6,
-        'date_str7': date_str7,
-        'date_str8': date_str8,
+        # 'date_str1': date_str1,
+        # 'date_str2': date_str2,
+        # 'date_str3': date_str3,
+        # 'date_str4': date_str4,
+        # 'date_str5': date_str5,
+        # 'date_str6': date_str6,
+        # 'date_str7': date_str7,
+        # 'date_str8': date_str8,
     }
     return render(request, 'movies/detail.html', context)
 
@@ -123,10 +123,10 @@ def movie_review_delete(request, movie_pk, review_pk):
 
 
 def movie_list(request):
-    movies_1 = Movie.objects.order_by('-released_date')[1:60] 
-    movies1_start = Movie.objects.order_by('-released_date')[0]
+    movies_1 = Movie.objects.order_by('-release_date')[1:60] 
+    movies1_start = Movie.objects.order_by('-release_date')[0]
     
-    movies = Movie.objects.order_by('-released_date')
+    movies = Movie.objects.order_by('-release_date')
     paginator = Paginator(movies, 10)
     page = request.GET.get('page')
     paginators = paginator.get_page(page)
@@ -270,7 +270,7 @@ def tmdb_search(request):
     movie_id = tmdb_helper.get_movie_id(title)
     url = tmdb_helper.get_request_url(f'/movie/{movie_id}',region='KR', language='ko')
     movie = requests.get(url).json()
-    print(movie['genre_ids'][0]['name'])
+    # print(movie['genre_ids'][0]['name'])
     context = {
         'movie': movie,
     }
@@ -279,33 +279,59 @@ def tmdb_search(request):
 # ------------------- Face Recognization -------------------
 import json
 import requests
+import datetime
 def face_recommends(request):
     client_id = "nSNNt9Iyb9ef1PxjBLPF"
     client_secret = "yjeOVJx1Qz"
 
     url = "https://openapi.naver.com/v1/vision/face" 
 
-    files = {'image': open(request.user.profile_img, 'rb')}
+    files = {'image': request.user.profile_img }
     headers = {'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
-
     response = requests.post(url,  files=files, headers=headers)
-    rescode = response.status_code
     result = json.loads(response.text)
 
     age_front = int(result['faces'][0]['age']['value'].split('~')[0])
     age_end = int(result['faces'][0]['age']['value'].split('~')[1])
     age_average = (age_front + age_end) / 2
 
+    url = tmdb_helper.get_request_url('/movie/top_rated',region='KR', language='ko')
+    data = requests.get(url).json()
+    movies = data['results']
+    movies[0]['tmp'] = 1
+    genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
+    genres_list = requests.get(genres_url).json()
+    genres = genres_list['genres']
+    for movie in movies:
+        for i in range(len(movie['genre_ids'])):
+            for j in range(len(genres)):
+                if movie['genre_ids'][i] == genres[j]['id']:
+                    movie['genre_ids'][i] = genres[j]['name']
+
     # 20세 미만의 경우 adult=True인 영화 필터링
     # 20~29세 이용자는 release_date 가 2015년 이후인 영화 추천
     # 30세 이상 이용자는 release_date 가 2015년 이전인 영화 추천
+    # 얼굴 인식이 안되는 경우 메시지 출력
     if 20 <= age_average < 30:
-        pass
+        rec_movie = Movie.objects.filter(release_date__gte=datetime.date(2010, 1, 1)).filter(release_date__lte=datetime.date(2019, 12, 31))
+
     elif age_average < 20:
-        pass
+        rec_movie = Movie.objects.filter(adult=False).filter(release_date__gte=datetime.date(2020, 1, 1))
+
+    elif 30 <= age_average < 40:
+        rec_movie = Movie.objects.filter(release_date__gte=datetime.date(2000, 1, 1)).filter(release_date__lte=datetime.date(2009, 12, 31))
+
     else:
-        pass
+        rec_movie = Movie.objects.filter(release_date__lte=datetime.date(1999, 12, 31))
+
+    
+    paginator = Paginator(rec_movie, 10)
+    page = request.GET.get('page')
+    paginators = paginator.get_page(page)
+
     context = {
+        'movies': rec_movie,
         'age_average': age_average,
+        'paginators': paginators,
     }
-    return render(request, 'movies/movie_recommends.html', context)
+    return render(request, 'movies/face_recommends.html', context)

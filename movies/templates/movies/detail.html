@@ -13,9 +13,9 @@
   <p style="font-size: 20px;">{{ movie.overview }}</p>
   <hr>
   <p style="font-size: 20px;">개봉일</p><p>
-  {{ date_str1 }}{{ date_str2 }}{{ date_str3 }}{{ date_str4 }}년
-  {{ date_str5 }}{{ date_str6 }}월
-  {{ date_str7 }}{{ date_str8 }}일</p>
+  {{ movie.release_date|date:'Y' }}년
+  {{ movie.release_date|date:'m' }}월
+  {{ movie.release_date|date:'d' }}일
   <p>
   <hr>
   {% comment %} <p><span style="font-size: 20px;">개봉일 </span><span>{{ movie.released_date }}</span><p> {% endcomment %}

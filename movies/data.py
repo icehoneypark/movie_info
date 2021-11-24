@@ -6,7 +6,7 @@ total_data = []
 
 idx = 1
 for num in range(1, 4):
-    movie_url = f'https://api.themoviedb.org/3/movie/popular?api_key={API_KEY}&language=ko-KR&page={num}'
+    movie_url = f'https://api.themoviedb.org/3/movie/top_rated?api_key={API_KEY}&language=ko-KR&page={num}'
     movie_get = requests.get(movie_url)
     movies = movie_get.json().get('results')
 
@@ -16,12 +16,13 @@ for num in range(1, 4):
             fields = {
                 'movie_id': movie['id'],
                 'title': movie['title'],
-                'released_date': movie['release_date'],
+                'release_date': movie['release_date'],
                 'popularity': movie['popularity'],
-                'vote_avg': movie['vote_average'],
+                'vote_average': movie['vote_average'],
                 'overview': movie['overview'],
                 'poster_path': movie['poster_path'],
-                'genres': movie['genre_ids']
+                'genre_ids': movie['genre_ids'],
+                'adult': movie['adult'],
             }
             data = {
                 "pk": idx,
