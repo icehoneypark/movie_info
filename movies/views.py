@@ -223,7 +223,7 @@ def movie_index(request):
                         movie['genre_ids'][i] = genres[j]['name']
         context = {
         'movies': data_results,
-        'page_name': '높은 평점 영화',
+        'page_name': '평점순',
         'tmdb': 1,
         }
         return render(request, 'movies/recommend_tmdb.html', context)
@@ -233,7 +233,7 @@ def movie_index(request):
     
         context = {
             'movies': data_results,
-            'page_name': '높은 평점 영화'
+            'page_name': '평점순'
         }
         return render(request, 'movies/index.html', context)
 
@@ -334,7 +334,8 @@ def face_recommends(request):
     client_id = "nSNNt9Iyb9ef1PxjBLPF"
     client_secret = "yjeOVJx1Qz"
 
-    url = "https://openapi.naver.com/v1/vision/face" 
+    url = "https://openapi.naver.com/v1/vision/face"
+
     if not request.user.profile_img :
         gender = 'None'
         age_average = 'None'
@@ -413,13 +414,16 @@ import random
 def genre_recommends(request, genre_ids):
     url = tmdb_helper.get_request_url(f'/movie/popular',region='KR', language='ko')
     movies = []
-    for i in range(1, 11):
-        tmp_url = url + '&page=' + str(i)        
-        print(tmp_url)
-        movies_json = requests.get(tmp_url).json()
-        for movie in movies_json['results']:
-            if genre_ids in movie['genre_ids']:
-                movies.append(movie)
+    if genre_ids == 0:
+        pass
+    else: 
+        for i in range(1, 11):
+            tmp_url = url + '&page=' + str(i)        
+            print(tmp_url)
+            movies_json = requests.get(tmp_url).json()
+            for movie in movies_json['results']:
+                if genre_ids in movie['genre_ids']:
+                    movies.append(movie)
     if len(movies) == 0:
         context = {
             'movies': [],
