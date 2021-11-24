@@ -16,5 +16,6 @@ urlpatterns = [
     path('tmdb_now_playing/', views.tmdb_now_playing, name="tmdb_now_playing"),
     path('face_recommends/', views.face_recommends, name="face_recommends"),
     path('tmdb_search/', views.tmdb_search, name="tmdb_search"),
-    path('tmdb_detail/<str:movie_title>/', views.tmdb_detail, name="tmdb_detail"),
+    path('tmdb_detail/<int:movie_id>/', views.tmdb_detail, name="tmdb_detail"),
+    path('genre_recommends/<int:genre_ids>/', views.genre_recommends, name="genre_recommends"),
 ]

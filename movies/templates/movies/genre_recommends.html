@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<div style="display: flex; justify-content: center; height: 370px;">
+{% for movie in movies %}
+<div style=" width: 18%; margin: 0 4% 0;">
+<div style="border: solid 1px;">
+<a href="{% url 'movies:tmdb_detail' movie.id %}">
+<img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="img" style="width: 100%; height: 300px;">
+</a>
+</div>
+<br>
+<p style="text-align: center;">{{ movie.title }}</p>
+</div>
+<hr>
+{% empty %}
+<div style="display: flex; align-items: center;">
+{% if genre == 0 %}
+장르를 선택해주세요.
+{% else %}
+<p>최근 영화 중 관련 장르 영화가 없습니다.</p>
+{% endif %}
+</div>
+{% endfor %}
+</div>
+<hr>
+  <div  style="display: flex; justify-content: center; margin-bottom: 10px;">
+  <a href="{% url 'movies:genre_recommends' 28 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">액션</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 12 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">모험</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 16 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">애니매이션</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 878 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">SF</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 10752 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">전쟁</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 14 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">판타지</button></a>
+  </div>
+  <div  style="display: flex; justify-content: center; margin-bottom: 10px;">
+  <a href="{% url 'movies:genre_recommends' 80 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">범죄</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 27 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">공포</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 53 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">스릴러</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 9648 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">미스터리</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 10749 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">로맨스</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 18 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">드라마</button></a>
+  </div>
+  <div style="display: flex; justify-content: center;">
+  <a href="{% url 'movies:genre_recommends' 10751 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">가족</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 35 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">코미디</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 99 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">다큐멘터리</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 36 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">역사</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 10402 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">음악</button></a>&nbsp&nbsp
+  <a href="{% url 'movies:genre_recommends' 37 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">서부</button></a>
+  </div>
+{% endblock content %}
+{% block script %}
+{% endblock script %}
