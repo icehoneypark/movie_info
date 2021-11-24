@@ -143,12 +143,12 @@ img:hover{
         <ul class="pagination justify-content-center">
           {% if paginators.has_previous %}
             <li class="page-item">
-              <a class="page-link btn-gold" href="?page={{ paginators.previous_page_number }}">Previous</a>
+              <a class="page-link btn-gold" href="?page={{ paginators.previous_page_number }}"><</a>
             </li>
             
           {% else %}
           <li class="page-item disabled">
-            <a class="page-link btn-gold" href="#">Previous</a>
+            <a class="page-link btn-gold" href="#"><</a>
           </li>
 
           {% endif %}
@@ -163,12 +163,12 @@ img:hover{
 
           {% if paginators.has_next %}
             <li class="page-item">
-              <a class="page-link btn-gold" href="?page={{ paginators.next_page_number }}">Next</a>
+              <a class="page-link btn-gold" href="?page={{ paginators.next_page_number }}">></a>
             </li>
 
           {% else %}
           <li class="page-item disabled">
-            <a class="page-link btn-gold" href="#">Next</a>
+            <a class="page-link btn-gold" href="#">></a>
           </li>
 
           {% endif %}

@@ -26,11 +26,6 @@ def community_index(request):
 def community_create(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
-        print(request.FILES)
-        try:
-            form.community_img = request.FILES['community_image']
-        except:
-            pass
         if form.is_valid():
             post = form.save(commit=False)
             post.user = request.user
