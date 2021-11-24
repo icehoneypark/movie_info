@@ -4,8 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Movie, MovieReview
 from .forms import MovieReviewForm
 from django.core.paginator import Paginator
-
-
+from django.contrib.auth import get_user_model
 @require_http_methods(['GET', 'POST'])
 def main(request):
     context= {
@@ -371,6 +370,26 @@ def ranked_similar(request, movie_id):
         'page_name': '평가한 영화와 비슷한 영화'
     }
     return render(request, 'movies/ranked_similar.html', context)
+
+def rank_list(request, username):
+    person = get_object_or_404(get_user_model(), username=username)
+    movies_tmp = person.moviereview_set.all()
+    movie_ids = []
+    movies = []
+    for movie in movies_tmp :
+        movie_ids.append(movie.movie.movie_id)
+    movie_ids = set(movie_ids)
+    for movie_id in movie_ids:
+        movie = Movie.objects.get(movie_id=movie_id)
+        # print(movie)
+        movies.append(movie)
+    print(movies)
+    context = {
+        'person': person,
+        # 'movie_ids': movie_ids,
+        'movies': movies, 
+    }
+    return render(request, 'movies/rank_list.html', context)
 
 # ------------------- Face Recognization -------------------
 import json

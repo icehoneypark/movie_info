@@ -1,15 +1,41 @@
 {% extends 'base.html' %}
+{% block css %}
+<div class="filebox">
+  <label for="ex_file">업로드</label>
+  <input type="file" id="ex_file">
+</div>
+
+{% comment %} .input-file-button > input[type="file"]{
+  display: inline-block;
+  background: transparent;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  color: rgba(223,190,106,0.7);
+  border-radius: 0;
+  padding: 18px 80px 20px;
+  transition: all 0.7s ease-out;
+  background: linear-gradient(270deg, rgba(223,190,106,0.8), rgba(146,111,52,0.8), rgba(34,34,34,0), rgba(34,34,34,0));
+  background-position: 1% 50%;
+  background-size: 300% 300%;
+  text-decoration: none;
+  margin: 0;
+  border: none;
+  border: 1px solid rgba(223,190,106,0.3);
+} {% endcomment %}
+{% endblock css %}
 {% block content %}
 <h1>{{ site_name }}</h1>
 <hr>
-
 <form action="" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 {% comment %} {{ form.as_p }} {% endcomment %}
 <p><label for="id_title">제목</label></p>
 <input type="text" name="title" maxlength="20" required="" id="id_title" value="{{ post.title }}" style="margin-bottom: 5px;">
-<p><label for="id_content">내용:</label> <textarea name="content" style="width: 100%;" rows="10" required="" id="id_content">{{ post.content }}</textarea></p>
-<p><label for="id_community_img">이미지:</label> <input type="file" name="community_img" accept="image/*" id="id_community_img"></p>
+<p><label for="id_content">내용</label> <textarea name="content" style="width: 100%;" rows="10" required="" id="id_content">{{ post.content }}</textarea></p>
+<p class="filebox"><label for="id_community_img">이미지:</label><input type="file" name="community_img" accept="image/*" id="id_community_img"></p>
 <div>
 <input type="checkbox" name="community_img-clear" id="community_img-clear_id">
 <label for="community_img-clear_id">사진삭제</label><br>

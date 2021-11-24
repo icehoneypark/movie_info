@@ -26,11 +26,12 @@ vote_count
     <div class="col-xs-12 col-sm-12 col-md-12">
       <div class="carousel carousel-showmanymoveone slide" id="itemslider">
         <div class="carousel-inner">
-          <div class="item active">
+          <div class="item active" style="height: 350px;">
             <div class="col-xs-12 col-sm-6 col-md-2">
               <a href="{% url 'movies:tmdb_detail' movie_start.id %}">
               {% if movie_start.poster_path %}
-              <img src="https://image.tmdb.org/t/p/w500/{{ movie_start.poster_path }}" class="img-responsive center-block">
+              <img src="https://image.tmdb.org/t/p/w500/{{ movie_start.poster_path }}" class="img-responsive center-block" style="border: solid 1px; width: 300px;
+              height: 250px;">
               {% else %}
               <p style="height: 277.5px; line-height: 277.5px; text-align: center;">포스터 없음</p>
               {% endif %}
@@ -40,11 +41,12 @@ vote_count
           </div>
 
         {% for movie in movie_end %}
-          <div class="item">
+          <div class="item" style="height: 350px;">
             <div class="col-xs-12 col-sm-6 col-md-2">            
               <a href="{% url 'movies:tmdb_detail' movie.id %}">
               {% if movie.poster_path %}
-              <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="img-responsive center-block">
+              <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="img-responsive center-block" style="border: solid 1px; width: 300px;
+              height: 250px;">
               {% else %}
               <p style="height: 277.5px; line-height: 277.5px; text-align: center;">포스터 없음</p>
               {% endif %}
@@ -74,8 +76,7 @@ vote_count
   <hr>
   {% for movie in paginators %}
     <div style="display: flex;">
-      {% comment %} <p style="width: 10%;">{{ movie.pk }}</p> {% endcomment %}
-      <p style="width: 50%;"><a href="{% url 'movies:tmdb_detail' movie.id %}" >{{ movie.title }}</a></p>
+      <p style="width: 50%;"><a href="{% url 'movies:tmdb_detail' movie.id %}">{{ movie.title }}</a></p>
       <p style="width: 20%; 
       white-space: nowrap;
       overflow: hidden;

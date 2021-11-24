@@ -13,7 +13,7 @@
             <div class="col-xs-12 col-sm-6 col-md-2">
               <a href="{% url 'movies:tmdb_detail' movie_start.id %}">
               {% if movie_start.poster_path %}
-              <img src="https://image.tmdb.org/t/p/w500/{{ movie_start.poster_path }}" class="img-responsive center-block">
+              <img src="https://image.tmdb.org/t/p/w500/{{ movie_start.poster_path }}" class="img-responsive center-block" style="border: solid 1px;">
               {% else %}
               <p style="height: 277.5px; line-height: 277.5px; text-align: center;">포스터 없음</p>
               {% endif %}
@@ -27,7 +27,7 @@
             <div class="col-xs-12 col-sm-6 col-md-2">            
               <a href="{% url 'movies:tmdb_detail' movie.id %}">
               {% if movie.poster_path %}
-              <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="img-responsive center-block">
+              <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="img-responsive center-block"  style="border: solid 1px;">
               {% else %}
               <p style="height: 277.5px; line-height: 277.5px; text-align: center;">포스터 없음</p>
               {% endif %}
