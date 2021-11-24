@@ -11,9 +11,7 @@
 <br><br>
 
 <p style="margin-bottom: 0;"><label for="id_content">Content</label></p>
-<textarea name="content" style="width:100%;" rows="10" required="" id="id_content">
-{{ post.content }}
-</textarea></p>
+<textarea name="content" style="width:100%;" rows="10" required="" id="id_content">{{ post.content }}</textarea></p>
 
 <p style="margin-bottom: 0;"><label for="id_img">Img</label></p>
 <input type="file" name="community_img" value="{{ post.community_img }}" maxlength="20" required="" id="community_img" accept="image/*" onchange="loadFile(this)">

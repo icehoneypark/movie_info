@@ -6,6 +6,7 @@ from .models import Movie, MovieReview
 from .forms import MovieReviewForm
 from django.core.paginator import Paginator
 
+
 @require_http_methods(['GET', 'POST'])
 def main(request):
     context= {
@@ -13,39 +14,41 @@ def main(request):
     return render(request, 'main.html', context)
 
 def movie_index(request):
-    movies = Movie.objects.order_by('-popularity')
-    paginator = Paginator(movies, 10)
-    page = request.GET.get('page')
-    paginators = paginator.get_page(page)
-    # top_10 = Movie.objects.order_by('-popularity')[:10]
-    top_1 = Movie.objects.order_by('-popularity')[0]
-    top_2 = Movie.objects.order_by('-popularity')[1]
-    top_3 = Movie.objects.order_by('-popularity')[2]
-    top_4 = Movie.objects.order_by('-popularity')[3]
-    top_5 = Movie.objects.order_by('-popularity')[4]
-    top_6 = Movie.objects.order_by('-popularity')[5]
-    top_7 = Movie.objects.order_by('-popularity')[6]
-    top_8 = Movie.objects.order_by('-popularity')[7]
-    top_9 = Movie.objects.order_by('-popularity')[8]
-    top_10 = Movie.objects.order_by('-popularity')[9]
+    
+    movies = Movie.objects.order_by('-popularity')[:10]
     context = {
-        # 'movies': movies,
-        # 'top_10': top_10,
-        # 'paginator': paginator,
-        # 'page': page,
-        'paginators': paginators,
-        'top1': top_1,
-        'top2': top_2,
-        'top3': top_3,
-        'top4': top_4,
-        'top5': top_5,
-        'top6': top_6,
-        'top7': top_7,
-        'top8': top_8,
-        'top9': top_9,
-        'top10': top_10,
+        'movies': movies,
+        'page_name': '관객수',
     }
     return render(request, 'movies/index.html', context)
+
+# def movie_index(request):
+    
+#     # movies = Movie.objects.order_by('-popularity')
+#     top_1 = Movie.objects.order_by('-popularity')[0]
+#     top_2 = Movie.objects.order_by('-popularity')[1]
+#     top_3 = Movie.objects.order_by('-popularity')[2]
+#     top_4 = Movie.objects.order_by('-popularity')[3]
+#     top_5 = Movie.objects.order_by('-popularity')[4]
+#     top_6 = Movie.objects.order_by('-popularity')[5]
+#     top_7 = Movie.objects.order_by('-popularity')[6]
+#     top_8 = Movie.objects.order_by('-popularity')[7]
+#     top_9 = Movie.objects.order_by('-popularity')[8]
+#     top_10 = Movie.objects.order_by('-popularity')[9]
+#     context = {
+#         # 'movies': movies,
+#         'top1': top_1,
+#         'top2': top_2,
+#         'top3': top_3,
+#         'top4': top_4,
+#         'top5': top_5,
+#         'top6': top_6,
+#         'top7': top_7,
+#         'top8': top_8,
+#         'top9': top_9,
+#         'top10': top_10,
+#     }
+#     return render(request, 'movies/index.html', context)
 
 @require_safe
 def movie_detail(request, movie_pk):
@@ -173,10 +176,25 @@ def tmdb_upcoming(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/upcoming',region='KR', language='ko')
     data = requests.get(url).json()
-    data_results = data['results']
-    data_results[0]['tmp'] = 1
+    if 'results' in data : 
+        data_results = data['results']
+        genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
+        genres_list = requests.get(genres_url).json()
+        genres = genres_list['genres']
+        for movie in data_results:
+            for i in range(len(movie['genre_ids'])):
+                for j in range(len(genres)):
+                    if movie['genre_ids'][i] == genres[j]['id']:
+                        movie['genre_ids'][i] = genres[j]['name']
+        data_results_start = data['results'][0]
+        data_results_end = data['results'][1:]
+    else:
+        data_results_start = ''
+        data_results_end = ''
     context = {
         'movies': data_results,
+        'movie_start': data_results_start,
+        'movie_end': data_results_end,
         'page_name': '개봉 예정 영화'
     }
     return render(request, 'movies/tmdb_list_form.html', context)
@@ -186,34 +204,84 @@ def tmdb_toprate(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/top_rated',region='KR', language='ko')
     data = requests.get(url).json()
-    data_results = data['results']
-    data_results[0]['tmp'] = 1
-    context = {
+    if 'results' in data : 
+        data_results = data['results'][:10]
+        genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
+        genres_list = requests.get(genres_url).json()
+        genres = genres_list['genres']
+        for movie in data_results:
+            for i in range(len(movie['genre_ids'])):
+                for j in range(len(genres)):
+                    if movie['genre_ids'][i] == genres[j]['id']:
+                        movie['genre_ids'][i] = genres[j]['name']
+        context = {
         'movies': data_results,
-        'page_name': '높은 평점 영화'
-    }
-    return render(request, 'movies/tmdb_list_form.html', context)
+        'page_name': '높은 평점 영화',
+        'tmdb': 1,
+        }
+        return render(request, 'movies/index.html', context)
+
+    else:
+        data_results = Movie.objects.order_by('-vote_average')[:10]    
+    
+        context = {
+            'movies': data_results,
+            'page_name': '높은 평점 영화'
+        }
+        return render(request, 'movies/index.html', context)
 
 def tmdb_popular(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/popular',region='KR', language='ko')
     data = requests.get(url).json()
-    data_results = data['results']
-    data_results[0]['tmp'] = 1
-    context = {
+    if 'results' in data : 
+        data_results = data['results'][:10]
+        genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
+        genres_list = requests.get(genres_url).json()
+        genres = genres_list['genres']
+        for movie in data_results:
+            for i in range(len(movie['genre_ids'])):
+                for j in range(len(genres)):
+                    if movie['genre_ids'][i] == genres[j]['id']:
+                        movie['genre_ids'][i] = genres[j]['name']
+        context = {
         'movies': data_results,
-        'page_name': '인기 영화'
-    }
-    return render(request, 'movies/tmdb_list_form.html', context)
+        'page_name': '인기 영화',
+        'tmdb': 1,
+        }
+        return render(request, 'movies/index.html', context)
+
+    else:  
+    
+        context = {
+            'movies': '',
+            'page_name': '인기 영화'
+        }
+        return render(request, 'movies/index.html', context)
 
 def tmdb_now_playing(request):
     # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/now_playing',region='KR', language='ko')
     data = requests.get(url).json()
-    data_results = data['results']
-    data_results[0]['tmp'] = 1
+    if 'results' in data : 
+        data_results = data['results']
+        genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
+        genres_list = requests.get(genres_url).json()
+        genres = genres_list['genres']
+        for movie in data_results:
+            for i in range(len(movie['genre_ids'])):
+                for j in range(len(genres)):
+                    if movie['genre_ids'][i] == genres[j]['id']:
+                        movie['genre_ids'][i] = genres[j]['name']
+        data_results_start = data['results'][0]
+        data_results_end = data['results'][1:]
+    else:
+        data_results_start = ''
+        data_results_end = ''
     context = {
         'movies': data_results,
+        'movie_start': data_results_start,
+        'movie_end': data_results_end,
         'page_name': '현재 상영 중인 영화'
     }
     return render(request, 'movies/tmdb_list_form.html', context)
@@ -225,6 +293,34 @@ def tmdb_search(request):
 
     movie = requests.get(url).json()
 
+    movie_genre = []
+
+    if 'genres' in movie:
+
+        for genre in movie['genres'] :
+            # print(genre['name'])
+            movie_genre.append(genre['name'])
+        
+        movie['genres'] = movie_genre
+    context = {
+        'movie': movie,
+    }
+    return render(request,'movies/tmdb_detail.html',context)
+
+
+def tmdb_detail(request, movie_title):
+    title = movie_title
+    movie_id = tmdb_helper.get_movie_id(title)
+    url = tmdb_helper.get_request_url(f'/movie/{movie_id}',region='KR', language='ko')
+
+    movie = requests.get(url).json()
+    movie_genre = []
+
+    for genre in movie['genres'] :
+        # print(genre['name'])
+        movie_genre.append(genre['name'])
+    
+    movie['genres'] = movie_genre
     context = {
         'movie': movie,
     }

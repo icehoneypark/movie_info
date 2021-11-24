@@ -4,11 +4,18 @@
 </style>
 {% endblock css %}
 {% block content %}
-<h1>{{ movie.title }}</h1>
+<div style="display: flex;">
+<h1 style="height: 50px; line-height: 50px; margin: 8px 0 0;">{{ movie.title }}</h1>
+&nbsp&nbsp&nbsp
+<a href="{% url 'movies:movie_index' %}">
+<button class="btn-gold">나가기</button>
+</a>
+</div>
+<div style="width: 1400px;">
 <hr>
 <div style="display: flex;">
 <p style="margin-right: 30px;"><img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="img" style="width: 500px;"></p>
-  <div>
+  <div style="width: 870px;">
   <p style="font-size: 35px;">줄거리</p>
   <p style="font-size: 20px;">{{ movie.overview }}</p>
   <hr>
@@ -23,10 +30,10 @@
   <p>{{ movie.popularity }}K</p>
   <hr>
   <p style="font-size: 20px;">평점</p>
-  <p>{{ movie.vote_avg }}</p>
+  <p>{{ movie.vote_average }}</p>
   <hr>
   <p id="genresList" style="font-size: 20px;">장르</p>
-  <p>{{ movie.genres|slice:"2:-2"|cut:"'" }}</p>
+  <p>{{ movie.genre_ids|slice:"2:-2"|cut:"'" }}</p>
   </div>
 </div>
 <hr>
@@ -74,12 +81,6 @@
   {% endif %}
 {% endfor %}
 <hr>
-
-<div style="display: flex; width: 700px; justify-content: space-between;">
-<a href="{% url 'movies:movie_index' %}">
-<button class="btn-gold">BACK</button>
-</a>
-
 {% endblock content %}
 {% block script %}
 <script>

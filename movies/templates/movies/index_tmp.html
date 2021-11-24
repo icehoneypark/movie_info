@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+{% block css %}
+*{
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: none;
+	box-sizing: border-box;
+}
+*:before,
+*:after{
+	box-sizing: border-box;
+}
+html,
+body{
+	min-height: 100%;
+}
+
+.container-carousel{
+	margin: 4% auto;
+	width: 210px;
+	height: 140px;
+	position: relative;
+	perspective: 1000px;
+}
+#carousel{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	transform-style: preserve-3d;
+	animation: rotation 30s infinite linear;
+}
+#carousel:hover{
+	animation-play-state: paused;
+}
+#carousel figure{
+	display: block;
+	position: absolute;
+	width: 186px;
+	height: 255px;
+	left: 10px;
+	top: 10px;
+	{% comment %} background: black; {% endcomment %}
+	overflow: hidden;
+	{% comment %} border: solid 5px black; {% endcomment %}
+}
+#carousel figure:nth-child(1){transform: rotateY(0deg) translateZ(288px);}
+#carousel figure:nth-child(2) { transform: rotateY(36deg) translateZ(288px);}
+#carousel figure:nth-child(3) { transform: rotateY(72deg) translateZ(288px);}
+#carousel figure:nth-child(4) { transform: rotateY(108deg) translateZ(288px);}
+#carousel figure:nth-child(5) { transform: rotateY(144deg) translateZ(288px);}
+#carousel figure:nth-child(6) { transform: rotateY(180deg) translateZ(288px);}
+#carousel figure:nth-child(7) { transform: rotateY(216deg) translateZ(288px);}
+#carousel figure:nth-child(8) { transform: rotateY(252deg) translateZ(288px);}
+#carousel figure:nth-child(9) { transform: rotateY(288deg) translateZ(288px);}
+#carousel figure:nth-child(10) { transform: rotateY(324deg) translateZ(288px);}
+
+img{
+	{% comment %} -webkit-filter: grayscale(1); {% endcomment %}
+	cursor: pointer;
+	transition: all .5s ease;
+}
+img:hover{
+	-webkit-filter: grayscale(0);
+  transform: scale(0.95, 0.95);
+}
+
+@keyframes rotation{
+	from{
+		transform: rotateY(0deg);
+	}
+	to{
+		transform: rotateY(-360deg);
+	}
+}
+{% endblock css %}
+{% block content %}
+<h1>TOP 10 (관객수 별)</h1>
+<hr>
+<div class="container-carousel" style="margin-bottom: 200px;">
+		<div id="carousel">
+      {% comment %} {% for top in top_10 %}			 {% endcomment %}
+				{% comment %} <a href="{% url 'movies:movie_detail' top.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top.title }}</h6>
+        </div>
+				</a> {% endcomment %}
+				{% comment %} ----------------- 1등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 1</h6>
+				<a href="{% url 'movies:movie_detail' top1.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top1.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top1.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 2등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 2</h6>
+				<a href="{% url 'movies:movie_detail' top2.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top2.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top2.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 3등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 3</h6>
+				<a href="{% url 'movies:movie_detail' top3.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top3.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top3.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 4등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 4</h6>
+				<a href="{% url 'movies:movie_detail' top4.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top4.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top4.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 5등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 5</h6>
+				<a href="{% url 'movies:movie_detail' top5.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top5.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top5.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 6등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 6</h6>
+				<a href="{% url 'movies:movie_detail' top6.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top6.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top6.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 7등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 7</h6>
+				<a href="{% url 'movies:movie_detail' top7.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top7.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top7.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 8등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 8</h6>
+				<a href="{% url 'movies:movie_detail' top8.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top8.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top8.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 9등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 9</h6>
+				<a href="{% url 'movies:movie_detail' top9.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top9.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top9.title }}</h6>
+        </div>
+				</a>
+				</figure>
+				{% comment %} ----------------- 10등 {% endcomment %}
+				<figure>
+				<h6 style="color: rgba(223,190,106,0.7); display: flex; justify-content: center;">NO. 10</h6>
+				<a href="{% url 'movies:movie_detail' top10.pk %}">
+        <img src="https://image.tmdb.org/t/p/w500/{{ top10.poster_path }}" alt=""style="width: 186px;	height: 200px; border: solid 5px black;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <h6 style="color: rgba(223,190,106,0.7);">{{ top10.title }}</h6>
+        </div>
+				</a>
+        </figure>
+      {% comment %} {% endfor %} {% endcomment %}
+		</div>
+	</div>
+	<br>
+	<br>	
+	<div style="display: flex;">
+		<div style="width: 10%;">순위</div>
+		<div style="width: 50%;">영화 제목</div>
+		<div style="width: 20%;">장르</div>
+		<div style="width: 20%;">관객수</div>
+		<div style="width: 10%;">평점</div>
+	</div>
+	<hr>
+	<div style="display: flex; margin-bottom: 100px;">
+		<div style="width: 10%;">
+		<p>1</p>
+		<p>2</p>
+		<p>3</p>
+		<p>4</p>
+		<p>5</p>
+		<p>6</p>
+		<p>7</p>
+		<p>8</p>
+		<p>9</p>
+		<p>10</p>
+		</div>
+		<div style="width: 50%;">
+		<p><a href="{% url 'movies:movie_detail' top1.pk %}">{{ top1.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top2.pk %}">{{ top2.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top3.pk %}">{{ top3.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top4.pk %}">{{ top4.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top5.pk %}">{{ top5.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top6.pk %}">{{ top6.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top7.pk %}">{{ top7.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top8.pk %}">{{ top8.title }}</a></p>
+		<p><a 	href="{% url 'movies:movie_detail' top9.pk %}">{{ top9.title }}</a></p>
+		<p><a href="{% url 'movies:movie_detail' top10.pk %}">{{ top10.title }}</a></p>
+		</div>
+		<div style="width: 20%;">
+			<p>{{ top1.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top2.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top3.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top4.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top5.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top6.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top7.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top8.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top9.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+			<p>{{ top10.genre_ids|slice:"2:-2"|cut:"'" }}</p>
+		</div>
+		<div style="width: 20%;">
+			<p>{{ top1.popularity }}</p>
+			<p>{{ top2.popularity }}</p>
+			<p>{{ top3.popularity }}</p>
+			<p>{{ top4.popularity }}</p>
+			<p>{{ top5.popularity }}</p>
+			<p>{{ top6.popularity }}</p>
+			<p>{{ top7.popularity }}</p>
+			<p>{{ top8.popularity }}</p>
+			<p>{{ top9.popularity }}</p>
+			<p>{{ top10.popularity }}</p>
+		</div>
+		<div style="width: 10%;">
+			<p>{{ top1.vote_average }}</p>
+			<p>{{ top2.vote_average }}</p>
+			<p>{{ top3.vote_average }}</p>
+			<p>{{ top4.vote_average }}</p>
+			<p>{{ top5.vote_average }}</p>
+			<p>{{ top6.vote_average }}</p>
+			<p>{{ top7.vote_average }}</p>
+			<p>{{ top8.vote_average }}</p>
+			<p>{{ top9.vote_average }}</p>
+			<p>{{ top10.vote_average }}</p>
+		</div>
+	</div>
+</div>
+{% endblock content %}
+{% block script %}
+<script>
+</script>
+{% endblock script %}
