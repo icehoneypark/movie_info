@@ -11,6 +11,7 @@ class Post(models.Model):
     community_img = models.ImageField(upload_to='', blank=True, null=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_post')
 
+
     def __str__(self):
         return self.title
 

@@ -153,9 +153,13 @@ img:hover{
 
           {% endif %}
 
-          <li class="page-item">
-            <a class="page-link btn-gold" href="#">{{ paginators.number }}/{{ paginators.paginator.num_pages }}</a>
-          </li>
+          {% for i in paginators.paginator.page_range %}
+            {% if paginators.number == i %}
+              <li class="page-link btn-gold active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+              <li class="page-link btn-gold"><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
 
           {% if paginators.has_next %}
             <li class="page-item">

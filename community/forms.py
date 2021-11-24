@@ -7,6 +7,7 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ('title', 'content', 'community_img')
 
+
 class CommunityCommentForm(forms.ModelForm):
     class Meta:
         model = CommunityComment

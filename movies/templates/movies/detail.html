@@ -62,7 +62,7 @@
     &nbsp&nbsp&nbsp
     <form action="{% url 'movies:movie_review_delete' movie.pk review.pk %}" method="POST" class="d-inline">
       {% csrf_token %}
-        <button class="btn-gold" style="width: 150px; height: 40px; padding: 10px;">Delete</button>
+        <button class="btn-gold" style="width: 150px; height: 40px; padding: 10px;">댓글삭제</button>
     </form>
     </div>
     <form class="review-form review-form-{{ review.pk }}" data-form-id="{{ review.pk }}" data-movie-id="{{ movie.pk }}" action="{% url 'movies:movie_review_update' movie.pk review.pk %}" method="POST" style="display: none;">    
