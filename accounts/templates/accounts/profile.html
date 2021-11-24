@@ -166,11 +166,19 @@
             console.log(followerBox)
             followBtn.innerText = '언팔로우'
             var parentP = document.createElement("p")
+            if (requestUserImg){
             parentP.innerHTML = `<a href='http://127.0.0.1:8000/accounts/${requestUserName}/'>
             <img src="/media/${requestUserImg}" alt="" style="
             width: 50px; height: 50px; 
             margin-left: 15px;
             -webkit-border-radius: 30px;">&nbsp&nbsp&nbsp&nbsp${requestUserName}</a>`
+            } else {
+            parentP.innerHTML = `<a href='http://127.0.0.1:8000/accounts/${requestUserName}/'>
+            <img src="/static/images/default-profile-img.png" alt="" style="
+            width: 50px; height: 50px; 
+            margin-left: 15px;
+            -webkit-border-radius: 30px;">&nbsp&nbsp&nbsp&nbsp${requestUserName}</a>`
+            }
             //parentP.innerText = `${requestUserName}`
             parentP.setAttribute("class", `follow-atag-${requestUserName}`)
             followerBox.append(parentP)

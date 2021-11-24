@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 {% block css %}
-<style>
-</style>
 {% endblock css %}
 {% block content %}
 <div style="display: flex; margin: 0;">
@@ -19,15 +17,33 @@
       <span id="like-count-{{ post.pk }}" style="height: 45px; line-height: 45px;">{{ post.like_users.all|length }}</span>명이 이 글을 좋아합니다.
     </p>
 </div>
-
 <hr style="margin:0;">
+<div style="padding: 5px;">
 {% if post.community_img %}
 <br>
 <img src="{{ post.community_img.url }}" alt="community_img" style="width:500px;">
 <br><br>
+<p style="word-wrap: break-word; font-size: 20px; width: 100%; ">{{ post.content }}</p>
+{% else %}
+<p style="word-wrap: break-word; font-size: 20px; width: 100%; height: 424px;">{{ post.content }}</p>
 {% endif %}
 <div style="display: flex; justify-content: space-between;">
-<p style="word-wrap: break-word; font-size: 20px; width: 100%;">{{ post.content }}</p>
+</div>
+<br>
+<div style="display: flex; width: 700px; justify-content: space-between;">
+  <a href="{% url 'community:community_index' %}">
+  <button class="btn-gold">BACK</button>
+  </a>
+
+  {% if request.user == post.user %}
+  <a href="{% url 'community:community_update' post.pk %}">
+  <button class="btn-gold">UPDATE</button></a>
+  <form action="{% url 'community:community_delete' post.pk %}" method="POST">
+  {% csrf_token %}
+  <button class="btn-gold">DELETE</button>
+  </form>
+  {% endif %} 
+</div>
 </div>
 <hr>
 <div style="display: flex; justify-content: space-between;">
@@ -82,20 +98,6 @@
 </div>
 
 <hr>
-<div style="display: flex; width: 700px; justify-content: space-between;">
-  <a href="{% url 'community:community_index' %}">
-  <button class="btn-gold">BACK</button>
-  </a>
-
-  {% if request.user == post.user %}
-  <a href="{% url 'community:community_update' post.pk %}">
-  <button class="btn-gold">UPDATE</button></a>
-  <form action="{% url 'community:community_delete' post.pk %}" method="POST">
-  {% csrf_token %}
-  <button class="btn-gold">DELETE</button>
-  </form>
-  {% endif %} 
-</div> 
 {% endblock %}
 
 {% block script %}
