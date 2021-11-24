@@ -107,7 +107,8 @@ img:hover{
 	<div style="display: flex;margin-bottom: 10px;">
 		<div style="width: 10%;">{{ forloop.counter }}</div>
 		<div style="width: 50%;"><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.title }}</a></div>
-		<div style="width: 20%;white-space: nowrap;
+		<div style="width: 20%;
+			white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       margin-right: 10px;">{{ movie.genre_ids|cut:"'"|cut:"["|cut:"]" }}</div>

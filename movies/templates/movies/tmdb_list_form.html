@@ -75,7 +75,11 @@ vote_count
     <div style="display: flex;">
       {% comment %} <p style="width: 10%;">{{ movie.pk }}</p> {% endcomment %}
       <p style="width: 50%;">{{ movie.title }}</p>
-      <p style="width: 20%;">{{ movie.genre_ids|cut:"'"|cut:"["|cut:"]" }}</p>
+      <p style="width: 20%; 
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: 10px;">{{ movie.genre_ids|cut:"'"|cut:"["|cut:"]" }}</p>
       <p style="width: 20%;">{{ movie.popularity }}</p>
       <p style="width: 10%;">{{ movie.vote_average }}</a></p>
     </div>
@@ -129,11 +133,6 @@ vote_count
     {% comment %} {% if movie.tmp %}
     --------{{ movie.tmp }}-------
     {% endif %} {% endcomment %}
-  <hr>  
-</div>
-{% empty %}
-없음
-{% endfor %}
 {% else %}
 <hr>
 <h1>&nbsp&nbsp잘못된 요청입니다.</h1>

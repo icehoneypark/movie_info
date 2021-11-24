@@ -194,6 +194,7 @@ def tmdb_upcoming(request):
         data_results_start = ''
         data_results_end = ''
         paginators = ''
+        data_results = ''
     context = {
         'paginators': paginators,
         'movies': data_results,
@@ -286,6 +287,7 @@ def tmdb_now_playing(request):
         data_results_start = ''
         data_results_end = ''
         paginators = ''
+        data_results = ''
     context = {
         'paginators': paginators,
         'movies': data_results,
@@ -304,7 +306,6 @@ def tmdb_search(request):
     movie_genre = []
 
     if 'genres' in movie:
-
         for genre in movie['genres'] :
             # print(genre['name'])
             movie_genre.append(genre['name'])
@@ -324,11 +325,12 @@ def tmdb_detail(request, movie_title):
     movie = requests.get(url).json()
     movie_genre = []
 
-    for genre in movie['genres'] :
-        # print(genre['name'])
-        movie_genre.append(genre['name'])
-    
-    movie['genres'] = movie_genre
+    if 'genres' in movie: 
+        for genre in movie['genres'] :
+            # print(genre['name'])
+            movie_genre.append(genre['name'])
+        
+        movie['genres'] = movie_genre
     context = {
         'movie': movie,
     }
