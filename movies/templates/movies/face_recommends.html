@@ -40,9 +40,7 @@ body{
 	height: 260px;
 	left: 10px;
 	top: 10px;
-	{% comment %} background: black; {% endcomment %}
 	overflow: hidden;
-	{% comment %} border: solid 5px black; {% endcomment %}
 }
 #carousel figure:nth-child(1){transform: rotateY(0deg) translateZ(288px);}
 #carousel figure:nth-child(2) { transform: rotateY(36deg) translateZ(288px);}
@@ -56,7 +54,6 @@ body{
 #carousel figure:nth-child(10) { transform: rotateY(324deg) translateZ(288px);}
 
 img{
-	{% comment %} -webkit-filter: grayscale(1); {% endcomment %}
 	cursor: pointer;
 	transition: all .5s ease;
 }
@@ -79,9 +76,11 @@ img:hover{
 <br>
 {% comment %} 온오프라인 여부 확인 {% endcomment %}
 {% if movies %}
+  {% comment %} 프로필 이미지 등록 여부 확인 {% endcomment %}
   {% if request.user.profile_img %}
   <h3 style="font-weight: bold;">&nbsp&nbsp&nbsp&nbsp{{ request.user.username }}님의 연령대에 추천하는 영화는??</h3>
   <div style="display: flex; flex-direction: column; width:100%; align-items: center;">
+    {% comment %} 사용자 정보 출력 {% endcomment %}
     <div style="margin-top: 50px; margin-left: -60px;">
       <img src="{{ request.user.profile_img.url }}"  alt="profile_img" style="width: 255px; height: 275px; border: solid 5px rgba(223,190,106, 1);">
       <div class="card" style="color: rgba(223,190,106,0.7); background-color: #231f20; border: none;">
@@ -93,6 +92,7 @@ img:hover{
         </div>
       </div>  
     </div>
+    {% comment %} flex wrap을 이용해 알맞은 영화 목록 출력 {% endcomment %}
     <div style="display: flex; flex-wrap: wrap;">
       {% for movie in movies %}
         <div style=" width: 10%; margin: 0 4% 0;">
@@ -111,10 +111,12 @@ img:hover{
     </div>
   </div>
 
-
+  {% comment %} 프로필 사진 등록이 안됐을 때 {% endcomment %}
   {% else %}
   <p style="margin-left: 30px;">프로필 사진이 없습니다.</p>
   {% endif %}
+
+{% comment %} 오프라인일 때 {% endcomment %}
 {% else %}
 <p>요청이 잘못되었습니다.</p>
 {% endif %}

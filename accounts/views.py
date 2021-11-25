@@ -45,7 +45,7 @@ def login(request):
     else:
         return redirect('community:community_index')
 
-
+@require_POST
 def logout(request):
     auth_logout(request)
     return redirect('movies:movie_index')

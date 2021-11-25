@@ -12,7 +12,9 @@
 
 ## ✍ 시작하기 전 구상
 
-📄 `FE : JS`    `BE : Django`
+📄 `FE : 박지유 (JS)`    `BE : 장세영 (Django)`
+
+📄 `소통 수단 : Notion`
 
 📄 `ERD : erdcloud`
 

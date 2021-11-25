@@ -404,6 +404,7 @@ def face_recommends(request):
 
     url = "https://openapi.naver.com/v1/vision/face"
     
+    # 예외 처리
     if not request.user.profile_img :
         gender = 'None'
         age_average = 'None'
@@ -414,7 +415,7 @@ def face_recommends(request):
         result = json.loads(response.text)
         if not 'faces' in result:
             return render(request, 'movies/face_recommends.html')
-        
+        # 성별 구분
         if result['faces'] == []:
             gender = 'None'
             age_average = 'None'
