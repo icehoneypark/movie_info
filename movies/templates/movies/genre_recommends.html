@@ -25,6 +25,7 @@
 {% endfor %}
 </div>
 <hr>
+{% comment %} 장르 버튼들 {% endcomment %}
   <div  style="display: flex; justify-content: center; margin-bottom: 10px;">
   <a href="{% url 'movies:genre_recommends' 28 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">액션</button></a>&nbsp&nbsp
   <a href="{% url 'movies:genre_recommends' 12 %}"><button class="btn-gold" style="width: 200px; padding: 0; height: 50px; font-size: 20px;">모험</button></a>&nbsp&nbsp

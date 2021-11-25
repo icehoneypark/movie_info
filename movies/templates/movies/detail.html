@@ -18,7 +18,6 @@
   {{ movie.release_date|date:'Y-m-d' }}
   </p>
   <hr>
-  {% comment %} <p><span style="font-size: 20px;">개봉일 </span><span>{{ movie.released_date }}</span><p> {% endcomment %}
   <p style="font-size: 20px;">관객수</p>
   <p>{{ movie.popularity }}K</p>
   <hr>
@@ -92,32 +91,7 @@
       } else {
         reviewForm.style.display = "none";
       }
-      console.log('!!!!')
-      //document.getElementById(id).style.visibility = "visible";
     })
   })
-/*
-  forms.forEach(form => {
-    form.addEventListener('submit', function (event) {
-      event.preventDefault()
-      const formId = event.target.dataset.formId
-      const postId = event.target.dataset.postId
-      const reviewInput = form.querySelector(`.review-input-${ formId }`)
-      axios({
-        method: 'post',
-        url: `http://127.0.0.1:8000/community/${postId}/reviews/${formId}/update/`,
-        headers: {'X-CSRFToken': csrftoken},
-      })
-      .then(res => {
-      const review_tmp = res.data.review_form
-      console.log(event)
-      console.log(res)
-      console.log(review_tmp)
-      })
-      .catch(err => {
-        console.log(err.response)
-      })
-    })
-  })*/
 </script>
 {% endblock script %}

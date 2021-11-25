@@ -3,6 +3,7 @@
 {% block content %}
 <div style="display: flex;">
 <h1>{{ person.username }}</h1>&nbsp&nbsp&nbsp&nbsp&nbsp
+{% comment %} 본인 프로필 페이지일 경우 회원정보 수정, 타인 프로필 페이지일 경우 팔로우/언팔로우 버튼 생성 {% endcomment %}
 {% if request.user == person %}
 <a href="{% url 'accounts:change' %}"><button class="btn-gold" style="width: 150px; height: 40px; padding: 10px;">회원정보 수정</button></a>
 &nbsp&nbsp&nbsp
@@ -19,6 +20,7 @@
 </div>
 {% endif %}
 </div>
+{% comment %} 게시글의 개수, 팔로우 수, 팔로워 수 {% endcomment %}
 <hr style="margin-top: 8px;">
 <div style="display: flex;">
 <span>게시글 : {{ person.post_set.all|length }}</span>
@@ -28,20 +30,6 @@
     <div><a href="#"data-bs-toggle="modal" data-bs-target="#exampleModal-followings" class="follow">팔로우 : {{ followings|length }}</a>
     ,&nbsp&nbsp&nbsp<a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal-followers" class="follower">팔로워 : {{ followers|length }}</a></div>
   </div>
-  {% comment %} ---
-  {% if user != person %}
-    <div>
-      <form id="follow-form" data-user-id="{{ person.pk }}">
-        {% csrf_token %}
-        {% if user in followers %}
-          <button>언팔로우</button>
-        {% else %}
-          <button>팔로우</button>
-        {% endif %}
-      </form>
-    </div>
-  {% endif %}
-  --- {% endcomment %}
 {% endwith %}
 </div>
 {% if person.email %}
@@ -54,6 +42,7 @@
   <span>프로필 사진 : <img src="{{ person.profile_img.url }}" alt="profile_img" style="width: 50px; height: 50px;"></span>
 {% endif %}
 <hr>
+{% comment %} 유저가 작성한 글, 댓글, 좋아요, 평점 남긴 영화 {% endcomment %}
 <h3>{{ person.username }}가 작성한 글</h3>
 {% for post in person.post_set.all %}
 <p><a href="{% url 'community:community_detail' post.pk %}">{{ post.title }}</a></p>
@@ -82,7 +71,7 @@
 <p>평점을 남긴 영화가 없습니다.</p>
 {% endfor %}
 
-
+{% comment %} 팔로우와 팔로워를 눌렀을 때 나오는 modal {% endcomment %}
 <div class="modal fade" id="exampleModal-followings" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="background-color : rgba(50, 40, 31, 0.55);">
       <div class="modal-content" style="background-color : rgba(50, 40, 31, 0.55);">
@@ -162,9 +151,9 @@
 
           if (isFollowed === true) {
             const followerBox = document.querySelector('.follower-box')
-            console.log(followerBox)
             followBtn.innerText = '언팔로우'
             var parentP = document.createElement("p")
+            // 팔로우 / 언팔로우 눌렀을 때 팔로워 목록에 사용자 추가 / 제거 JS
             if (requestUserImg){
             parentP.innerHTML = `<a href='http://127.0.0.1:8000/accounts/${requestUserName}/'>
             <img src="/media/${requestUserImg}" alt="" style="
@@ -178,7 +167,6 @@
             margin-left: 15px;
             -webkit-border-radius: 30px;">&nbsp&nbsp&nbsp&nbsp${requestUserName}</a>`
             }
-            //parentP.innerText = `${requestUserName}`
             parentP.setAttribute("class", `follow-atag-${requestUserName}`)
             followerBox.append(parentP)
           } else {

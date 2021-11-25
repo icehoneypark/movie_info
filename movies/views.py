@@ -11,84 +11,30 @@ def main(request):
     }
     return render(request, 'main.html', context)
 
-# def movie_index(request):
-    
-#     movies = Movie.objects.order_by('-popularity')[:10]
-#     context = {
-#         'movies': movies,
-#         'page_name': '관객수',
-#     }
-#     return render(request, 'movies/index.html', context)
-
-# def movie_index(request):
-    
-#     # movies = Movie.objects.order_by('-popularity')
-#     top_1 = Movie.objects.order_by('-popularity')[0]
-#     top_2 = Movie.objects.order_by('-popularity')[1]
-#     top_3 = Movie.objects.order_by('-popularity')[2]
-#     top_4 = Movie.objects.order_by('-popularity')[3]
-#     top_5 = Movie.objects.order_by('-popularity')[4]
-#     top_6 = Movie.objects.order_by('-popularity')[5]
-#     top_7 = Movie.objects.order_by('-popularity')[6]
-#     top_8 = Movie.objects.order_by('-popularity')[7]
-#     top_9 = Movie.objects.order_by('-popularity')[8]
-#     top_10 = Movie.objects.order_by('-popularity')[9]
-#     context = {
-#         # 'movies': movies,
-#         'top1': top_1,
-#         'top2': top_2,
-#         'top3': top_3,
-#         'top4': top_4,
-#         'top5': top_5,
-#         'top6': top_6,
-#         'top7': top_7,
-#         'top8': top_8,
-#         'top9': top_9,
-#         'top10': top_10,
-#     }
-#     return render(request, 'movies/index.html', context)
-
 @require_safe
 def movie_detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
     review_form = MovieReviewForm()
     reviews = movie.moviereview_set.order_by('-pk')
-    # date_str1 = movie.release_date#[0]
-    # date_str2 = movie.release_date#[1]
-    # date_str3 = movie.release_date#[2]
-    # date_str4 = movie.release_date#[3]
-    # date_str5 = movie.release_date#[5]
-    # date_str6 = movie.release_date#[6]
-    # date_str7 = movie.release_date#[8]
-    # date_str8 = movie.release_date#[9]
     context = {
         'movie': movie,
         'review_form': review_form,
         'reviews': reviews,
-        # 'date_str1': date_str1,
-        # 'date_str2': date_str2,
-        # 'date_str3': date_str3,
-        # 'date_str4': date_str4,
-        # 'date_str5': date_str5,
-        # 'date_str6': date_str6,
-        # 'date_str7': date_str7,
-        # 'date_str8': date_str8,
     }
     return render(request, 'movies/detail.html', context)
 
 
 @require_POST
 def movie_review_create(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
     if request.user.is_authenticated:
-        movie = get_object_or_404(Movie, pk=movie_pk)
         review_form = MovieReviewForm(request.POST)
         if review_form.is_valid():
             review = review_form.save(commit=False)
             review.movie = movie
             review.user = request.user
             review.save()
-        return redirect('movies:movie_detail', movie.pk)
-    return redirect('movies:movie_index')
+    return redirect('movies:movie_detail', movie.pk)
 
 
 @login_required
@@ -123,30 +69,14 @@ def movie_review_delete(request, movie_pk, review_pk):
             review.delete()
     return redirect('movies:movie_detail', movie_pk)
 
-@require_safe
-def movie_list(request):
-    movies_1 = Movie.objects.order_by('-release_date')[1:60] 
-    movies1_start = Movie.objects.order_by('-release_date')[0]
-    
-    movies = Movie.objects.order_by('-release_date')
-    paginator = Paginator(movies, 10)
-    page = request.GET.get('page')
-    paginators = paginator.get_page(page)
-    context = {
-        'movies_1': movies_1,
-        'movies1_start': movies1_start,
-        'paginators': paginators,
-    }
-    return render(request, 'movies/movie_list.html', context)
-
 # -----------------------tmdb API-----------------------
-
+# tmdb에 데이터를 받아오기 위한 함수
 import requests
 
 class TMDBHelper:
     def __init__(self, api_key=None):
         self.api_key = api_key
-
+    # url 작성하기
     def get_request_url(self, method, **kwargs):
         base_url = 'https://api.themoviedb.org/3'
         request_url = base_url + method
@@ -156,6 +86,7 @@ class TMDBHelper:
             request_url += f'&{k}={v}'
 
         return request_url
+    # 영화 제목 입력하면 id값 받아오기
     def get_movie_id(self, title):
         request_url = self.get_request_url('/search/movie', query=title, region='KR', language='ko')
         data = requests.get(request_url).json()
@@ -170,15 +101,71 @@ class TMDBHelper:
 tmdb_helper = TMDBHelper('6163fbe091536a27c8951c10ecb40d6c')
 
 @require_safe
+# 영화 목록(영화 평점 기능을 위해 상시 Local DB 사용)
+def movie_list(request):
+    # tmdb API로 가져오는 영화 목록 (영화에 평점다는 명세서 요구사항으로 인해 주석처리)
+    # url = tmdb_helper.get_request_url('/movie/top_rated',region='KR', language='ko')
+    # data = requests.get(url).json()
+    # movies = []
+    
+    # genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
+    # genres_list = requests.get(genres_url).json()
+    # if 'results' in data : 
+    #     for i in range(1, 11):
+    #         tmp_url = url + '&page=' + str(i)
+    #         movies_json = requests.get(tmp_url).json()
+    #         for movie in movies_json['results']:
+    #             movies.append(movie)
+       
+    #     genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
+    #     genres_list = requests.get(genres_url).json()
+    #     genres = genres_list['genres']
+    #     for movie in movies:
+    #         for i in range(len(movie['genre_ids'])):
+    #             for j in range(len(genres)):
+    #                 if movie['genre_ids'][i] == genres[j]['id']:
+    #                     movie['genre_ids'][i] = genres[j]['name']
+    #         data_results_start = data['results'][0]
+    #         data_results_end = data['results'][1:]
+    #         paginator = Paginator(movies, 10)
+    #         page = request.GET.get('page')
+    #         paginators = paginator.get_page(page)
+    #     context = {
+    #         'paginators': paginators,
+    #         'movies': movies,
+    #         'movie_start': data_results_start,
+    #         'movie_end': data_results_end,
+    #         'page_name': '영화 목록'
+    #     }
+    #     return render(request, 'movies/tmdb_list_form.html', context)
+    # else:
+    movies_1 = Movie.objects.order_by('-release_date')[1:60] 
+    movies1_start = Movie.objects.order_by('-release_date')[0]
+    
+    movies = Movie.objects.order_by('-release_date')
+    paginator = Paginator(movies, 10)
+    page = request.GET.get('page')
+    paginators = paginator.get_page(page)
+    context = {
+        'movies_1': movies_1,
+        'movies1_start': movies1_start,
+        'paginators': paginators,
+        'page_name': '영화 목록'
+    }
+    return render(request, 'movies/movie_list.html', context)
+
+@require_safe
+# 개봉 예정 작품
 def tmdb_upcoming(request):
-    # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/upcoming',region='KR', language='ko')
     data = requests.get(url).json()
     if 'results' in data : 
         data_results = data['results']
         genres_url = tmdb_helper.get_request_url('/genre/movie/list', region='KR', language='ko')
+        # url에 요청한 정보를 저장
         genres_list = requests.get(genres_url).json()
         genres = genres_list['genres']
+        # 장르 id를 name으로 변경
         for movie in data_results:
             for i in range(len(movie['genre_ids'])):
                 for j in range(len(genres)):
@@ -206,10 +193,10 @@ def tmdb_upcoming(request):
 
 
 # def tmdb_toprate(request):
+# 높은 평점을 index 페이지로 구성
 @require_safe
 def movie_index(request):
-    # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
-    url = tmdb_helper.get_request_url('/movie/top_rated',region='KR', language='ko')
+    url = tmdb_helper.get_request_url('/movie/top_rateds',region='KR', language='ko')
     data = requests.get(url).json()
     if 'results' in data : 
         data_results = data['results'][:10]
@@ -227,7 +214,7 @@ def movie_index(request):
         'tmdb': 1,
         }
         return render(request, 'movies/recommend_tmdb.html', context)
-
+    # url에 요청한 정보가 잘못되거나 오프라인일 경우 Local DB로 동작
     else:
         data_results = Movie.objects.order_by('-vote_average')[:10]    
     
@@ -239,8 +226,8 @@ def movie_index(request):
 
 
 @require_safe
+# 현재 인기작
 def tmdb_popular(request):
-    # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/popular',region='KR', language='ko')
     data = requests.get(url).json()
     if 'results' in data : 
@@ -260,8 +247,8 @@ def tmdb_popular(request):
         }
         return render(request, 'movies/recommend_tmdb.html', context)
 
-    else:  
-    
+    # url에 요청한 정보가 잘못되거나 오프라인일 경우 데이터가 없음(오류페이지 방지)
+    else:      
         context = {
             'movies': '',
             'page_name': '인기 영화'
@@ -270,8 +257,8 @@ def tmdb_popular(request):
 
 
 @require_safe
+# 현재 상영작
 def tmdb_now_playing(request):
-    # 개봉예정 url = '/movie/upcoming' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url('/movie/now_playing',region='KR', language='ko')
     data = requests.get(url).json()
     if 'results' in data : 
@@ -305,8 +292,11 @@ def tmdb_now_playing(request):
 
 
 @require_safe
+# 검색기능
 def tmdb_search(request):
+    # input에 입력한 값
     title = request.GET.get('search')
+    # 검색한 값을 url에 요청
     url = tmdb_helper.get_request_url('/search/movie',region='KR', language='ko', query = title)
     movies = requests.get(url).json()
     context = {
@@ -316,6 +306,7 @@ def tmdb_search(request):
 
 
 @require_safe
+# tmdb 영화 상세정보
 def tmdb_detail(request, movie_id):
     url = tmdb_helper.get_request_url(f'/movie/{movie_id}',region='KR', language='ko')
 
@@ -324,7 +315,6 @@ def tmdb_detail(request, movie_id):
 
     if 'genres' in movie: 
         for genre in movie['genres'] :
-            # print(genre['name'])
             movie_genre.append(genre['name'])
         
         movie['genres'] = movie_genre
@@ -335,8 +325,8 @@ def tmdb_detail(request, movie_id):
 
 
 @require_safe
+# 평점 남긴 영화와 비슷한 영화 추천
 def ranked_similar(request, movie_id):
-    # 평점 기준 영화 추천 = '/movie/{movie_id}/similar' (필요한 내용에 대한 url을 수정하면 됨)
     url = tmdb_helper.get_request_url(f'/movie/{movie_id}/similar',region='KR', language='ko')
     ranked_movie_url = tmdb_helper.get_request_url(f'/movie/{movie_id}',region='KR', language='ko')
     data = requests.get(url).json()
@@ -371,6 +361,7 @@ def ranked_similar(request, movie_id):
     }
     return render(request, 'movies/ranked_similar.html', context)
 
+# 평점 남긴 영화 목록
 def rank_list(request, username):
     person = get_object_or_404(get_user_model(), username=username)
     movies_tmp = person.moviereview_set.all()
@@ -506,12 +497,13 @@ def face_recommends(request):
     return render(request, 'movies/face_recommends.html', context)
 
 import random
-
 @require_safe
+# 장르 관련 영화 추천
 def genre_recommends(request, genre_ids):
     url = tmdb_helper.get_request_url(f'/movie/popular',region='KR', language='ko')
     movies = []
     if genre_ids == 0:
+        # 처음 화면은 장르id를 0으로 지정
         pass
     else: 
         for i in range(1, 11):
@@ -520,6 +512,7 @@ def genre_recommends(request, genre_ids):
             for movie in movies_json['results']:
                 if genre_ids in movie['genre_ids']:
                     movies.append(movie)
+    # 요청에 반환된 영화 개수에 따라 0, 1, 2, 3, 4(최대)개를 랜덤으로 제공
     if len(movies) == 0:
         context = {
             'movies': [],

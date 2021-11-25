@@ -10,7 +10,7 @@ from django.core.paginator import Paginator
 
 @require_safe
 def community_index(request):
-    posts = Post.objects.all()
+    posts = Post.objects.order_by('-pk')
     paginator = Paginator(posts, '10')
     page = request.GET.get('page')
     paginators = paginator.get_page(page)
@@ -78,10 +78,11 @@ def community_update(request, pk):
 @login_required
 @require_POST
 def community_delete(request, pk):
-    community = get_object_or_404(Post, pk=pk)
-    community.delete()
+    if request.user.is_authenticated:
+        community = get_object_or_404(Post, pk=pk)
+        if request.user == community.user:
+            community.delete()
     return redirect('community:community_index')
-
 
 @require_POST
 def community_comment_create(request, post_pk):

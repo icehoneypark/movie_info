@@ -4,6 +4,7 @@
 {% block content %}
 <div style="display: flex; margin: 0;">
   <h1 style="margin: 5px;">{{ post.title }}&nbsp</h1> 
+  {% comment %} 좋아요 / 좋아요 취소 {% endcomment %}
     <form class="like-form" data-post-id="{{ post.pk }}" style="height: 40px; margin-top: 8px;">
       {% csrf_token %}
       {% if user in post.like_users.all %}
@@ -19,6 +20,7 @@
 </div>
 <hr style="margin:0;">
 <div style="padding: 5px;">
+{% comment %} 게시글 사진 / 내용 {% endcomment %}
 {% if post.community_img %}
 <br>
 <img src="{{ post.community_img.url }}" alt="community_img" style="width:500px;">
@@ -30,11 +32,12 @@
 <div style="display: flex; justify-content: space-between;">
 </div>
 <br>
+{% comment %} 게시글에서 뒤로가기 {% endcomment %}
 <div style="display: flex; width: 700px; justify-content: space-between;">
   <a href="{% url 'community:community_index' %}">
   <button class="btn-gold">BACK</button>
   </a>
-
+{% comment %} 게시글 수정, 게시글 삭제 - 게시글 작성자만 보임 {% endcomment %}
   {% if request.user == post.user %}
   <a href="{% url 'community:community_update' post.pk %}">
   <button class="btn-gold">UPDATE</button></a>
@@ -57,7 +60,6 @@
   {% if request.user.is_authenticated %}
   <form action="{% url 'community:community_comment_create' post.pk %}" method="POST">
     {% csrf_token %}
-    {% comment %} {{ comment_form }} {% endcomment %}
     <label for="id_content">댓글:&nbsp</label><input type="text" name="content" maxlength="100" required="" id="id_content">
     <button class="btn-gold" style="width: 80px; height: 40px; padding: 10px; margin-top: 10px;">입력</button>
   </form>
@@ -78,7 +80,7 @@
   <p>댓글내용 : {{ comment.content }}</p> 
   <p>생성 : {{ comment.created_at | date:'Y년 m월 d일 h시 i분'}} / 수정 : {{comment.updated_at | date:'Y년 m월 d일 h시 i분'}}&nbsp&nbsp</p>
 
-  {% comment %} 댓글내용 수정 {% endcomment %}
+  {% comment %} 댓글내용 수정 input 열기 및 닫기 / 댓글 삭제 - 댓글 작성자만 보임{% endcomment %}
   {% if user == comment.user %}
     <div style="display: flex;">
     <button class="comment-update-btn btn-gold" data-comment-id="{{ comment.pk }}" style="width: 150px; height: 40px; padding: 10px;">댓글수정</button>
@@ -88,6 +90,7 @@
         <button class="btn-gold" style="width: 150px; height: 40px; padding: 10px;">Delete</button>
     </form>
     </div>
+    {% comment %} 댓글 수정 input (처음엔 없고 댓글수정 버튼을 누르면 ON / OFF (JS로 구현)) {% endcomment %}
     <form class="comment-form comment-form-{{ comment.pk }}" data-form-id="{{ comment.pk }}" data-post-id="{{ post.pk }}" action="{% url 'community:community_comment_update' post.pk comment.pk %}" method="POST" style="display: none;">    
       {% csrf_token %}
       <input type="text" class="comment-input-{{ comment.pk }}" name="content" maxlength="100" required="" value={{ comment.content }} size=55 >
@@ -110,6 +113,7 @@
   const formsUpdate = document.querySelectorAll('.comment-form')
   const csrftokenUpdate = document.querySelector('[name=csrfmiddlewaretoken]').value
 
+  {% comment %} 댓글 input 나타나게 하는 JS {% endcomment %}
   buttons.forEach(button => {
     button.addEventListener('click', function (event) {
       event.preventDefault()

@@ -29,7 +29,8 @@
     {% endfor %}
     </div>
   </div>
-    <div class="row mt-2">
+  {% comment %} pagination {% endcomment %}
+  <div class="row mt-2">
     <div class="col-12">
       <nav>
         <ul class="pagination justify-content-center">
@@ -77,32 +78,4 @@
     </div>
   </div>
 </div>
-{% comment %} {% if post_page.has_pervious %}
-<a href="?page=1">맨 앞으로</a>
-<a href="?page={{ post_page.previous_page_number }}">이전으로</a>
-{% endif %}
-<span>{{ post.number }}</span>
-<span>/</span>
-{% if post_page.has_next %}
-<a href="?page={{post.next_page_number}}">다음으로</a>
-<a href="?page={{post.paginator.num_pages}}">맨 뒤로</a>
-{% endif %} {% endcomment %}
-
-{% comment %} <nav aria-label="Page navigation example">
-  <ul class="pagination">
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-  </ul>
-</nav> {% endcomment %}
 {% endblock %}

@@ -4,6 +4,7 @@
 {% block content %}
 <h1>&nbsp&nbsp{{ page_name }}</h1>
 {% if movies %}
+{% comment %} 평점 남긴 영화에 대한 추천 영화 캐러셀 {% endcomment %}
 <div class="container-fluid" style="padding: 0;">
   <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -46,6 +47,7 @@
     </div>
   </div>
 </div>
+{% comment %} 영화 목록 Table {% endcomment %}
 <div style="width: 95%; justify-content: center; margin-left: 30px;">
   <div style="display: flex;">
     <div style="width: 50%;">영화 제목</div>
@@ -69,6 +71,7 @@
   {% empty %}
   없음
   {% endfor %}
+  {% comment %} pagination {% endcomment %}
   <div class="row mt-2">
     <div class="col-12">
       <nav>
