@@ -372,9 +372,7 @@ def rank_list(request, username):
     movie_ids = set(movie_ids)
     for movie_id in movie_ids:
         movie = Movie.objects.get(movie_id=movie_id)
-        # print(movie)
         movies.append(movie)
-    print(movies)
     context = {
         'person': person,
         # 'movie_ids': movie_ids,
