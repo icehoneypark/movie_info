@@ -16,7 +16,7 @@ def signup(request):
             if form.is_valid():
                 user = form.save()
                 auth_login(request, user)
-                return redirect('community:community_index')
+                return redirect('movies:movie_index')
         else:
             form = CustomUserCreationForm()
         context = {
@@ -25,7 +25,7 @@ def signup(request):
         return render(request, 'accounts/signup.html', context)
     # 이미 로그인이 돼있으면 index로 redirect
     else:
-        return redirect('community:community_index')
+        return redirect('movies:movie_index')
 
 
 @require_http_methods(['GET', 'POST'])
@@ -43,11 +43,12 @@ def login(request):
         }
         return render(request, 'accounts/login.html', context)
     else:
-        return redirect('community:community_index')
+        return redirect('movies:movie_index')
 
 @require_POST
 def logout(request):
-    auth_logout(request)
+    if request.user.is_authenticated:
+        auth_logout(request)
     return redirect('movies:movie_index')
 
 
@@ -111,7 +112,7 @@ def password(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
-            return redirect('community:community_index')
+            return redirect('accounts:change')
     else:
         form = PasswordChangeForm(request.user)
     context = {

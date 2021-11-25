@@ -16,6 +16,7 @@
 
   <title>Document</title>
   <style>
+  {% comment %} input 타입 css {% endcomment %}
   input[type="text"], input[type="password"], input[type="email"], textarea {
   color: rgba(223,190,106,0.7); background: #231f20; padding: 5px; border: solid 1px; border-color: rgba(223,190,106,0.7); line-height: 17px;
 }
@@ -32,11 +33,13 @@
   <link rel="stylesheet" href="{% static "css/base.css" %}">
 </head>
 <body>
+{% comment %} navbar {% endcomment %}
 <nav style=" position:-webkit-sticky;position:sticky;top:0;z-index:1020; background: #231f20;  line-height: 70px; height: 70px; margin: 0px; display: flex; justify-content: space-between;">
   <div>
     <div style="display: flex; width: 300px; justify-content: space-between; margin-left: 20px;">
+    {% comment %} 처음 출력 페이지로 이동 {% endcomment %}
       <div><a href="{% url 'main' %}">배배</a></div>
-      {% comment %} <div><a href="{% url 'movies:movie_index' %}">영화 추천</a></div> {% endcomment %}
+      {% comment %} dropdown형식으로 출력 {% endcomment %}
       <div class="nav-item dropdown" style="">
         <a class="nav-link dropdown" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0;">    
         <p style=" justify-content: center; padding: 0;">영화 추천</p>
@@ -46,16 +49,13 @@
         padding: 0;
         text-align: center;
         ">
-          {% comment %} <a href="{% url 'movies:movie_index' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">관객수별</button></a> {% endcomment %}
           <a href="{% url 'movies:movie_index' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">높은 평점</button></a>
           <a href="{% url 'movies:tmdb_popular' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">인기 영화</button></a>
           <a href="{% url 'movies:face_recommends' %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">연령대 추천</button></a>
           <a href="{% url 'movies:genre_recommends' 0 %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">장르별 추천</button></a>
-          {% comment %} <a href="{% url 'movies:rank_recommends' movie_id %}"><button style="border: none; background-color: rgb(50, 40, 31, 1); color: rgba(223,190,106,0.7);">평점 연관 추천</button></a> {% endcomment %}
-
+          
         </ul>
       </div>
-      {% comment %} <div><a href="{% url 'movies:movie_list' %}">영화 목록</a></div> {% endcomment %}
       <div class="nav-item dropdown" style="">
         <a class="nav-link dropdown" href="#" id="navbarDropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0;">    
         <p style=" justify-content: center; padding: 0;">영화 목록</p>
@@ -77,6 +77,7 @@
     </div>
   </div>
   <div class="search" style="text-align: center;">
+  {% comment %} 검색창 {% endcomment %}
   <form action="{% url 'movies:tmdb_search' %}" method="GET" style="height: 15px;">
     <label for="search-input1"></label>
     <input type="search" class='search-input1' placeholder="영화 제목을 입력하세요." name='search' size=100 style="
@@ -84,6 +85,7 @@
   </form>
   <br>
 </div>
+{% comment %} 계정 관련 내용을 dropdown 형식으로 출력 {% endcomment %}
   <div class="nav-item dropdown" style="margin-right: 40px;">
     <a class="nav-link dropdown" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0;">
     {% if request.user.profile_img %}
@@ -100,9 +102,17 @@
     {% if request.user.is_authenticated %}
       <a href="{% url 'accounts:profile' request.user.username %}"><button>내 정보</button></a>
       <br>
-      <a href="{% url 'accounts:logout' %}"><button>로그아웃</button></a>
+      <form action="{% url 'accounts:logout' %}" method="POST">
+        {% csrf_token %}
+        <button style="
+        outline: 0;
+        width: 158px;
+        border: 0;
+        background-color : rgba(50, 40, 31, 0.55);
+        color: rgba(223,190,106,0.7);">
+        로그아웃</button>
+      </form>
       {% else %}
-      {% comment %} <li><hr class="dropdown-divider"></li> {% endcomment %}      
       <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"><button>로그인</button></a>
       <br>
       <a href="{% url 'accounts:signup' %}"><button>회원가입</button></a>
@@ -110,6 +120,7 @@
     </ul>
   </div>
 </nav>
+{% comment %} 로그인 modal {% endcomment %}
 <div class="container" style="margin-top: 15px;">
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="background-color : rgba(50, 40, 31, 0.55);">

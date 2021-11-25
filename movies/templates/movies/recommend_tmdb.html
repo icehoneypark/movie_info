@@ -77,6 +77,7 @@ img:hover{
 {% block content %}
 <h1>{{ page_name }} TOP10</h1>
 <hr>
+{% comment %} TOP 10 영화 캐러셀 {% endcomment %}
 <div class="container-carousel" style="margin-bottom: 200px;">
 		<div id="carousel">
       {% for movie in movies %}			
@@ -94,6 +95,7 @@ img:hover{
 	</div>
 	<br>
 	<br>
+	{% comment %} TOP 10 영화 Table {% endcomment %}
 	<div style=" margin-bottom: 100px;">
 	<div style="display: flex;">
 		<div style="width: 10%;">순위</div>

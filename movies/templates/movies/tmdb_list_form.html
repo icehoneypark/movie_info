@@ -3,30 +3,15 @@
 {% endblock css %}
 {% block content %}
 <h1>&nbsp&nbsp{{ page_name }}</h1>
-{% comment %} ---
----movie 구성 요소---
-adult
-backdrop_path
-genre_ids
-id
-original_language
-original_title
-overview
-popularity
-poster_path
-release_date
-title
-video
-vote_average
-vote_count
---- {% endcomment %}
 {% if movies %}
+{% comment %} 영화 목록 캐러셀 {% endcomment %}
 <div class="container-fluid" style="padding: 0;">
   <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
       <div class="carousel carousel-showmanymoveone slide" id="itemslider">
         <div class="carousel-inner">
           <div class="item active" style="height: 350px;">
+          {% comment %} 영화 목록 중 첫 번째 영화 {% endcomment %}
             <div class="col-xs-12 col-sm-6 col-md-2">
               <a href="{% url 'movies:tmdb_detail' movie_start.id %}">
               {% if movie_start.poster_path %}
@@ -39,7 +24,7 @@ vote_count
               <h4 class="text-center" style="margin-top:10px;">{{ movie_start.title }}</h4>
             </div>
           </div>
-
+        {% comment %} 용화 목록 중 두 번째 영화부터 {% endcomment %}
         {% for movie in movie_end %}
           <div class="item" style="height: 350px;">
             <div class="col-xs-12 col-sm-6 col-md-2">            
@@ -65,6 +50,7 @@ vote_count
     </div>
   </div>
 </div>
+{% comment %} 영화 목록 Table {% endcomment %}
 <div style="width: 95%; justify-content: center; margin-left: 30px;">
   <hr>
   <div style="display: flex;">
@@ -74,6 +60,7 @@ vote_count
     <div style="width: 10%;">평점</div>
   </div>
   <hr>
+  {% comment %} pagination {% endcomment %}
   {% for movie in paginators %}
     <div style="display: flex;">
       <p style="width: 50%;"><a href="{% url 'movies:tmdb_detail' movie.id %}">{{ movie.title }}</a></p>

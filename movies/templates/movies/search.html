@@ -3,6 +3,7 @@
 {% endblock css %}
 {% block content %}
 <hr>
+{% comment %} 검색했을 때 나오는 영화들 {% endcomment %}
 {% for movie in movies %}
 <a href="{% url 'movies:tmdb_detail' movie.id %}">
 <div style="display: flex; height: 250px;">

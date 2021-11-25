@@ -5,6 +5,7 @@
 <h1>{{ person.username }}님이 평점을 남긴 영화</h1>
 <hr>
 <div style="display: flex; flex-wrap: wrap; width: 100%;">
+{% comment %} 평점 남긴 영화들 {% endcomment %}
 {% for movie in movies %}
   <div style="text-align: center; width: 20%; height: 430px;">
     <a href="{% url 'movies:movie_detail' movie.pk %}"><img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" style="height: 300px; width: 200px; border: solid 1px;"></a>
